@@ -94,7 +94,7 @@ export default function SettingsPage({ navigation }) {
           <SettingsImageView>
             <SettingsImage name="key" size={24}/>
           </SettingsImageView>
-          <SettingsItemText>Conta</SettingsItemText>
+          <SettingsItemText>Edit Account</SettingsItemText>
           <SettingsLink onPress={() => handleUpdateProfile()}>
             <NextIcon name="arrow-right" size={16}></NextIcon>
           </SettingsLink>
@@ -105,7 +105,7 @@ export default function SettingsPage({ navigation }) {
           <SettingsImageView>
             <SettingsImage name="info" size={24} style={{color: '#ddd'}}/>
           </SettingsImageView>
-          <SettingsItemText style={{color: '#ddd'}}>Ajuda</SettingsItemText>
+          <SettingsItemText style={{color: '#ddd'}}>Help</SettingsItemText>
             <SettingsLink>
               <NextIcon name="arrow-right" size={16} style={{color: '#ddd'}}></NextIcon>
             </SettingsLink>
@@ -116,7 +116,7 @@ export default function SettingsPage({ navigation }) {
           <SettingsImageView>
             <SettingsImage name="heart" size={24} style={{color: '#ddd'}}/>
           </SettingsImageView>
-          <SettingsItemText style={{color: '#ddd'}}>Compartilhar godtasker</SettingsItemText>
+          <SettingsItemText style={{color: '#ddd'}}>Share godtasker</SettingsItemText>
           <SettingsLink>
             <NextIcon name="arrow-right" size={16} style={{color: '#ddd'}}></NextIcon>
           </SettingsLink>
@@ -127,7 +127,7 @@ export default function SettingsPage({ navigation }) {
           <SettingsImageView>
             <SettingsImage name="log-out" size={24}/>
           </SettingsImageView>
-          <SettingsItemText>Sair</SettingsItemText>
+          <SettingsItemText>Exit</SettingsItemText>
           <SettingsLink onPress={() => handleSignOut()}>
             <NextIcon name="arrow-right" size={16}></NextIcon>
           </SettingsLink>

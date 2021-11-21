@@ -37,7 +37,7 @@ export const ButtonView2 = styled(TouchableOpacity)`
 `;
 
 export const ButtonText = styled.Text`
-  background-color: ${Platform.OS === 'ios' ? '16px' : '14px'};
+  font-size: ${Platform.OS === 'ios' ? '15px' : '13px'};
   font-weight: bold;
   color: #fff;
 `;
@@ -245,7 +245,7 @@ export const SubmitButton = styled(TouchableOpacity)`
   flex-direction: row;
   align-items: center;
   justify-content: center;
-  height: 40px;
+  height: 36px;
   width: 100%;
   border-radius: 8px;
   margin: 0 auto 40px;
@@ -253,7 +253,7 @@ export const SubmitButton = styled(TouchableOpacity)`
   background-color: #18A0FB;
 `;
 export const SubmitButtonText = styled.Text`
-  font-size: 14px;
+  font-size: ${Platform.OS === 'ios' ? '15px' : '13px'};
   font-weight: bold;
   color: #fff;
 `;

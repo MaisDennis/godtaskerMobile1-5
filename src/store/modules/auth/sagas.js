@@ -30,9 +30,8 @@ export function* signIn({ payload }) {
 
   } catch (error) {
     yield put(signFailure());
-    console.tron.log(error)
-    Alert.alert('Dados inválidos')
-    // toast.error('Falha na autenticação, verifique seus dados');
+    // console.log(error)
+    Alert.alert('Invalid Data. Please check password')
   }
 }
 // -----------------------------------------------------------------------------

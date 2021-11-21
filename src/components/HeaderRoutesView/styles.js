@@ -8,7 +8,7 @@ export const AlignView = styled.View`
   width: 90%;
   height: 100%;
   background: #fff;
-  background: #ee3;
+  /* background: #ee3; */
 `;
 
 export const HeaderContainer = styled.View`
@@ -17,7 +17,7 @@ export const HeaderContainer = styled.View`
   align-items: center;
   width: 100%;
   /* height: 100%; */
-  background: #F5F5;
+  /* background: #F5F5; */
 `;
 
 export const HeaderText = styled.Text`

@@ -40,7 +40,7 @@ export const ButtonView2 = styled(TouchableOpacity)`
 `;
 
 export const ButtonText = styled.Text`
-  background-color: ${Platform.OS === 'ios' ? '16px' : '14px'};
+  font-size: ${Platform.OS === 'ios' ? '15px' : '13px'};
   font-weight: bold;
   color: #fff;
 `;
@@ -64,6 +64,7 @@ export const CheckBoxView = styled.View`
   max-width: 80%;
   margin: 4px 0;
 `;
+
 export const Container = styled.SafeAreaView`
   display: flex;
   height: 100%;
@@ -107,6 +108,7 @@ export const FormScrollView = styled.ScrollView`
   width: 100%;
   padding: 12px 0;
   background-color: #fff;
+  /* background-color: #f00; */
 `;
 
 export const HrLine = styled.View`
@@ -257,7 +259,7 @@ export const SubmitButton = styled(TouchableOpacity)`
   flex-direction: row;
   align-items: center;
   justify-content: center;
-  height: 40px;
+  height: 36px;
   width: 100%;
   border-radius: 8px;
   margin: 0 auto 40px;
@@ -265,7 +267,7 @@ export const SubmitButton = styled(TouchableOpacity)`
   background-color: #18A0FB;
 `;
 export const SubmitButtonText = styled.Text`
-  font-size: 14px;
+  font-size: ${Platform.OS === 'ios' ? '15px' : '13px'};
   font-weight: bold;
   color: #fff;
 `;

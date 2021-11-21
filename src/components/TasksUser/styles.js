@@ -4,6 +4,30 @@ import LinearGradient from 'react-native-linear-gradient';
 import Icon from 'react-native-vector-icons/Feather';
 import Button from '~/components/Button';
 
+export const AcceptButton = styled.View`
+  display: flex;
+  flex-direction:row;
+  align-items: center;
+  justify-content: center;
+  height: 36px;
+  width: 108px;
+  border-radius: 8px;
+  background-color: #18A0FB;
+`;
+
+export const AcceptButtonView = styled.View`
+  display: flex;
+  flex-direction:column;
+  align-items: flex-start;
+  height: auto;
+  width: 85%;
+  border-radius: 8px;
+  border-width: 1px;
+  border-color: #1B2432;
+  padding: 0 4px 16px;
+  background-color: #fff;
+`;
+
 export const AlignCheckBoxView = styled.View`
   display: flex;
   flex-direction:column;
@@ -64,7 +88,7 @@ export const BottomHeaderView = styled.View`
 `;
 
 export const ButtonText = styled.Text`
-  font-size: 13px;
+  font-size: ${Platform.OS === 'ios' ? '15px' : '13px'};
   font-weight: bold;
   margin: auto;
   color: #fff;
@@ -76,7 +100,7 @@ export const ButtonView = styled(TouchableOpacity)`
   flex-direction: row;
   align-items: center;
   justify-content: center;
-  height: 40px;
+  height: 36px;
   width: 20%;
   text-align: center;
   margin: 0 auto;
@@ -281,6 +305,14 @@ export const LeftView = styled.View`
   background-color: #D0ECE3;
 `;
 
+export const ModalText = styled.Text`
+  font-weight: bold;
+  font-size: ${Platform.OS === 'ios' ? '14px' : '12px'};
+  margin: 16px auto 8px;
+  color: #222;
+  /* background-color: #f00; */
+`;
+
 export const ModalView = styled.View`
   /* display: flex;
   flex-direction:column; */
@@ -307,6 +339,17 @@ export const OuterStatusView = styled.View`
   margin: 8px 0;
   margin-right: 8px;
   background-color: #ddd;
+`;
+
+export const RejectButton = styled.View`
+  display: flex;
+  flex-direction:row;
+  align-items: center;
+  justify-content: center;
+  height: 36px;
+  width: 108px;
+  border-radius: 8px;
+  background-color: #403F4C;
 `;
 
 export const RightView = styled.View`
@@ -348,7 +391,8 @@ export const TaskAttributesView = styled.View`
 `;
 
 export const TaskIcon = styled(Icon)`
-font-size: ${Platform.OS === 'ios' ? '20px' : '18px'};
+/* font-size: ${Platform.OS === 'ios' ? '22px' : '20px'}; */
+font-size: 20px;
 /* color: #000; */
 color: #18A0FB;
   /* background-color: #f00; */
@@ -363,7 +407,7 @@ color: #19AE7C;
 
 export const TitleText = styled.Text`
   font-weight: bold;
-  font-size: ${Platform.OS === 'ios' ? '18px' : '16px'};
+  font-size: ${Platform.OS === 'ios' ? '16px' : '14px'};
   width: 100%;
   color: #19AE7C;
   width: auto;
@@ -372,7 +416,7 @@ export const TitleText = styled.Text`
 
 export const TitleTextModal = styled.Text`
   font-weight: bold;
-  font-size: ${Platform.OS === 'ios' ? '18px' : '16px'};
+  font-size: ${Platform.OS === 'ios' ? '16px' : '14px'};
   width: auto;
   text-align: left;
   color: #19AE7C;

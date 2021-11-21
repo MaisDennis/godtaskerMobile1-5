@@ -23,7 +23,6 @@ import {
   SenderView, SenderText, SenderAboutText,
 } from './messageStyles'
 import {
-  TestList,
   Container,ConversationView,
   HrDivider,
   // ParsedKeyboardAvoidingView,
@@ -272,7 +271,7 @@ export default function MessagesConversationPage({ navigation, route }) {
                           ? (
                             <ForwardOnTopView>
                               <MessageIcon name='corner-down-right'/>
-                              <ForwardText>Mens. encaminhada</ForwardText>
+                              <ForwardText>Forwarded Message</ForwardText>
                             </ForwardOnTopView>
                           )
                           : (
@@ -461,21 +460,21 @@ export default function MessagesConversationPage({ navigation, route }) {
                 onPress={() => handleMessageReply(item.message, item.sender)}
               >
                 <MessageListItemView>
-                  <MessageListItemText>Responder</MessageListItemText>
+                  <MessageListItemText>Reply</MessageListItemText>
                 </MessageListItemView>
               </MessageListButton>
               <MessageListButton
                 onPress={() => handleMessageForward(item.message)}
               >
                 <MessageListItemView>
-                  <MessageListItemText>Encaminhar</MessageListItemText>
+                  <MessageListItemText>Forward</MessageListItemText>
                 </MessageListItemView>
               </MessageListButton>
               <MessageListButton
                 onPress={() => handleMessageDelete(index)}
               >
                 <MessageListItemView>
-                  <MessageListItemText>Deletar</MessageListItemText>
+                  <MessageListItemText>Delete</MessageListItemText>
                 </MessageListItemView>
               </MessageListButton>
             </MessageListView>

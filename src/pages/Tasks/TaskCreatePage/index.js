@@ -78,7 +78,11 @@ export default function TaskCreatePage({ navigation }) {
   }, [ userId ])
 
   async function loadContacts(userID) {
-    const response = await api.get(`/users/${userID}/following`)
+    const response = await api.get(`/users/${userID}/following`, {
+      params: {
+        nameFilter: ``,
+      }
+    })
 
     const checkedList = response.data
     checkedList.forEach(c => {
@@ -425,44 +429,10 @@ export default function TaskCreatePage({ navigation }) {
             >
               <ButtonText>Start & Due Dates</ButtonText>
             </ButtonView2>
-            {/* <LabelText>Due Date:</LabelText>
-            <DateOptionsView>
-              <DateOptions
-                date={startDate}
-                onDateChange={setStartDate}
-                locale='pt'
-                is24hourSource='locale'
-                androidVariant="nativeAndroid"
-                textColor="#666"
-                textSize="24"
-              />
-            </DateOptionsView> */}
             </WeigeView>
-            {/* <HrDivider/> */}
           </ItemWrapperView>
-
-          {/* <ItemWrapperView>
-            <LabelText>Prazo:</LabelText>
-            <DateOptionsView>
-              <DateOptions
-                date={dueDate}
-                onDateChange={setDueDate}
-                locale='pt'
-                is24hourSource='locale'
-                androidVariant="nativeAndroid"
-                textColor="#666"
-                textSize="30"
-              />
-            </DateOptionsView>
-          </ItemWrapperView> */}
-
           <ItemWrapperView>
             <LabelText>Priority:</LabelText>
-            {/* <Options selectedValue={prior} onValueChange={setPrior}>
-              { taskAttributesArray.map(t => (
-                <Options.Item key={t.id} label={t.tag} value={t.id}/>
-              ))}
-            </Options> */}
             <RadioButtonView>
               <RadioButtonTag onPress={() => setPrior(1)}>
                 <RadioButtonLabel>Low</RadioButtonLabel>
@@ -492,73 +462,8 @@ export default function TaskCreatePage({ navigation }) {
             {/* <HrDivider/> */}
           </ItemWrapperView>
 
-          {/* <ItemWrapperView>
-            <LabelText>Urgência:</LabelText>
-            <RadioButtonView>
-              <RadioButtonTag onPress={() => setUrgent(1)}>
-                <RadioButtonLabel>baixa</RadioButtonLabel>
-                <RadioButtonOuter>
-                  <RadioButtonInner1 switch={urgent}/>
-                </RadioButtonOuter>
-              </RadioButtonTag>
-              <RadioButtonTag onPress={() => setUrgent(2)}>
-                <RadioButtonLabel>média</RadioButtonLabel>
-                <RadioButtonOuter>
-                  <RadioButtonInner2 switch={urgent}/>
-                </RadioButtonOuter>
-              </RadioButtonTag>
-              <RadioButtonTag onPress={() => setUrgent(3)}>
-                <RadioButtonLabel>alta</RadioButtonLabel>
-                <RadioButtonOuter>
-                  <RadioButtonInner3 switch={urgent}/>
-                </RadioButtonOuter>
-              </RadioButtonTag>
-              <RadioButtonTag onPress={() => setUrgent(4)}>
-                <RadioButtonLabel>n/a</RadioButtonLabel>
-                <RadioButtonOuter>
-                  <RadioButtonInner4 switch={urgent}/>
-                </RadioButtonOuter>
-              </RadioButtonTag>
-            </RadioButtonView>
-          </ItemWrapperView> */}
-
-          {/* <ItemWrapperView>
-            <LabelText>Complexidade:</LabelText>
-            <RadioButtonView>
-              <RadioButtonTag onPress={() => setComplex(1)}>
-                <RadioButtonLabel>baixa</RadioButtonLabel>
-                <RadioButtonOuter>
-                  <RadioButtonInner1 switch={complex}/>
-                </RadioButtonOuter>
-              </RadioButtonTag>
-              <RadioButtonTag onPress={() => setComplex(2)}>
-                <RadioButtonLabel>média</RadioButtonLabel>
-                <RadioButtonOuter>
-                  <RadioButtonInner2 switch={complex}/>
-                </RadioButtonOuter>
-              </RadioButtonTag>
-              <RadioButtonTag onPress={() => setComplex(3)}>
-                <RadioButtonLabel>alta</RadioButtonLabel>
-                <RadioButtonOuter>
-                  <RadioButtonInner3 switch={complex}/>
-                </RadioButtonOuter>
-              </RadioButtonTag>
-              <RadioButtonTag onPress={() => setComplex(4)}>
-                <RadioButtonLabel>n/a</RadioButtonLabel>
-                <RadioButtonOuter>
-                  <RadioButtonInner4 switch={complex}/>
-                </RadioButtonOuter>
-              </RadioButtonTag>
-            </RadioButtonView>
-          </ItemWrapperView> */}
-
           <ItemWrapperView>
             <RadioButtonLabelText>Confirm with photo?</RadioButtonLabelText>
-            {/* <Options selectedValue={confirmPhoto} onValueChange={setConfirmPhoto}>
-              { confirmPhotoArray.map(t => (
-                <Options.Item key={t.id} label={t.tag} value={t.id}/>
-              ))}
-            </Options> */}
             <RadioButtonView>
               <RadioButtonTagConfirmPhoto onPress={() => setConfirmPhoto(1)}>
                 <RadioButtonLabel>Yes</RadioButtonLabel>
@@ -634,99 +539,6 @@ export default function TaskCreatePage({ navigation }) {
               <ButtonView onPress={handleToggleDates}>
                   <ButtonText>OK</ButtonText>
               </ButtonView>
-                {/* <LabelText>Due Date:</LabelText>
-                <DatesNumberWrapper>
-                  <DatesNumberView>
-                    <DatesText>Day</DatesText>
-                    <InputDate
-                      // autoFocus={true}
-                      keyboardType="number-pad"
-                      maxLength={2}
-                    />
-                  </DatesNumberView>
-                  <DatesIntersection1View>
-                    <DatesText></DatesText>
-                    <DatesText>/</DatesText>
-                  </DatesIntersection1View>
-                  <DatesNumberView>
-                    <DatesText>Month</DatesText>
-                    <InputDate
-                      keyboardType="number-pad"
-                      maxLength={2}
-                    />
-                  </DatesNumberView>
-                  <DatesIntersection1View>
-                    <DatesText></DatesText>
-                    <DatesText>/</DatesText>
-                  </DatesIntersection1View>
-                  <DatesIntersection2View>
-                    <DatesText></DatesText>
-                    <DatesText>20</DatesText>
-                  </DatesIntersection2View>
-                  <DatesNumberView>
-                    <DatesText>Year</DatesText>
-                    <InputDate
-                      keyboardType="number-pad"
-                      maxLength={2}
-                    />
-                  </DatesNumberView>
-                </DatesNumberWrapper>
-
-                <DatesNumberWrapper>
-                  <DatesButton>
-                    <DatesButtonText>Today</DatesButtonText>
-                  </DatesButton>
-                  <DatesButton>
-                    <DatesButtonText>Tomorrow</DatesButtonText>
-                  </DatesButton>
-                  <DatesButton>
-                    <DatesButtonText>Next Week</DatesButtonText>
-                  </DatesButton>
-                  <DatesButton>
-                    <DatesButtonText>Next Year</DatesButtonText>
-                  </DatesButton>
-                </DatesNumberWrapper>
-
-                <DatesNumberWrapper>
-                <DatesNumberView>
-                    <DatesText>Hour</DatesText>
-                    <InputDate
-                      keyboardType="number-pad"
-                      maxLength={2}
-                      returnKeyType='next'
-                    />
-                  </DatesNumberView>
-                  <DatesIntersection1View>
-                    <DatesText></DatesText>
-                    <DatesText>:</DatesText>
-                  </DatesIntersection1View>
-                  <DatesNumberView>
-                    <DatesText>Minutes</DatesText>
-                    <InputDate
-                      keyboardType="number-pad"
-                      maxLength={2}
-                    />
-                  </DatesNumberView>
-                  <DatesLabelView>
-                    <DatesText></DatesText>
-                    <DatesText>p.m.</DatesText>
-                  </DatesLabelView>
-                </DatesNumberWrapper>
-
-                <DatesNumberWrapper>
-                  <DatesButton2>
-                    <DatesButtonText>:00</DatesButtonText>
-                  </DatesButton2>
-                  <DatesButton2>
-                    <DatesButtonText>:15</DatesButtonText>
-                  </DatesButton2>
-                  <DatesButton2>
-                    <DatesButtonText>:30</DatesButtonText>
-                  </DatesButton2>
-                  <DatesButton2>
-                    <DatesButtonText>:45</DatesButtonText>
-                  </DatesButton2>
-                </DatesNumberWrapper> */}
 
               </CheckBoxWrapper>
             </ModalView>

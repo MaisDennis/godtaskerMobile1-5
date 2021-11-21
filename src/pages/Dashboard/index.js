@@ -32,9 +32,9 @@ import {
   UserImage, UserImageBackgroundView, UserInfoView,
   UserNameText, UserProfileView, UserView,
 } from './styles'
-import logo from '~/assets/detective/detective_remake.png'
+import logo from '~/assets/detective/detective_remake02.png'
 // import banner from '~/assets/detective/font_remake.png'
-import banner from '~/assets/detective/new_banner.png'
+import banner from '~/assets/detective/font_remake02.png'
 import api from '~/services/api';
 
 export default function Dashboard({ navigation }) {

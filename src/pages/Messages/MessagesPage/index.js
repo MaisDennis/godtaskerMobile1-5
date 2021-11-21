@@ -127,7 +127,7 @@ export default function MessagesPage({ navigation, route }) {
       </HeaderTabView> */}
       { messages == ''
         ? (
-          <Title>Não há conversas em aberto.</Title>
+          <Title>No Messages</Title>
         )
         : (
           <>

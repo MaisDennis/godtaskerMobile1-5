@@ -25,7 +25,7 @@ export const AcceptButtonView = styled.View`
   border-width: 1px;
   border-color: #1B2432;
   padding: 0 0 16px;
-  /* background-color: #333e; */
+  background-color: #fff;
 `;
 
 export const AlignCheckBoxView = styled.View`
@@ -95,14 +95,14 @@ export const ButtonView = styled(TouchableOpacity)`
   flex-direction: row;
   align-items: center;
   justify-content: center;
-  height: 40px;
+  height: 36px;
   width: 20%;
   text-align: center;
   margin: 0 auto;
   /* background: #f4f; */
 `;
 export const ButtonText = styled.Text`
-  font-size: 13px;
+  font-size: ${Platform.OS === 'ios' ? '15px' : '13px'};
   font-weight: bold;
   margin: auto;
   color: #fff;
@@ -442,7 +442,8 @@ export const TitleView = styled.View`
   /* background-color: #663333; */
 `;
 export const TaskIcon = styled(Icon)`
-  font-size: ${Platform.OS === 'ios' ? '20px' : '18px'};
+  /* font-size: ${Platform.OS === 'ios' ? '22px' : '20px'}; */
+  font-size: 20px;
   /* color: #000; */
   color: #18A0FB;
   /* background-color: #f00; */
@@ -481,13 +482,13 @@ export const TitleIcon = styled(Icon)`
 `;
 export const TitleText = styled.Text`
   font-weight: bold;
-  font-size: ${Platform.OS === 'ios' ? '18px' : '16px'};
+  font-size: ${Platform.OS === 'ios' ? '16px' : '14px'};
   color: #334466;
 `;
 
 export const TitleTextModal = styled.Text`
   font-weight: bold;
-  font-size: ${Platform.OS === 'ios' ? '18px' : '16px'};
+  font-size: ${Platform.OS === 'ios' ? '16px' : '14px'};
   width: auto;
   text-align: left;
   color: #334466;

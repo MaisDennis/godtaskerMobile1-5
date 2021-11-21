@@ -10,17 +10,21 @@ color: #18A0FB;
 `;
 
 export const BannerImage = styled.Image`
-  height: 100%;
-  width: 100px;
+  height: 60%;
+  /* width: 100px; */
+  width: 142px;
   margin: 0 auto;
   /* background: #f00; */
 `;
 
 export const BannerView = styled.View`
+  display: flex;
+  flex-direction: row;
+  align-items: center;
   height: 100%;
   width: 50%;
   border-radius: 4px;
-  padding: 4px 12px;
+  padding: 0 12px;
   margin: 0 auto;
   /* background-color: #ee3; */
 
@@ -118,7 +122,7 @@ export const BlockSmallWorker = styled.View`
 `;
 
 export const ButtonText = styled.Text`
-  font-size: 14px;
+  font-size: ${Platform.OS === 'ios' ? '15px' : '13px'};
   font-weight: bold;
   color: #fff;
 `;
@@ -147,8 +151,8 @@ export const ButtonView = styled(TouchableOpacity)`
   border-radius: 8px;
   margin: 8px auto;
   padding: 0 16px;
-  /* background-color: #1B2432; */
-  background-color: #18A0FB;
+  background-color: #1B2432;
+  /* background-color: #18A0FB; */
 `;
 
 export const Container = styled.SafeAreaView`
@@ -277,7 +281,7 @@ export const Input = styled.TextInput`
 
 export const Label = styled.Text`
   font-weight: bold;
-  font-size: ${Platform.OS === 'ios' ? '16px' : '14px'};
+  font-size: ${Platform.OS === 'ios' ? '14px' : '12px'};
   margin: 0;
   color: #1B2432;
   /* background-color: #4433ee; */

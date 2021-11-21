@@ -129,7 +129,7 @@ export const UpperTabSelectedView = styled(TouchableOpacity)`
   background-color: #1B2432;
 `;
 export const UpperTabSelectedText = styled.Text`
-  font-size: 12px;
+  font-size: ${Platform.OS === 'ios' ? '14px' : '12px'};
   font-weight: 700;
   color: #fff;
 `;

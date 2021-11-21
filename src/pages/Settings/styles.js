@@ -37,7 +37,7 @@ export const HeaderImage = styled.Image`
 
 export const NextIcon = styled(Icon)`
   padding: 0 16px;
-  color: #4433ee;
+  color: #18A0FB;
   /* background-color: #f00; */
 `;
 

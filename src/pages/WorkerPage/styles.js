@@ -57,15 +57,16 @@ export const FollowButton = styled(TouchableOpacity)`
   align-items: center;
   justify-content: center;
   width: 96px;
-  height: 32px;
+  height: 28px;
   border-radius: 16px;
-  margin: auto 8px;
+  margin: 4px 0;
   background-color: #18A0FB;
   /* background-color: #4433ee; */
 `;
 
 export const FollowText = styled.Text`
   font-weight: bold;
+  font-size: ${Platform.OS === 'ios' ? '14px' : '12px'};
   color: #fff;
 `;
 
@@ -75,17 +76,18 @@ export const FollowingButton = styled(TouchableOpacity)`
   align-items: center;
   justify-content: center;
   width: 96px;
-  height: 32px;
+  height: 28px;
   border-radius: 16px;
   border-width: 2px;
   border-color: #18A0FB;
-  margin: auto 0;
+  margin: 4px 0;
   background-color: #fff;
 
 `;
 
 export const FollowingText = styled.Text`
   font-weight: bold;
+  font-size: ${Platform.OS === 'ios' ? '14px' : '12px'};
   color: #18A0FB;
 `;
 
@@ -132,7 +134,7 @@ export const Iicon = styled(Icon)`
 
 export const Label = styled.Text`
   font-weight: bold;
-  font-size: ${Platform.OS === 'ios' ? '16px' : '14px'};
+  font-size: ${Platform.OS === 'ios' ? '14px' : '12px'};
   margin: 0;
   color: #1B2432;
   /* background-color: #4433ee; */

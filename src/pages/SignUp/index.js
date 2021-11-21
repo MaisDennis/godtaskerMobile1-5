@@ -213,7 +213,7 @@ export default function SignUp({ navigation, route }) {
               onChangeText={setBirthDate}
             />
             <GenderDiv>
-              <LabelText>Gender</LabelText>
+              <LabelText>Gender:</LabelText>
               <RadioButtonView>
                 <RadioButtonTag onPress={() => setGender('feminino')}>
                   <RadioButtonLabel>female</RadioButtonLabel>

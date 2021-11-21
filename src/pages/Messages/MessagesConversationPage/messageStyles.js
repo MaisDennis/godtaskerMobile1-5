@@ -32,12 +32,13 @@ export const ForwardOnTopView = styled.View`
   /* height: auto; */
   width: 100%;
   border-radius: 4px;
-  margin: 0 4px;
+  margin: 4px;
   padding: 0 4px;
   /* background-color: #f00; */
 `;
 export const ForwardText = styled.Text`
   font-style: italic;
+  font-size: ${Platform.OS === 'ios' ? '14px' : '12px'};
   margin-left: 4px;
   color: #666;
 `;
@@ -126,16 +127,17 @@ color: #666;
 export const MessageListButton = styled(TouchableOpacity)`
   display: flex;
   flex-direction: row;
-  height: 36px;
-  padding: 0 4px;
-  margin: 4px 0;
+  height: 32px;
+  /* padding: 0 4px; */
+  margin: 4px;
   /* background-color: #f44; */
 `;
 export const MessageListItemText = styled.Text`
 font-weight: bold;
-color: #18A0FB;
 text-align: left;
+font-size: ${Platform.OS === 'ios' ? '14px' : '12px'};
 margin: 0 auto;
+color: #18A0FB;
 `;
 export const MessageListItemView = styled.View`
   display: flex;

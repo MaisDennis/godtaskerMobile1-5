@@ -13,7 +13,7 @@ export const AlignView = styled.View`
 `;
 
 export const ButtonText = styled.Text`
-font-size: 16px;
+font-size: ${Platform.OS === 'ios' ? '16px' : '14px'};
 font-weight: bold;
 /* background: #999; */
 color: #fff;
@@ -64,14 +64,17 @@ export const FormWorker = styled(KeyboardAvoidingView)`
 `;
 
 export const ImageLogo = styled.Image`
-  width: 102px;
-  height: 98px;
-  margin: auto;
+  /* width: 102px; */
+  width: 75px;
+  /* height: 98px; */
+  height: 70px;
+  margin: 4px auto;
 `;
 
 export const ImageGodtaskerFont = styled.Image`
   width: 210px;
-  height: 72px;
+  /* height: 72px; */
+  height: 38px;
   margin: 12px auto 12px;
 `;
 
@@ -80,9 +83,9 @@ font-size: 16px;
 /* font-weight: bold; */
 width: 340px;
 text-align: center;
-margin: 24px auto 0;
+margin: 14px auto 10px;
 /* background: #999; */
-color: #000;
+color: #1B2432;
 `;
 
 export const PhoneMask = styled(InputMask)`
@@ -92,10 +95,10 @@ export const PhoneMask = styled(InputMask)`
   /* border-top-left-radius: 8px;
   border-top-right-radius: 8px; */
   border-width: 1px;
-  border-color: #000;
+  border-color: #1B2432;
   padding-left: 12px;
   margin: 8px auto;
-  color: #000;
+  color: #1B2432;
   background-color: #ddd;
 `;
 
@@ -106,27 +109,22 @@ export const SubmitButton = styled(TouchableOpacity)`
   justify-content: center;
   height: 44px;
   width: 80%;
-  /* border-bottom-left-radius: 8px;
-  border-bottom-right-radius: 8px; */
   border-radius: 8px;
   margin: 8px auto 0;
-  background-color: #000;
-  /* width: 148px; */
-  /* width: 50%; */
+  background-color: #1B2432;
 `;
 
 export const SignUpButton = styled(Button)`
   height: 44px;
   width: 80%;
   border-radius: 8px;
-  /* margin: 32px auto; */
   padding: 0 16px;
   margin-top: 8px;
   background-color: #18A0FB;
 `;
 
 export const SignUpText = styled.Text`
-  font-size: 16px;
+  font-size: ${Platform.OS === 'ios' ? '16px' : '14px'};
   font-weight: bold;
   color: #fff;
   /* color: #44ccee; */
@@ -140,11 +138,11 @@ export const StyledScrollView = styled.ScrollView`
 export const Title = styled.Text`
 font-size: 16px;
 /* font-weight: bold; */
-width: 340px;
+max-width: 64%;
 text-align: center;
 margin: 8px auto;
 /* background: #999; */
-color: #000;
+color: #1B2432;
 `;
 
 export const Wrapper = styled.View`

@@ -47,8 +47,8 @@ export const LastMessageText = styled.Text`
 
 export const LastMessageTimeText = styled.Text`
   font-size: ${Platform.OS === 'ios' ? '11px' : '9px'};
-  font-weight: bold;
-  color: #000;
+  /* font-weight: bold; */
+  color: #666;
 `;
 
 export const LastMessageTimeView = styled.View`

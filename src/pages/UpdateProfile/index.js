@@ -11,7 +11,7 @@ import {
   Container,
   Form, FormInput,
   GenderDiv,
-  ImageWrapper,
+  ImageWrapper, IosKeyboardAvoidingView,
   LabelText,
   // Options,
   PhoneMask,
@@ -112,6 +112,10 @@ export default function UpdateProfile({ navigation, route }) {
   return (
     // <Background>
       <Container>
+        <IosKeyboardAvoidingView
+          behavior={Platform.OS === "ios" ? "padding" : null}
+          keyboardVerticalOffset = {Platform.OS === "ios" ? "70" : null}
+        >
         <Form contentContainerStyle={{ alignItems: 'center' }}>
         <AllIcon name='user'/>
           <ImageWrapper>
@@ -153,7 +157,7 @@ export default function UpdateProfile({ navigation, route }) {
           <FormInput
             autoCorrect={false}
             autoCapitalize="none"
-            placeholder="Nome"
+            placeholder="Name"
             placeholderTextColor="#999"
             returnKeyType="next"
             value={firstName}
@@ -162,7 +166,7 @@ export default function UpdateProfile({ navigation, route }) {
           <FormInput
             autoCorrect={false}
             autoCapitalize="none"
-            placeholder="Sobrenome"
+            placeholder="Last Name"
             placeholderTextColor="#999"
             // onSubmitEditing={() => userNameRef.current.focus()}
             value={lastName}
@@ -172,7 +176,7 @@ export default function UpdateProfile({ navigation, route }) {
           <FormInput
             autoCorrect={false}
             autoCapitalize="none"
-            placeholder="Nome de usuário"
+            placeholder="User Name"
             placeholderTextColor="#999"
             // onSubmitEditing={() => passwordRef.current.focus()}
             value={userName}
@@ -187,23 +191,13 @@ export default function UpdateProfile({ navigation, route }) {
             options={{
               format: 'DD/MM/YYYY',
             }}
-            placeholder="Data de nascimento (DD/MM/YYYY)"
+            placeholder="Birthdate (DD/MM/YYYY)"
             placeholderTextColor="#999"
             returnKeyType="next"
             value={birthDate}
             onChangeText={setBirthDate}
             // ref={birthDateRef}
           />
-
-          {/* <Options
-            selectedValue={gender}
-            onValueChange={setGender}
-            placeholder="Gênero"
-          >
-            { genderOptions.map(g => (
-              <Options.Item key={g} label={g} value={g}/>
-            ))}
-          </Options> */}
           <FormInput
             keboardType="email-address"
             autoCorrect={false}
@@ -216,16 +210,16 @@ export default function UpdateProfile({ navigation, route }) {
             // ref={emailRef}
           />
           <GenderDiv>
-            <LabelText>Gênero</LabelText>
+            <LabelText>Gender:</LabelText>
             <RadioButtonView>
               <RadioButtonTag onPress={() => setGender('feminino')}>
-                <RadioButtonLabel>fem.</RadioButtonLabel>
+                <RadioButtonLabel>female</RadioButtonLabel>
                 <RadioButtonOuter>
                   <RadioButtonInner1 switch={gender}/>
                 </RadioButtonOuter>
               </RadioButtonTag>
               <RadioButtonTag onPress={() => setGender('masculino')}>
-                <RadioButtonLabel>masc.</RadioButtonLabel>
+                <RadioButtonLabel>male</RadioButtonLabel>
                 <RadioButtonOuter>
                   <RadioButtonInner2 switch={gender}/>
                 </RadioButtonOuter>
@@ -237,7 +231,7 @@ export default function UpdateProfile({ navigation, route }) {
                 </RadioButtonOuter>
               </RadioButtonTag>
               <RadioButtonTag onPress={() => setGender('outro')}>
-                <RadioButtonLabel>outro</RadioButtonLabel>
+                <RadioButtonLabel>other</RadioButtonLabel>
                 <RadioButtonOuter>
                   <RadioButtonInner4 switch={gender}/>
                 </RadioButtonOuter>
@@ -248,7 +242,7 @@ export default function UpdateProfile({ navigation, route }) {
           <AllIcon name='unlock'/>
           <FormInput
             secureTextEntry
-            placeholder="Sua antiga senha"
+            placeholder="Old password"
             placeholderTextColor="#999"
             returnKeyType="send"
             // onSubmitEditing={() => confirmPasswordRef.current.focus()}
@@ -258,7 +252,7 @@ export default function UpdateProfile({ navigation, route }) {
           />
           <FormInput
             secureTextEntry
-            placeholder="Sua nova senha"
+            placeholder="New password"
             placeholderTextColor="#999"
             returnKeyType="send"
             // onSubmitEditing={() => confirmPasswordRef.current.focus()}
@@ -268,7 +262,7 @@ export default function UpdateProfile({ navigation, route }) {
           />
           <FormInput
             secureTextEntry
-            placeholder="Confirmar a nova senha"
+            placeholder="Confirmar new password"
             placeholderTextColor="#999"
             returnKeyType="send"
             onSubmitEditing={handleSubmit}
@@ -280,11 +274,11 @@ export default function UpdateProfile({ navigation, route }) {
             <SignUpErrorText>{signUpError}</SignUpErrorText>
           )}
           <SubmitButton onPress={handleSubmit}>
-            <ButtonText>Enviar</ButtonText>
+            <ButtonText>Send</ButtonText>
           </SubmitButton>
 
         </Form>
-
+        </IosKeyboardAvoidingView>
       </Container>
     // </Background>
   );

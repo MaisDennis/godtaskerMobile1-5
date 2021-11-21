@@ -4,9 +4,9 @@ import { useDispatch, useSelector } from 'react-redux';
 import { signInRequest } from '~/store/modules/auth/actions';
 import Background from '~/components/Background';
 // import logo from '~/assets/detective/detectiveBlack.png';
-import logo from '~/assets/detective/detective_remake.png'
+import logo from '~/assets/detective/detective_remake02.png'
 // import godtaskerFont from '~/assets/detective/godtaskerFontPlainGreySmall.png';
-import godtaskerFont from '~/assets/detective/font_remake.png';
+import godtaskerFont from '~/assets/detective/font_remake02.png';
 import {
   AlignView,
   ButtonText,

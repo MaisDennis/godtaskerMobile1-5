@@ -7,11 +7,6 @@ import {
 } from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
 
-export const TestList = styled(FlatList)`
-  height: 300px;
-  background-color: #333;
-`;
-
 export const Container = styled(SafeAreaView)`
   display: flex;
   flex-direction: column;
@@ -129,6 +124,7 @@ export const TemporaryMessageContainer = styled.View`
   width: 100%;
   padding: 8px;
   background-color: #f5f5f5;
+  /* background-color: #f5f; */
 `;
 export const TemporaryMessageView = styled.View`
   display: flex;
@@ -144,14 +140,14 @@ export const TemporaryMessageView = styled.View`
   /* background-color: #f00; */
 `;
 export const TemporaryMessageText = styled.Text`
-  color: #1B2432;
+  color: #999;
   text-align: left;
   margin: 0 auto;
 `;
 
 export const TemporaryMessageIcon = styled(Icon)`
-  font-size: 21px;
-  color: #AE1919;
+  font-size: 24px;
+  color: #f64C75;
   /* background-color: #fff; */
 `;
 export const TemporaryMessageIconView = styled.View`

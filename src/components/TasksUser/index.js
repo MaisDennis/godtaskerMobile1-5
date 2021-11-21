@@ -9,6 +9,7 @@ import firestore from '@react-native-firebase/firestore';
 import pt from 'date-fns/locale/pt';
 // -----------------------------------------------------------------------------
 import {
+  AcceptButtonView, ModalText, ButtonWrapper, AcceptButton, RejectButton,
   AlignDetailsView, AlignCheckBoxView,
   BackButton,
   BodyView, BodyWrapper, ButtonView, BottomHeaderView,
@@ -35,7 +36,7 @@ import { updateChatInfo } from '~/store/modules/message/actions';
 import api from '~/services/api';
 // import message from '../../store/modules/message/reducer';
 // -----------------------------------------------------------------------------
-const taskAttributesArray = [ 'baixa', 'média', 'alta', '-']
+const taskAttributesArray = [ 'low', 'medium', 'high', '-']
 const formattedDate = fdate =>
   fdate == null
     ? '-'
@@ -47,21 +48,23 @@ const formattedDateTime = fdate =>
     : format(parseISO(fdate), "dd'-'MMM'-'yyyy HH:mm", { locale: pt });
 
 export default function TaskUser({ data, navigation, taskConditionIndex }) {
-  console.log(data)
+  // console.log(data)
   const dispatch = useDispatch();
   const updated_tasks = useSelector( state => state.task.tasks)
 
   const user_id = data.user.id;
   const worker_id = data.worker.id;
 
-  const workerData = data.worker
-  const userData = data.user
+  const workerData = data.worker;
+  const userData = data.user;
   const dueDate = parseISO(data.due_date);
   const endDate = parseISO(data.end_date);
-  const subTasks = data.sub_task_list
+  const subTasks = data.sub_task_list;
+  const confirmPhoto = data.confirm_photo;
 
   const [toggleTask, setToggleTask] = useState();
   const [toggleCheckBox, setToggleCheckBox] = useState(false)
+  const [toggleDeleteModal, setToggleDeleteModal] = useState();
   const [statusResult, setStatusResult] = useState(0);
   const [messageBell, setMessageBell] = useState();
 
@@ -209,13 +212,30 @@ export default function TaskUser({ data, navigation, taskConditionIndex }) {
   }
 
   function handleReviveTask() {
-    // api.put(`tasks/${data.id}`);
+    api.put(`tasks/${data.id}/revive`, {
+      status: {
+        "status": 1,
+        "comment": new Date(),
+      }
+    });
     setToggleTask(!toggleTask)
     dispatch(updateTasks(new Date()));
   }
 
   function handleCancelTask() {
     // api.delete(`tasks/${data.id}`);
+    api.put(`tasks/${data.id}/cancel`, {
+      status: {
+        "status": 3,
+        "comment": new Date(),
+      }
+    })
+    setToggleTask(!toggleTask)
+    dispatch(updateTasks(new Date()));
+  }
+
+  function handleDeleteTask() {
+    api.delete(`tasks/${data.id}`);
     setToggleTask(!toggleTask)
     dispatch(updateTasks(new Date()));
   }
@@ -430,7 +450,15 @@ export default function TaskUser({ data, navigation, taskConditionIndex }) {
               <DetailsView>
                 <TagView>
                   <Label>Confirmation with photograph?</Label>
-                  <ToText>Sim</ToText>
+                  { confirmPhoto
+                    ? (
+                      <ToText>Yes</ToText>
+                    )
+                    : (
+                      <ToText>No</ToText>
+                    )
+
+                  }
                 </TagView>
               </DetailsView>
             </AlignDetailsView>
@@ -490,10 +518,9 @@ export default function TaskUser({ data, navigation, taskConditionIndex }) {
               }
               { taskConditionIndex === 3
                 ? (
-                  <ButtonView>
+                  <ButtonView onPress={() => setToggleDeleteModal(!toggleDeleteModal)}>
                     <TaskIcon
                       name="trash-2"
-                      style={{color: '#ccc'}}
                     />
                   </ButtonView>
                 )
@@ -516,6 +543,26 @@ export default function TaskUser({ data, navigation, taskConditionIndex }) {
               </BackButton>
             </DescriptionView>
           </FormScrollView>
+        </ModalView>
+      </Modal>
+
+      <Modal isVisible={toggleDeleteModal}>
+        <ModalView>
+          <AcceptButtonView>
+            <ModalText>Permanently delete this task?</ModalText>
+            <ButtonWrapper>
+              <ButtonView onPress={handleDeleteTask}>
+                <AcceptButton>
+                  <ButtonText>Yes</ButtonText>
+                </AcceptButton>
+              </ButtonView>
+              <ButtonView onPress={() => setToggleDeleteModal(!toggleDeleteModal)}>
+                <RejectButton>
+                <ButtonText>Back</ButtonText>
+                </RejectButton>
+              </ButtonView>
+            </ButtonWrapper>
+          </AcceptButtonView>
         </ModalView>
       </Modal>
     </Container>

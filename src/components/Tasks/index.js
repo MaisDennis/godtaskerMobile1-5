@@ -38,7 +38,7 @@ import { updateTasks } from '~/store/modules/task/actions';
 import { updateChatInfo } from '~/store/modules/message/actions';
 import api from '~/services/api';
 // -----------------------------------------------------------------------------
-const taskAttributesArray = [ 'baixa', 'média', 'alta', '-']
+const taskAttributesArray = [ 'low', 'medium', 'high', '-']
 const formattedDate = fdate =>
   fdate == null
     ? '-'
@@ -50,17 +50,18 @@ const formattedDateTime = fdate =>
     : format(parseISO(fdate), "MMM'-'dd'-'yyyy HH:mm", { locale: enUS });
 
 export default function Task({ data, navigation, taskConditionIndex }) {
-  console.log(data)
+  // console.log(data)
   const dispatch = useDispatch();
 
   const user_id = data.user.id;
   const worker_id = data.worker.id;
   const task_id = data.id;
-  const userData = data.user
-  const workerData = data.worker
+  const userData = data.user;
+  const workerData = data.worker;
   const dueDate = parseISO(data.due_date);
   const endDate = parseISO(data.end_date);
-  const subTasks = data.sub_task_list
+  const subTasks = data.sub_task_list;
+  const confirmPhoto = data.confirm_photo;
 
   const [toggleTask, setToggleTask] = useState();
   const [toggleModal, setToggleModal] = useState(false);
@@ -577,7 +578,16 @@ export default function Task({ data, navigation, taskConditionIndex }) {
               <DetailsView>
                 <TagView>
                   <Label>Confirmation with photograph?</Label>
-                  <ToText>Sim</ToText>
+                  { confirmPhoto
+                    ? (
+                      <ToText>Yes</ToText>
+                    )
+                    : (
+                      <ToText>No</ToText>
+                    )
+
+                  }
+
                 </TagView>
               </DetailsView>
             </AlignDetailsView>
@@ -652,23 +662,23 @@ export default function Task({ data, navigation, taskConditionIndex }) {
             </DescriptionView>
 
             <Modal isVisible={toggleConfirmModal}>
-            <ModalView>
-              <AcceptButtonView>
-                <ModalText>Confirm and end this task?</ModalText>
-                <ButtonWrapper>
-                  <ButtonView onPress={() => setToggleConfirmModal(!toggleConfirmModal)}>
-                    <RejectButton>
-                      <ButtonText>Back</ButtonText>
-                    </RejectButton>
-                  </ButtonView>
-                  <ButtonView onPress={handleConfirmWithoutPhoto}>
-                    <AcceptButton>
-                      <ButtonText>Yes</ButtonText>
-                    </AcceptButton>
-                  </ButtonView>
+              <ModalView>
+                <AcceptButtonView>
+                  <ModalText>Confirm and end this task?</ModalText>
+                  <ButtonWrapper>
+                    <ButtonView onPress={() => setToggleConfirmModal(!toggleConfirmModal)}>
+                      <RejectButton>
+                        <ButtonText>Back</ButtonText>
+                      </RejectButton>
+                    </ButtonView>
+                    <ButtonView onPress={handleConfirmWithoutPhoto}>
+                      <AcceptButton>
+                        <ButtonText>Yes</ButtonText>
+                      </AcceptButton>
+                    </ButtonView>
 
-                </ButtonWrapper>
-              </AcceptButtonView>
+                  </ButtonWrapper>
+                </AcceptButtonView>
               </ModalView>
             </Modal>
 
