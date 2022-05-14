@@ -1,13 +1,10 @@
 import 'react-native-gesture-handler';
 import * as React from 'react';
 import { useSelector } from 'react-redux';
-import { NavigationContainer } from '@react-navigation/native';
+import { NavigationContainer, DarkTheme } from '@react-navigation/native';
 import { createStackNavigator, TransitionPresets } from '@react-navigation/stack';
+import { useTranslation } from 'react-i18next';
 // -----------------------------------------------------------------------------
-import Confirm from './pages/Confirm';
-import ContactCreate from './pages/Contacts/ContactCreatePage';
-import ContactEdit from './pages/Contacts/ContactEditPage';
-import ContactTasks from './pages/Contacts/ContactTasksPage';
 import Follow from './pages/Contacts/FollowPage';
 import Followed from './pages/Contacts/FollowedPage';
 
@@ -16,18 +13,21 @@ import HeaderMessageConversationView from './components/HeaderMessageConversatio
 
 import MessagesConversationPage from './pages/Messages/MessagesConversationPage/index';
 
+import ServiceCreate from './pages/Services/ServiceCreatePage';
+import ServiceDisplay from './pages/Services/ServiceDisplayPage';
+import ServiceEdit from './pages/Services/ServiceEditPage';
+import ServiceSend from './pages/Services/ServiceSendPage';
+import ServiceWorkerSend from './pages/Services/ServiceWorkerSendPage';
+
 import Settings from '~/pages/Settings';
-import SignInPhone from './pages/SignInPhone';
 import SignIn from './pages/SignIn';
 import SignUp from './pages/SignUp';
 
 import TabRoutes from '~/components/TabRoutes';
-// import TestPage from './pages/TestPage';
 import TaskCreate from './pages/Tasks/TaskCreatePage';
 import TaskEdit from './pages/Tasks/TaskEditPage';
 
 import UpdateProfile from './pages/UpdateProfile';
-// import UpdateProfilePhoto from './pages/UpdateProfilePhoto';
 
 import WorkerPage from './pages/WorkerPage';
 
@@ -35,32 +35,30 @@ import WorkerPage from './pages/WorkerPage';
 // -----------------------------------------------------------------------------
 const Stack = createStackNavigator();
 const headerBackVisible = false;
-const headerHeight = Platform.OS === 'ios' ? 70 : 42;
-const headerMessageConversationHeight = Platform.OS === 'ios' ? 80 : 60;
+const headerHeight = Platform.OS === 'ios' ? 60 : 42;
+const headerMessageConversationHeight = Platform.OS === 'ios' ? 70 : 60;
 const headerBackFontSize = 12;
 // -----------------------------------------------------------------------------
 export default function App() {
+  const {t, i18n} = useTranslation()
   const signed = useSelector(state => state.auth.signed);
   const userData = useSelector(state => state.message.userData);
   const workerData = useSelector(state => state.message.workerData);
-  console.log(userData)
+  const inverted = useSelector(state => state.message.inverted);
+  // console.log(workerData)
   // -----------------------------------------------------------------------------
   return (
-    <NavigationContainer>
+    <NavigationContainer
+      // theme={DarkTheme}
+    >
       <Stack.Navigator
-        initialRouteName={signed === true ? 'Home' : 'SignIn'}
+        initialRouteName={signed ? 'Home' : 'SignIn'}
         // initialRouteName={'SignIn'}
         screenOptions={{
           headerTitleAlign: "center",
           ...TransitionPresets.ModalTransition,
         }}
       >
-      <Stack.Screen name="SignInPhone" component={SignInPhone}
-        options={{
-          title: 'Entrar',
-          headerShown: false,
-        }}
-      />
       <Stack.Screen name="SignIn" component={SignIn}
         options={{
           title: 'Entrar',
@@ -84,24 +82,114 @@ export default function App() {
           },
         }}
       />
-      {/* <Stack.Screen name="TestPage" component={TestPage}
-        options={{
-          title: 'Entrar',
-          headerShown: false,
-        }}
-      /> */}
       <Stack.Screen
         name="Home"
-        component={TabRoutes}
+        // component={signed && !userData.first_name ? SignUp03 : TabRoutes}
+        component={TabRoutes }
         options={{
           headerShown: false,
+        }}
+      />
+      <Stack.Screen
+        name="ServiceCreate"
+        component={ServiceCreate}
+        options={{
+          headerTitle: (() => (<HeaderView data={'Create Saved Task'}/>)),
+          headerShown: true,
+          headerStyle: {
+            height: headerHeight,
+            backgroundColor: '#fff',
+          },
+          headerBackTitleVisible: headerBackVisible,
+          headerBackTitle: "Back",
+          headerBackTitleStyle: {
+            fontSize: headerBackFontSize,
+            marginLeft: 8,
+            color: '#4433ee',
+          },
+        }}
+      />
+      <Stack.Screen
+        name="ServiceDisplay"
+        component={ServiceDisplay}
+        options={{
+          headerTitle: (() => (<HeaderView data={'Offer this Service'}/>)),
+          headerShown: true,
+          headerStyle: {
+            height: headerHeight,
+            backgroundColor: '#fff',
+          },
+          headerBackTitleVisible: headerBackVisible,
+          headerBackTitle: "Back",
+          headerBackTitleStyle: {
+            fontSize: headerBackFontSize,
+            marginLeft: 8,
+            color: '#4433ee',
+          },
+        }}
+      />
+      <Stack.Screen
+        name="ServiceEdit"
+        component={ServiceEdit}
+        options={{
+          headerTitle: (() => (<HeaderView data={'Edit Saved Task'}/>)),
+          headerShown: true,
+          headerStyle: {
+            height: headerHeight,
+            backgroundColor: '#fff',
+          },
+          headerBackTitleVisible: headerBackVisible,
+          headerBackTitle: "Back",
+          headerBackTitleStyle: {
+            fontSize: headerBackFontSize,
+            marginLeft: 8,
+            color: '#4433ee',
+          },
+        }}
+      />
+      <Stack.Screen
+        name="ServiceSend"
+        component={ServiceSend}
+        options={{
+          headerTitle: (() => (<HeaderView data={'Send Task'}/>)),
+          headerShown: true,
+          headerStyle: {
+            height: headerHeight,
+            backgroundColor: '#fff',
+          },
+          headerBackTitleVisible: headerBackVisible,
+          headerBackTitle: "Back",
+          headerBackTitleStyle: {
+            fontSize: headerBackFontSize,
+            marginLeft: 8,
+            color: '#4433ee',
+          },
+        }}
+      />
+      <Stack.Screen
+        name="ServiceWorkerSend"
+        component={ServiceWorkerSend}
+        options={{
+          headerTitle: (() => (<HeaderView data={'Hire this Service'}/>)),
+          headerShown: true,
+          headerStyle: {
+            height: headerHeight,
+            backgroundColor: '#fff',
+          },
+          headerBackTitleVisible: headerBackVisible,
+          headerBackTitle: "Back",
+          headerBackTitleStyle: {
+            fontSize: headerBackFontSize,
+            marginLeft: 8,
+            color: '#4433ee',
+          },
         }}
       />
       <Stack.Screen
         name="TaskCreate"
         component={TaskCreate}
         options={{
-          headerTitle: (() => (<HeaderView data={'Create Task'}/>)),
+          headerTitle: (() => (<HeaderView data={t('CreateTask')}/>)),
           headerShown: true,
           headerStyle: {
             height: headerHeight,
@@ -120,26 +208,7 @@ export default function App() {
         name="TaskEdit"
         component={TaskEdit}
         options={{
-          headerTitle: (() => (<HeaderView data={'Edit Task'}/>)),
-          headerShown: true,
-          headerStyle: {
-            height: headerHeight,
-            backgroundColor: '#fff',
-          },
-          headerBackTitleVisible: headerBackVisible,
-          headerBackTitle: "Back",
-          headerBackTitleStyle: {
-            fontSize: headerBackFontSize,
-            marginLeft: 8,
-            color: '#4433ee',
-          },
-        }}
-      />
-      <Stack.Screen
-        name="Confirm"
-        component={Confirm}
-        options={{
-          headerTitle: (() => (<HeaderView data={'Confirm Task'}/>)),
+          headerTitle: (() => (<HeaderView data={t('EditTask')}/>)),
           headerShown: true,
           headerStyle: {
             height: headerHeight,
@@ -158,7 +227,7 @@ export default function App() {
         name="Settings"
         component={Settings}
         options={{
-          headerTitle: (() => (<HeaderView data={'Settings'}/>)),
+          headerTitle: (() => (<HeaderView data={t('Settings')}/>)),
           headerShown: true,
           headerStyle: {
             height: headerHeight,
@@ -177,7 +246,7 @@ export default function App() {
         name="Followed"
         component={Followed}
         options={{
-          headerTitle: (() => (<HeaderView data={'Followers'}/>)),
+          headerTitle: (() => (<HeaderView data={t('Followers')}/>)),
           headerShown: true,
           headerStyle: {
             height: headerHeight,
@@ -196,7 +265,7 @@ export default function App() {
         name="Follow"
         component={Follow}
         options={{
-          headerTitle: (() => (<HeaderView data={'Followers'}/>)),
+          headerTitle: (() => (<HeaderView data={t('Following')}/>)),
           headerShown: true,
           headerStyle: {
             height: headerHeight,
@@ -215,7 +284,7 @@ export default function App() {
         name="WorkerPage"
         component={WorkerPage}
         options={{
-          headerTitle: (() => (<HeaderView data={'Worker Profile'}/>)),
+          headerTitle: (() => (<HeaderView data={t('ContactProfile')}/>)),
           headerShown: true,
           headerStyle: {
             height: headerHeight,
@@ -231,30 +300,11 @@ export default function App() {
         }}
       />
       <Stack.Screen
-        name="ContactCreate"
-        component={ContactCreate}
-        options={{
-          headerTitle: (() => (<HeaderView data={'Adicionar um contato'}/>)),
-            headerShown: true,
-            headerStyle: {
-              height: headerHeight,
-              backgroundColor: '#fff',
-            },
-            headerBackTitleVisible: headerBackVisible,
-            headerBackTitle: "Back",
-            headerBackTitleStyle: {
-              fontSize: headerBackFontSize,
-              marginLeft: 8,
-              color: '#4433ee',
-            },
-          }}
-        />
-      <Stack.Screen
         name="MessagesConversationPage"
         component={MessagesConversationPage}
         options={{
           headerTitle: (() => (
-            <HeaderMessageConversationView data={userData}/>
+            <HeaderMessageConversationView data={{userData, workerData, inverted}}/>
           )),
           headerShown: true,
           headerStyle: {
@@ -289,44 +339,6 @@ export default function App() {
           },
         }}
       />
-            {/* <Stack.Screen
-        name="ContactEdit"
-        component={ContactEdit}
-        options={{
-          headerTitle: (() => (<HeaderView data={'Editar contato'}/>)),
-          headerShown: true,
-          headerStyle: {
-            height: headerHeight,
-            backgroundColor: '#fff',
-          },
-          headerBackTitleVisible: headerBackVisible,
-          headerBackTitle: "Back",
-          headerBackTitleStyle: {
-            fontSize: headerBackFontSize,
-            marginLeft: 8,
-            color: '#4433ee',
-          },
-        }}
-      />
-      <Stack.Screen
-        name="ContactTasks"
-        component={ContactTasks}
-        options={{
-          headerTitle: (() => (<HeaderView data={'Tarefas do contato'}/>)),
-          headerShown: true,
-          headerStyle: {
-            height: headerHeight,
-            backgroundColor: '#fff',
-          },
-          headerBackTitleVisible: headerBackVisible,
-          headerBackTitle: "Back",
-          headerBackTitleStyle: {
-            fontSize: headerBackFontSize,
-            marginLeft: 8,
-            color: '#4433ee',
-          },
-        }}
-      /> */}
       </Stack.Navigator>
     </NavigationContainer>
   )

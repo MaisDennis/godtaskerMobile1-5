@@ -1,4 +1,4 @@
-import { Platform, ScrollView, TouchableOpacity, SafeAreaView } from 'react-native';
+import { KeyboardAvoidingView, Platform, ScrollView, TouchableOpacity, SafeAreaView } from 'react-native';
 import styled from 'styled-components/native';
 import { TextInputMask as InputMask } from 'react-native-masked-text'
 import Icon from 'react-native-vector-icons/Feather';
@@ -51,7 +51,7 @@ export const EyeIcon = styled(Icon)`
   /* background-color: #44ccee; */
 `;
 
-export const Form = styled.ScrollView`
+export const Form = styled(KeyboardAvoidingView)`
   display: flex;
   flex-direction: column;
   width: 100%;

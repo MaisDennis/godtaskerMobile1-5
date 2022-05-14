@@ -1,13 +1,15 @@
 import React, { useState, useEffect } from 'react';
-import { TouchableOpacity } from 'react-native'
+import { TouchableOpacity, View } from 'react-native'
 import { useSelector } from 'react-redux';
 import { format } from 'date-fns';
 import pt from 'date-fns/locale/pt';
+import { useTranslation } from 'react-i18next';
 // -----------------------------------------------------------------------------
 import Task from '~/components/Tasks';
 import api from '~/services/api';
 import HeaderView from '~/components/HeaderView';
 import logo from '~/assets/detective/detective_remake.png'
+import SearchBar from '~/components/Searchbar'
 import {
   AddIcon,
   Container,
@@ -15,12 +17,14 @@ import {
   Header, HeaderImage, HeaderTabView, HeaderTouchable,
   SearchBarTextInput, SpaceView,
   Title, TitleNumber,
-  UpperTabView, UpperTabText, UpperTabSelectedView, UpperTabSelectedText,
+  UpperTabView, UpperTabText, UpperTabSelectedView, UpperTabSelectedText, UpperTabSelectedBarView
 } from './styles';
 // -----------------------------------------------------------------------------
-export default function Dashboard({ navigation }) {
+export default function TaskPage({ navigation }) {
+  const { t, i18n } = useTranslation();
   const [tasks, setTasks] = useState([]);
   const [listState, setListState] = useState(1);
+  const [searchInputState, setSearchInputState] = useState('');
   const [taskConditionIndex, setTaskConditionIndex] = useState();
 
   const workerID = useSelector(state => state.worker.profile.id);
@@ -30,33 +34,49 @@ export default function Dashboard({ navigation }) {
     ? '-'
     : format(fdate, "dd 'de' MMMM',' yyyy", { locale: pt });
   const todayDate = formattedDate(new Date())
+  // const Tab = createMaterialTopTabNavigator();
 
   useEffect(() => {
-    loadTasks();
+    loadTasks('');
   }, [ update_tasks ]);
 
-  async function loadTasks() {
+  async function loadTasks(nameFilter) {
+    setSearchInputState(nameFilter)
     setListState(1);
     let response = await api.get(`tasks/unfinished`, {
-      params: { workerID },
+      params: { workerID, nameFilter },
     });
     setTasks(response.data);
     setTaskConditionIndex(1);
   }
 
-  async function loadFinished() {
+  async function loadTasksRefresh() {
+    setSearchInputState('')
+    let nameFilter = '';
+    setListState(1);
+    setTasks(null)
+    let response = await api.get(`tasks/unfinished`, {
+      params: { workerID, nameFilter },
+    });
+    setTasks(response.data);
+    setTaskConditionIndex(1);
+  }
+
+  async function loadFinished(nameFilter) {
+    setSearchInputState(nameFilter)
     setListState(2);
     let response = await api.get(`tasks/finished`, {
-      params: { workerID }
+      params: { workerID, nameFilter }
     })
     setTasks(response.data);
     setTaskConditionIndex(2);
   }
 
-  async function loadCanceled() {
+  async function loadCanceled(nameFilter) {
+    setSearchInputState(nameFilter)
     setListState(3);
     let response = await api.get(`tasks/canceled`, {
-      params: { workerID }
+      params: { workerID, nameFilter }
     })
     setTasks(response.data);
     setTaskConditionIndex(3);
@@ -70,56 +90,87 @@ export default function Dashboard({ navigation }) {
             source={logo}
           />
         </SpaceView>
+        { listState === 1
+          ? (
+            <SearchBar
+              onChangeText={(input) => loadTasks(input)}
+              returnKeyType={'search'}
+              value={searchInputState}
+            />
+          )
+          : null
+        }
+        { listState === 2
+          ? (
+            <SearchBar
+              onChangeText={(input) => loadFinished(input)}
+              returnKeyType={'search'}
+              value={searchInputState}
+            />
+          )
+          : null
+        }
+                { listState === 3
+          ? (
+            <SearchBar
+              onChangeText={(input) => loadCanceled(input)}
+              returnKeyType={'search'}
+              value={searchInputState}
+            />
+          )
+          : null
+        }
 
-        <SearchBarTextInput
-          placeholder='Search'
-        />
-        <HeaderTouchable onPress={() => loadTasks()}>
+        <HeaderTouchable onPress={() => loadTasksRefresh()}>
           <AddIcon name='refresh-cw' size={20}/>
         </HeaderTouchable>
       </Header>
-
       <HeaderTabView>
         { listState === 1
           ? (
             <UpperTabSelectedView>
-              <UpperTabSelectedText>open</UpperTabSelectedText>
+              <UpperTabSelectedText>{t('LowerCaseOpen')}</UpperTabSelectedText>
+              <UpperTabSelectedBarView/>
             </UpperTabSelectedView>
+
           )
           : (
-            <UpperTabView onPress={() => loadTasks()}>
-              <UpperTabText>open</UpperTabText>
+            <UpperTabView onPress={() => loadTasks('')}>
+              <UpperTabText>{t('LowerCaseOpen')}</UpperTabText>
             </UpperTabView>
           )
         }
         { listState === 2
           ? (
             <UpperTabSelectedView>
-              <UpperTabSelectedText>finished</UpperTabSelectedText>
+              <UpperTabSelectedText>{t('LowerCaseFinished')}</UpperTabSelectedText>
+              <UpperTabSelectedBarView/>
             </UpperTabSelectedView>
           )
           : (
-            <UpperTabView onPress={() => loadFinished()}>
-              <UpperTabText>finished</UpperTabText>
+            <UpperTabView onPress={() => loadFinished('')}>
+              <UpperTabText>{t('LowerCaseFinished')}</UpperTabText>
             </UpperTabView>
           )
         }
         { listState === 3
           ? (
             <UpperTabSelectedView>
-              <UpperTabSelectedText>canceled</UpperTabSelectedText>
+              <UpperTabSelectedText>{t('LowerCaseCanceled')}</UpperTabSelectedText>
+              <UpperTabSelectedBarView/>
             </UpperTabSelectedView>
           )
           : (
-            <UpperTabView onPress={() => loadCanceled()}>
-              <UpperTabText>canceled</UpperTabText>
+            <UpperTabView onPress={() => loadCanceled('')}>
+              <UpperTabText>{t('LowerCaseCanceled')}</UpperTabText>
             </UpperTabView>
           )
         }
       </HeaderTabView>
+
       { tasks == ''
         ? (
-          <Title>No tasks with this status</Title>
+          <Title>{t('NoTasksWith')}</Title>
         )
         : (
           <List

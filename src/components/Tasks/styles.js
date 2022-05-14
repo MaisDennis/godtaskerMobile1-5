@@ -2,30 +2,20 @@ import styled from 'styled-components/native';
 import { TouchableOpacity } from 'react-native';
 import Icon from 'react-native-vector-icons/Feather';
 import LinearGradient from 'react-native-linear-gradient';
-import Button from '~/components/Button';
 
-export const AcceptButton = styled.View`
-  display: flex;
-  flex-direction:row;
-  align-items: center;
-  justify-content: center;
-  height: 36px;
-  width: 108px;
-  border-radius: 8px;
-  background-color: #18A0FB;
-`;
+const primaryFont = 'OpenSans-Bold';
+const secondaryFont = 'OpenSans-Regular';
 
 export const AcceptButtonView = styled.View`
   display: flex;
   flex-direction:column;
-  align-items: flex-start;
+  align-items: center;
   height: auto;
-  width: 85%;
-  border-radius: 8px;
-  border-width: 1px;
-  border-color: #1B2432;
-  padding: 0 0 16px;
-  background-color: #fff;
+  width: 90%;
+  border-width: 2px;
+  border-radius: 4px;
+  border-color: #999;
+  /* background-color: #f5f; */
 `;
 
 export const AlignCheckBoxView = styled.View`
@@ -33,29 +23,44 @@ export const AlignCheckBoxView = styled.View`
   flex-direction:column;
   align-items: flex-start;
   width: 100%;
+  /* border-width: 2px;
+  border-radius: 4px;
+  border-color: #999; */
   margin: ${Platform.OS === 'ios' ? '4px 0' : '0'};
-  /* background-color: #ee4; */
+  /* background-color: #eee; */
 `;
 
 export const AlignDetailsView = styled.View`
   display: flex;
   flex-direction:column;
   align-items: flex-start;
-  width: 80%;
+  width: 85%;
   /* background-color: #666; */
 `;
 
-export const BackButton = styled(TouchableOpacity)`
-  height: 36px;
-  /* width: 120px; */
-  width: 100%;
-  border-radius: 8px;
-  margin: 8px auto;
-  padding: 0 16px;
-  background-color: #403F4C;
+export const BackIcon = styled(Icon)`
+  padding-right: ${Platform.OS === 'ios' ? '0' : '4px'};
+  color: #18A0FB;
+  /* background-color: #f00; */
 `;
+
+export const BackIcon02 = styled(Icon)`
+height: auto;
+  color: #18A0FB;
+  
+`;
+
+export const BackText = styled.Text`
+  
+  font-weight: bold;
+  font-size: ${Platform.OS === 'ios' ? '14px' : '12px'};
+  margin: 0 auto;
+  color: #18A0FB;
+  /* background-color: #f00; */
+`;
+
 export const BellIcon = styled(Icon)`
-font-size: 24px;
+font-size: ${Platform.OS === 'ios' ? '26px' : '24px'};
 margin: auto 0;
 color: #1B2432;
 /* background-color: #ee2; */
@@ -71,73 +76,75 @@ export const BodyWrapper = styled.View`
   display: flex;
   flex-direction:column;
   align-items: center;
-  width: 80%;
-  margin: 0 auto;
+  width: auto;
+  margin: 0 16px;
   /* background-color: #f44; */
 `;
 
-export const ButtonIcon = styled(Icon)`
-font-size: 21px;
-padding: 4px;
-color: #4433ee;
-`;
 export const BottomHeaderView = styled.View`
   display: flex;
   flex-direction:row;
   align-items: center;
   justify-content: space-between;
   width: 100%;
-  margin: 8px auto 4px;
+  margin: 0px auto;
   /* background-color: #f44; */
 `;
-export const ButtonView = styled(TouchableOpacity)`
+
+export const ButtonForModal = styled(TouchableOpacity)`
   display: flex;
   flex-direction: row;
   align-items: center;
   justify-content: center;
-  height: 36px;
-  width: 20%;
-  text-align: center;
-  margin: 0 auto;
-  /* background: #f4f; */
+  height: 40px;
+  width: auto;
+  /* background-color: #f33; */
 `;
-export const ButtonText = styled.Text`
-  font-size: ${Platform.OS === 'ios' ? '15px' : '13px'};
-  font-weight: bold;
-  margin: auto;
-  color: #fff;
-  /* color: #44ccee; */
+
+export const ButtonForModalRight = styled(TouchableOpacity)`
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  height: 40px;
+  width: auto;
+  margin-left: ${Platform.OS === 'ios' ? '28px' : '0'};
+  
+`;
+
+export const ButtonIcon = styled(Icon)`
+font-size: ${Platform.OS === 'ios' ? '23px' : '21px'};
+padding: 4px;
+color: #18A0FB;
 `;
 
 export const ButtonWrapper = styled.View`
   display: flex;
+  justify-content: center;
   flex-direction: row;
-  align-items: flex-start;
+  height: auto;
   width: 100%;
-  margin: 0;
-  /* padding: 4px 0 12px; */
   /* background-color: #fe2; */
 `;
 
-export const CameraButton = styled.View`
+export const ButtonWrapperConfirm = styled.View`
   display: flex;
-  flex-direction:row;
-  align-items: center;
   justify-content: center;
-  height: 36px;
-  width: 108px;
-  border-radius: 4px;
-  background-color: #4433ee;
+  flex-direction: row;
+  height: auto;
+  width: 90%;
+  /* background-color: #fe2; */
 `;
 
 export const CenterView = styled.View`
   display: flex;
-  flex-direction: column;
+  flex-direction: row;
   align-items: center;
   justify-content: center;
-  width: 80%;
-  margin: 12px 0;
-  background-color: #e44;
+  align-items: center;
+  width: 90%;
+
+  /* background-color: #f00; */
 `;
 
 export const CheckBoxView = styled.View`
@@ -150,27 +157,29 @@ export const CheckBoxView = styled.View`
   /* background-color: #10ff; */
 `;
 
+export const CheckBoxWrapper = styled.View`
+  /* border-width: 2px;
+  border-radius: 4px; */
+  /* border-color: #999; */
+  /* background-color: #eee; */
+`;
+
 export const Container = styled(TouchableOpacity)`
   display: flex;
   flex-direction: row;
   width: 100%;
   height: auto;
   margin: 2px 0 0;
-  padding: 0;
   background-color: ${props => props.taskConditionIndex === 1
     ? '#fff'
     : '#eee'
   };
   /* background-color: #F5F5; */
 `;
-export const ConfirmButton = styled.View`
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-`;
 
 export const ConfirmIcon = styled(Icon)`
-font-size: 28px;
+font-size: ${Platform.OS === 'ios' ? '26px' : '24px'};
+font-weight: bold;
 color: #19AE7C;
   /* background-color: #f00; */
 `;
@@ -180,10 +189,9 @@ export const DatesAndButtonView = styled.View`
   flex-direction: row;
   align-items: center;
   justify-content: space-between;
-
   width: 100%;
-  margin: 8px auto 0;
-  /* background-color: #4433ee; */
+  margin: 0px auto;
+  /* background-color: #e4ee; */
 `;
 
 export const DescriptionView = styled.View`
@@ -191,45 +199,35 @@ export const DescriptionView = styled.View`
   flex-direction: column;
   justify-content: space-between;
   width: 90%;
-  margin: 4px 0 8px;
   padding: 0 8px;
+  border-width: 2px;
+  border-radius: 4px;
+  border-color: #eee;
   /* background-color: #ee44; */
-`;
-export const DescriptionBorderView = styled.View`
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  align-items: center;
-  min-height: 44px;
-  width: 100%;
-  border-width: 1px;
-  border-color: #ccc;
-  border-radius: 8px;
-  padding: 8px;
-  padding-bottom: 12px;
-  margin: 8px 0;
-  background-color: #f5f5f5;
-  /* background-color: #f00; */
 `;
 
 export const DescriptionSpan = styled.Text`
   font-weight: normal;
-  font-size: 12px;
+  font-size: ${Platform.OS === 'ios' ? '14px' : '12px'};
+  
   text-align: justify;
   line-height: 20px;
-  max-width: 85%;
+  max-width: 80%;
   margin: 4px;
-  color: #222;
+  margin-right: 8px;
+  color: #1B2432;
 `;
 
-export const DetailsView = styled.View`
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  width: 90%;
-  margin: 8px 0;
-  /* background-color: #4433ee; */
+export const DescriptionSpan02 = styled.Text`
+  font-weight: normal;
+  font-size: ${Platform.OS === 'ios' ? '14px' : '12px'};
+  
+  text-align: justify;
+  /* line-height: 20px; */
+  max-width: 85%;
+  margin: 0 12px;
+  margin-right: 8px;
+  color: #1B2432;
 `;
 
 export const DueTimeView = styled.View`
@@ -240,7 +238,8 @@ export const DueTimeView = styled.View`
 
 export const DueTime = styled.Text`
   font-weight: normal;
-  font-size: ${Platform.OS === 'ios' ? '13px' : '12px'};
+  font-size: ${Platform.OS === 'ios' ? '14px' : '12px'};
+  
 `;
 
 export const FormScrollView = styled.ScrollView.attrs({
@@ -250,16 +249,15 @@ export const FormScrollView = styled.ScrollView.attrs({
 })`
   width: 100%;
   border-radius: 8px;
-  padding-bottom: 12px;
   background-color: #fff;
   /* background-color: #f5f; */
 `;
 
 export const HrLine = styled.View`
-  width: 100%;
+  width: 90%;
   border-width: 0.5px;
   border-color: #ddd;
-  margin: 4px auto;
+  margin: 0px auto;
 `;
 
 export const IconsView = styled.View`
@@ -273,15 +271,12 @@ export const IconsView = styled.View`
 export const ImageView = styled.View`
   display: flex;
   flex-direction: column;
-  justify-content: space-between;
   align-items: center;
+  align-self: center;
   min-height: 36px;
-  width: 100%;
-  padding: 4px;
-  border-width: 1px;
-  border-color: #ccc;
-  border-radius: 4px;
-  background-color: #f5f5f5;
+  width: 90%;
+  height: 270px;
+  /* padding: 4px; */
   /* background-color: #F5F5; */
 `;
 
@@ -289,16 +284,15 @@ export const ImageWrapper = styled.View`
   display: flex;
   flex-direction: column;
   align-self: center;
-  width: 95%;
-  margin-top: 4px;
-  margin-bottom: 8px;
-  /* background-color: #ee44; */
 `;
 
 export const Image = styled.Image`
-  height: 300px;
-  width: 300px;
-  margin: 8px;
+  height: 100%;
+  width: 100%;
+  border-width: 1px;
+  border-color: #ccc;
+  border-radius: 4px;
+  /* margin: 8px; */
   /* border-radius: 48px; */
   background-color: #f5f5f5;
 `;
@@ -312,14 +306,18 @@ export const InnerStatusView = styled(LinearGradient)`
 export const Label = styled.Text`
   font-weight: bold;
   font-size: ${Platform.OS === 'ios' ? '14px' : '12px'};
+  
+  text-align: center;
   margin-right: 8px;
   color: #1B2432;
+  /* background-color: #f3c775; */
 `;
 
 export const LabelInitiated = styled.Text`
   font-weight: bold;
   font-size: ${Platform.OS === 'ios' ? '14px' : '12px'};
-  margin-right: 32px;
+  
+  margin-right: 8px;
   max-width: 60px;
   color: #19AE7C;
 `;
@@ -327,9 +325,73 @@ export const LabelInitiated = styled.Text`
 export const LabelEnded = styled.Text`
   font-weight: bold;
   font-size: ${Platform.OS === 'ios' ? '14px' : '12px'};
+  
   margin-right: 4px;
   max-width: 60px;
   color: ${props => props.pastDueDate === true ? '#f64C75' : '#19AE7C'};
+`;
+
+export const LastMessageText = styled.Text`
+  font-size: ${Platform.OS === 'ios' ? '14px' : '12px'};
+  
+  padding: 0 4px;
+  /* background-color: #f5f5; */
+`;
+
+export const LastMessageTimeText = styled.Text`
+  font-size: ${Platform.OS === 'ios' ? '11px' : '9px'};
+  
+  color: #666;
+`;
+
+export const LastMessageTimeView = styled.View`
+`;
+
+export const LastMessageView = styled.View`
+border-radius: 16px;
+/* padding: 4px; */
+width: 100%;
+/* background-color: #ee3; */
+`;
+
+// export const LastMessageView = styled(LinearGradient)`
+// border-radius: 16px;
+// padding: 4px;
+// width: 100%;
+// /* background-color: #ee3; */
+// `;
+
+export const LeftContactView = styled.View`
+  display: flex;
+  flex-direction:row;
+  align-items: center;
+  justify-content: center;
+  width: 22%;
+  height: 100%;
+  /* background-color: #eee; */
+  /* background-color: lightsalmon; */
+`;
+
+export const LeftMessageView = styled.View`
+  display: flex;
+  flex-direction:row;
+  align-items: center;
+  justify-content: center;
+  width: 22%;
+  height: 100%;
+  /* background-color: #ff892e; */
+  background-color: #eee;
+`;
+
+export const LeftUserView = styled.View`
+  display: flex;
+  flex-direction:row;
+  align-items: center;
+  justify-content: center;
+  width: 22%;
+  height: 100%;
+  background-color: #D0ECE3;
+  /* background-color: lightseagreen; */
 `;
 
 export const LeftView = styled.View`
@@ -340,29 +402,91 @@ export const LeftView = styled.View`
   width: 22%;
   height: 100%;
   background-color: #D4D3FF;
+  /* background-color: lightskyblue; */
 `;
 
-export const ModalView = styled.View`
-  align-items: center;
+export const MarginView02 = styled.View`
   width: 100%;
-  height: auto;
-  border-radius: 8px;
-  padding: 12px 0;
-  /* background-color: #fff; */
-  /* background-color: #f00; */
+  margin: 2px 0;
 `;
+
+export const MarginView04 = styled.View`
+  width: 100%;
+  margin: 4px 0;
+`;
+
+export const MarginView08 = styled.View`
+  width: 100%;
+  margin: 8px 0;
+`;
+
+export const MessageIcon = styled(Icon)`
+font-size: ${Platform.OS === 'ios' ? '18px' : '16px'};
+color: #000;
+color: #18A0FB;
+`;
+
+export const ModalHeaderCenter = styled.View`
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: flex-start;
+  width: 0%;
+  /* background-color: #999; */
+`;
+
+export const ModalHeaderLeft = styled.View`
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: flex-start;
+  width: 50%;
+  /* background-color: #ccc; */
+`;
+
+export const ModalHeaderRight = styled.View`
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: flex-end;
+  width: 50%;
+  
+`;
+
+export const ModalHeaderView = styled.View`
+  display: flex;
+  flex-direction: row;
+  width: 90%;
+  height: auto;
+  /* background-color: #999; */
+`;
+
 export const ModalText = styled.Text`
   font-weight: bold;
   font-size: ${Platform.OS === 'ios' ? '14px' : '12px'};
-  margin: 16px auto 8px;
-  color: #222;
+  margin: 0 auto;
+  color: #1B2432;
+  /* background-color: #f00; */
+`;
+
+export const ModalView = styled.View`
+  display: flex;
+
+  align-items: center;
+  width: 90%;
+  height: auto;
+  border-radius: 8px;
+  margin: 0 auto;
+  background-color: #fff;
   /* background-color: #f00; */
 `;
 
 export const NameText = styled.Text`
-  font-weight: bold;
+  
   font-size: ${Platform.OS === 'ios' ? '14px' : '12px'};
-  color: #222;
+  
+  max-width: 80px;
+  color: #1B2432;
 `;
 
 export const OuterStatusView = styled.View`
@@ -370,40 +494,29 @@ export const OuterStatusView = styled.View`
   flex-direction:row;
   width: 75%;
   border-radius: 16px;
-  margin: 8px 0;
-  /* margin-bottom: 8px; */
-  background-color: #F5F5F5;
+  margin-right: 8px;
+  background-color: #ddd;
 `;
 
 export const RejectTaskInput = styled.TextInput`
-  display: flex;
+  font-size: ${Platform.OS === 'ios' ? '14px' : '12px'};
+  
   height: auto;
-  width: 85%;
+  width: 90%;
   padding: 12px;
-  margin: 8px auto 16px;
-  border-radius: 12px;
+  margin: 0px auto;
+  border-radius: 4px;
   border-width: 1px;
-  border-color: #1B2432;
-  background-color: #403F4C;
-`;
-
-export const RejectButton = styled.View`
-  display: flex;
-  flex-direction:row;
-  align-items: center;
-  justify-content: center;
-  height: 36px;
-  width: 108px;
-  border-radius: 8px;
-  background-color: #403F4C;
+  border-color: #ccc;
+  background-color: #eee;
 `;
 
 export const RightView = styled.View`
   display: flex;
   flex-direction:column;
   align-items: center;
+  justify-content: space-between;
   width: 12%;
-  margin: 16px 0;
   /* background-color: #ddd; */
 `;
 
@@ -416,34 +529,29 @@ background: ${props => props.initiated === null ? '#ddd' : '#D0ECE3'};
 export const StartTime = styled.Text`
   font-weight: normal;
   font-size: ${Platform.OS === 'ios' ? '14px' : '12px'};
+  
 `;
 
 export const TagView = styled.View`
   display: flex;
   flex-direction: row;
   align-items: center;
-  /* background-color: #4433ee; */
+  margin: 8px 0;
+  /* background-color: #ee3; */
 `;
-
-// export const Time = styled.Text`
-//   font-weight: bold;
-//   font-size: 14px;
-//   color: ${props => props.pastDueDate === true ? '#f64C75' : '#19AE7C'};
-// `;
 
 export const TitleView = styled.View`
     display: flex;
   flex-direction: row;
   align-items: center;
-  justify-content: space-between;
   width: 100%;
-  margin: 8px auto 0;
-  color: #fff;
+  margin: 0 auto;
   /* background-color: #663333; */
 `;
 export const TaskIcon = styled(Icon)`
   /* font-size: ${Platform.OS === 'ios' ? '22px' : '20px'}; */
-  font-size: 20px;
+  font-size: ${Platform.OS === 'ios' ? '22px' : '20px'};
+  
   /* color: #000; */
   color: #18A0FB;
   /* background-color: #f00; */
@@ -465,40 +573,87 @@ export const TaskAttributesView = styled.View`
   };
 `;
 
-export const TitleBorderView = styled.View`
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  justify-content: center;
-  align-items: center;
-  width: 100%;
-  background-color: #fff;
-  /* background-color: #f00; */
+export const TextBio = styled.Text`
+  font-size: ${Platform.OS === 'ios' ? '14px' : '12px'};
+  font-weight: normal;
+  margin: 0px 4px;
+  color: #666;
+  /* background-color: #ee3; */
 `;
+
+export const TextPoints = styled.Text`
+  font-size: ${Platform.OS === 'ios' ? '13px' : '11px'};
+  font-weight: normal;
+  margin: 0px 4px;
+  color: #18A0FB;
+  color: #334466;
+`;
+
 export const TitleIcon = styled(Icon)`
-  font-size: 16px;
+  font-size: ${Platform.OS === 'ios' ? '18px' : '16px'};
+  font-weight: bold;
   margin-right: 8px;
   color: #334466;
 `;
+
 export const TitleText = styled.Text`
   font-weight: bold;
   font-size: ${Platform.OS === 'ios' ? '16px' : '14px'};
+  
   color: #334466;
+`;
+
+export const TitleUserText = styled.Text`
+  font-weight: bold;
+  font-size: ${Platform.OS === 'ios' ? '16px' : '14px'};
+  
+  color: #19AE7C;
 `;
 
 export const TitleTextModal = styled.Text`
   font-weight: bold;
   font-size: ${Platform.OS === 'ios' ? '16px' : '14px'};
+  
   width: auto;
   text-align: left;
   color: #334466;
   /* background-color: #4433ee; */
 `;
 
+export const TitleIconUser = styled(Icon)`
+font-size: 16px;
+margin-right: 8px;
+color: #19AE7C;
+/* background-color: #4ee; */
+`;
+
+export const TitleTextModalUser = styled.Text`
+  font-weight: bold;
+  font-size: ${Platform.OS === 'ios' ? '16px' : '14px'};
+  width: auto;
+  text-align: left;
+  color: #19AE7C;
+  width: auto;
+  /* background-color: #4433ee; */
+`;
+
 export const ToText = styled.Text`
   font-weight: normal;
   font-size: ${Platform.OS === 'ios' ? '14px' : '12px'};
-  margin-right: 8px;
+  
+  max-width: 80px;
+  margin-right: 16px;
+  color: #1B2432;
+
+  /* background-color: #4433ee; */
+`;
+
+export const ToTextModal = styled.Text`
+  font-weight: normal;
+  font-size: ${Platform.OS === 'ios' ? '14px' : '12px'};
+  
+  /* max-width: 80px; */
+  /* margin-right: 16px; */
   color: #1B2432;
 
   /* background-color: #4433ee; */
@@ -510,7 +665,7 @@ export const ToWorkerView = styled.View`
   align-items: center;
   justify-content: flex-start;
   width: 100%;
-  margin: 8px auto 0;
+  margin: 0px auto;
   /* background-color: #4433ee; */
 `;
 
@@ -522,7 +677,22 @@ export const UserImage = styled.Image`
   border-color: #fff;
   background-color: #f5f5f5;
 `;
-export const UserImageBackground = styled.View`
+
+export const ImageBackground = styled.View`
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  height: 64px;
+  width: 64px;
+  border-radius: 64px;
+  border-width: 1px;
+  border-color: #1B2432;
+  /* background-color: #fff; */
+  /* background-color: #666; */
+`;
+
+export const WorkerImageBackground = styled.View`
   display: flex;
   flex-direction: row;
   align-items: center;
@@ -536,9 +706,22 @@ export const UserImageBackground = styled.View`
   /* background-color: #666; */
 `;
 
+export const UserImageBackground = styled.View`
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  height: 64px;
+  width: 64px;
+  border-radius: 64px;
+  border-width: 1px;
+  border-color: #19AE7C;
+  /* background-color: #666; */
+`;
+
 export const UnreadMessageCountText = styled.Text`
-  font-size: 12px;
-  margin: auto;
+  font-size: 10px;
+  
   /* background-color: #f00; */
 `;
 

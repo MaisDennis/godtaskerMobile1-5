@@ -1,105 +1,191 @@
 import {
   KeyboardAvoidingView, Platform, SafeAreaView,
+  ScrollView,
   TouchableOpacity, TextInput } from 'react-native';
 import styled from 'styled-components/native';
 import { TextInputMask as InputMask } from 'react-native-masked-text'
+import Icon from 'react-native-vector-icons/Feather';
 // -----------------------------------------------------------------------------
 import Input from '~/components/Input';
 import Button from '~/components/Button';
 // -----------------------------------------------------------------------------
-export const AlignView = styled.View`
-  margin: 16px 0;
-  /* background-color: #444; */
+const primaryFont = 'OpenSans-Bold';
+const secondaryFont = 'OpenSans-Regular';
+
+export const AlignView = styled(KeyboardAvoidingView)`
+display: flex;
+flex-direction: column;
+height: 100%;
+width: 100%;
+overflow: scroll;
+/* background-color: #444; */
 `;
 
-export const ButtonText = styled.Text`
-font-size: ${Platform.OS === 'ios' ? '16px' : '14px'};
-font-weight: bold;
-/* background: #999; */
-color: #fff;
+export const AllIcon = styled(Icon)`
+  font-size: 16px;
+  color: #1B2432;
+  /* background-color: #44ccee; */
 `;
 
-// export const Container = styled.KeyboardAvoidingView.attrs({
-//   enabled: Platform.OS === 'ios',
-//   behavior: 'position',
-// })`
-//   flex: 1;
-//   justify-content: center;
-//   align-items: center;
-// `;
+export const ButtonWrapper = styled.View`
+  display: flex;
+  flex-direction: column;
+  height: auto;
+  width: 100%;
+  /* background-color: #fe2; */
+`;
 
-export const Container = styled.SafeAreaView`
+export const Container = styled.View`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  height: 100%;
+  width: 100%;
+  background-color: #fff;
+  /* background-color: #ee3; */
+`;
+
+export const EyeButton = styled(TouchableOpacity)`
   display: flex;
   flex-direction: row;
   align-items: center;
-  height: 100%;
-
-  /* background-color: #ff0; */
-`;
-
-export const Div1 = styled.View`
-flex-direction: row;
-width: 100%;
-/* background: #5edc1f; */
-`;
-
-export const FormInputWorkerPassword = styled(TextInput)`
-  height: 44px;
-  width: 80%;
+  justify-content: center;
+  position: absolute;
+  right: 0;
+  height: auto;
+  padding: 4px;
   border-radius: 8px;
+  border-width: 2px;
+  border-color: #18A0FB;
+  /* background-color: #fff; */
+`;
+
+export const EyeIcon = styled(Icon)`
+  font-size: 18px;
+  /* margin: 16px 0 4px; */
+  color: #18A0FB;
+  /* background-color: #44ccee; */
+`;
+
+export const ForgotPasswordLink = styled(TouchableOpacity)`
+`;
+
+export const ForgotPasswordText = styled.Text`
+  font-size: 12px;
+  
+  text-align: center;
+  text-decoration: underline;
+  width: auto;
+  color: #1B2432;
+`;
+
+export const Form = styled.View`
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  background-color: #fff;
+  /* background-color: #4433ee; */
+
+`;
+
+export const FormInput = styled.TextInput`
+  
+  height: 40px;
+  width: 100%;
+  border-radius: 4px;
   border-width: 1px;
-  border-color: #000;
-  margin: 8px auto;
+  border-color: #ccc;
+  margin: 0 auto;
   padding-left: 12px;
-  color: #000;
-  background-color: #ddd;
+  color: #1B2432;
+  background-color: #eee;
   /* background: #c4ce3b; */
 `;
 
-export const FormWorker = styled(KeyboardAvoidingView)`
+export const FormWorker = styled.View`
   width: 100%;
   height: auto;
-  margin: 0;
+  margin: 0 0 16px;
+  /* background: #c4ce3b; */
+`;
+
+export const HrLine = styled.View`
+  width: 90%;
+  border-width: 0.5px;
+  border-color: #ddd;
+  margin: 0px auto;
+`;
+
+export const IconView = styled.View`
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height:auto;
   /* background: #c4ce3b; */
 `;
 
 export const ImageLogo = styled.Image`
-  /* width: 102px; */
   width: 75px;
-  /* height: 98px; */
   height: 70px;
-  margin: 4px auto;
+  margin: 24px auto 8px;
 `;
 
 export const ImageGodtaskerFont = styled.Image`
   width: 210px;
-  /* height: 72px; */
   height: 38px;
-  margin: 12px auto 12px;
+  margin: 0 auto;
 `;
 
 export const Label = styled.Text`
-font-size: 16px;
-/* font-weight: bold; */
-width: 340px;
+font-size: ${Platform.OS === 'ios' ? '18px' : '16px'};
+
+width: auto;
 text-align: center;
-margin: 14px auto 10px;
-/* background: #999; */
 color: #1B2432;
+/* background: #999; */
 `;
 
-export const PhoneMask = styled(InputMask)`
-  height: 44px;
-  width: 80%;
+export const MarginView02 = styled.View`
+  width: 100%;
+  margin: 2px 0;
+`;
+
+export const MarginView04 = styled.View`
+  width: 100%;
+  margin: 4px 0;
+`;
+
+export const MarginView08 = styled.View`
+  width: 100%;
+  margin: 8px 0;
+`;
+
+export const ModalLabel = styled.Text`
+font-size: ${Platform.OS === 'ios' ? '14px' : '12px'};
+font-weight: bold;
+width: auto;
+text-align: center;
+color: #1B2432;
+/* background: #999; */
+`;
+
+export const ModalView = styled.View`
+  height: auto;
+  width: 100%;
   border-radius: 8px;
-  /* border-top-left-radius: 8px;
-  border-top-right-radius: 8px; */
-  border-width: 1px;
-  border-color: #1B2432;
-  padding-left: 12px;
-  margin: 8px auto;
-  color: #1B2432;
-  background-color: #ddd;
+  margin: 0 auto;
+
+  background-color: #fff;
+  /* background-color: #ff0; */
+`;
+
+export const ModalWrapper = styled.View`
+  height: auto;
+  width: 90%;
+  margin: 0 auto;
+  /* background-color: #ff0; */
 `;
 
 export const SubmitButton = styled(TouchableOpacity)`
@@ -123,12 +209,29 @@ export const SignUpButton = styled(Button)`
   background-color: #18A0FB;
 `;
 
-export const SignUpText = styled.Text`
-  font-size: ${Platform.OS === 'ios' ? '16px' : '14px'};
+export const SignUpErrorText = styled.Text`
+  color: #f64C75;
   font-weight: bold;
-  color: #fff;
-  /* color: #44ccee; */
+  font-size: 16px;
+`;
 
+export const SignUpText = styled.Text`
+  font-size: 14px;
+  line-height: 20px;
+  /* width: 90%; */
+  text-align: center;
+  color: #1B2432;
+  /* background-color: #F5F; */
+`;
+
+export const SignUpTextView = styled.View`
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-around;
+  height: auto;
+  width: 100%;
+  /* background-color: #999; */
 `;
 
 export const StyledScrollView = styled.ScrollView`
@@ -136,25 +239,23 @@ export const StyledScrollView = styled.ScrollView`
 `;
 
 export const Title = styled.Text`
-font-size: 16px;
-/* font-weight: bold; */
-max-width: 64%;
+font-size: ${Platform.OS === 'ios' ? '18px' : '16px'};
+
+/* max-width: 64%; */
+max-width: 80%;
 text-align: center;
-margin: 8px auto;
+margin: 16px auto;
 /* background: #999; */
 color: #1B2432;
 `;
 
-export const Wrapper = styled.View`
+export const Wrapper = styled.ScrollView`
   display: flex;
   flex-direction: column;
-  align-items: center;
-  justify-content: center;
   height: auto;
-  width: 80%;
+  width: 100%;
   min-width: 320px;
-  border-radius: 4px;
-  padding-bottom: 12px;
   margin: 0 auto;
-  /* background-color: #f5f5f5; */
+  padding: 0 10%;
+  /* background-color: #f5f; */
 `;

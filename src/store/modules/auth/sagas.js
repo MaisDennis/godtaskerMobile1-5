@@ -1,19 +1,27 @@
 import { takeLatest, call, put, all} from 'redux-saga/effects';
 import { Alert } from 'react-native';
+import auth from '@react-native-firebase/auth';
 // -----------------------------------------------------------------------------
 // import history from '~/services/history';
 import api from '~/services/api';
-import { signInSuccess, signFailure } from './actions';
+import { signInSuccess, signFailure, signUpSuccess, signUpFailure } from './actions';
 // -----------------------------------------------------------------------------
 export function* signIn({ payload }) {
+  // console.log(payload)
+
   try {
-    const { phonenumber, password } = payload;
-    const response = yield call(api.post, 'sessions', {
-      phonenumber,
+    const {
+      email,
       password,
+    } = payload;
+
+    const response = yield call(api.post, 'sessions', {
+      email,
     });
-    // console.tron.log(response.data)
+
     const { token, user } = response.data;
+
+    console.log(response.data)
 
     api.defaults.headers.Authorization = `Bearer ${token}`;
 
@@ -22,16 +30,17 @@ export function* signIn({ payload }) {
     });
 
     const worker = responseWorkers.data.find(
-      w => w.phonenumber == phonenumber
+      w => w.email == email
     );
-    // console.tron.log(worker)
+
+
     yield put(signInSuccess(token, user, worker));
-    // history.push('/dashboard');
+    console.log('signed in')
 
   } catch (error) {
     yield put(signFailure());
     // console.log(error)
-    Alert.alert('Invalid Data. Please check password')
+    Alert.alert(t("InvalidDataPleaseCheckPassword"))
   }
 }
 // -----------------------------------------------------------------------------
@@ -44,46 +53,31 @@ export function* signIn({ payload }) {
 // }
 // -----------------------------------------------------------------------------
 export function* signUp({ payload }) {
-  try {
-    const {
-      first_name, last_name, user_name,
-      password, phonenumber, email, birth_date, gender
-    } = payload;
 
-    yield call(api.post, 'users', {
-      first_name, last_name, user_name,
-      password, phonenumber, email, birth_date, gender, subscriber: false
-    })
+  const {
+    user_name,
+    password,
+    email,
+    bio,
+  } = payload;
 
-    yield call(api.post, 'workers', {
-      first_name,
-      last_name,
-      worker_name: user_name,
-      worker_password: password,
-      phonenumber,
-      email,
-      birth_date,
-      gender,
-      subscriber: false
-    })
-    // Alert.alert('Usuário cadastrado com sucesso!')
-    Alert.alert(
-      'Success!',
-      `User ${user_name} created`
-    )
-
-  } catch (error) {
-    console.log(error)
-    Alert.alert(
-      'Error: Sign up failed',
-      'e-mail address or phonenumber may already exist. Please contact support.'
-    )
-  }
+  const response = yield call(api.post, 'users', {
+    user_name,
+    worker_name: user_name,
+    password,
+    email,
+    bio,
+    points: 0,
+    subscriber: false
+  })
 }
 
 // -----------------------------------------------------------------------------
 export function signOnOut() {
   // history.push('/');
+  auth()
+  .signOut()
+  .then(() => console.log('User signed out!'));
 }
 // -----------------------------------------------------------------------------
 export default all([

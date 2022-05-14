@@ -116,8 +116,9 @@ export default function UpdateProfilePhoto({ navigation, route }) {
         setImage(image.path)
         const formData = new FormData();
         formData.append('profileImage', {
-          uri: Platform.OS === 'ios' ? image.sourceURL : image.path,
-          type: "image/jpg",
+          // uri: Platform.OS === 'ios' ? image.sourceURL : image.path,
+          uri: image.path,
+          type: "image/*",
           name: `profile_${user_id}.jpg`,
         });
 

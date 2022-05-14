@@ -7,10 +7,12 @@ import {
 } from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
 
-export const Container = styled(SafeAreaView)`
+const primaryFont = 'OpenSans-Bold';
+const secondaryFont = 'OpenSans-Regular';
+
+export const Container = styled.View`
   display: flex;
   flex-direction: column;
-  /* justify-content: space-between; */
   align-items: center;
   height: 100%;
   width: 100%;
@@ -23,34 +25,47 @@ flex-direction: column;
 height: 100%;
 width: 100%;
 overflow: scroll;
-/* margin-bottom: 40%; */
-/* background-color: #4433ee; */
+background-color: #fff;
 `;
 
-export const HrDivider = styled.View`
-width: 100%;
-border-width: 0.5px;
-border-color: #ddd;
-margin: 0 auto;
+export const LeftBorderView = styled.View`
+  left: 0;
+  height: 100%;
+  width: 2px;
+  margin-right: 8px;
+  background-color: #1B2432;
+
 `;
 
-// export const ParsedKeyboardAvoidingView = styled.KeyboardAvoidingView`
-// display: flex;
-// flex-direction: column;
-// align-items: center;
-// height: auto;
-// width: 100%;
-// background-color: #4433ee;
-// `;
+export const HrLine = styled.View`
+  width: 100%;
+  border-width: 0.5px;
+  border-color: #ddd;
+  margin: 0px auto;
+`;
+
+export const MarginView02 = styled.View`
+  width: 100%;
+  margin: 2px 0;
+`;
+
+export const MarginView04 = styled.View`
+  width: 100%;
+  margin: 4px 0;
+`;
+
+export const MarginView08 = styled.View`
+  width: 100%;
+  margin: 8px 0;
+`;
 
 export const ReplyContainer = styled.View`
   display: flex;
   flex-direction: column;
   align-items: center;
-  /* height: auto; */
   width: 100%;
   margin: 0;
-  background-color: #f00;
+  /* background-color: #f00; */
 `;
 
 export const ReplyView = styled.View`
@@ -58,27 +73,25 @@ export const ReplyView = styled.View`
   flex-direction: row;
   justify-content: space-around;
   align-items: center;
-  /* height: 48px; */
   height: auto;
   width: 100%;
   padding: 0 8px;
-  margin: 0;
   background-color: #fff;
 `;
 
 export const SendInput = styled.TextInput`
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  font-size: ${Platform.OS === 'ios' ? '14px' : '12px'};
+  
+  font-size: 14px;
+  
+  line-height: 20px;
+  
   height: auto;
-  min-height: 40px;
   width: 80%;
-  border-radius: 12px;
+  border-radius: 16px;
   border-width: 1px;
-  border-color: #403F4C;
-  margin: 16px 0;
-  padding: ${Platform.OS === 'ios' ? '10px 20px' : '0 20px'};
+  border-color: #ccc;
+  margin: 8px 0;
+  padding: 2px 12px 6px;
   color: #1B2432;
   background-color: #eee;
 `;
@@ -110,6 +123,11 @@ export const SendButtonView = styled(TouchableOpacity)`
   /* background-color: #4ee; */
 `;
 
+export const SendIcon = styled(Icon)`
+  font-size: ${Platform.OS === 'ios' ? '16px' : '14px'};
+  color: #fff;
+`;
+
 export const SpaceView = styled.View`
   height: 32px;
   width: 32px;
@@ -123,32 +141,30 @@ export const TemporaryMessageContainer = styled.View`
   height: auto;
   width: 100%;
   padding: 8px;
-  background-color: #f5f5f5;
+  background-color: #fff;
+  /* background-color: ${Platform.OS === 'ios' ? '#ddd' : '#f5f5f5'}; */
   /* background-color: #f5f; */
 `;
 export const TemporaryMessageView = styled.View`
   display: flex;
   flex-direction: row;
   align-items: center;
-  height: auto;
-  width: 90%;
-  border-radius: 8px;
-  border-width: 1px;
-  border-color: #999;
-  padding: 6px 20px;
-  background-color: #fff;
+  height: 100%;
+  width: auto;
   /* background-color: #f00; */
 `;
 export const TemporaryMessageText = styled.Text`
-  color: #999;
+  font-size: ${Platform.OS === 'ios' ? '13px' : '11px'};
+  
   text-align: left;
-  margin: 0 auto;
+  width: 90%;
+  color: #1B2432;
 `;
 
 export const TemporaryMessageIcon = styled(Icon)`
   font-size: 24px;
   color: #f64C75;
-  /* background-color: #fff; */
+  background-color: #fff;
 `;
 export const TemporaryMessageIconView = styled.View`
   display: flex;

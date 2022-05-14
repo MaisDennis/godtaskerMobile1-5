@@ -3,6 +3,7 @@ import produce from 'immer';
 const INITIAL_STATE = {
   profile: {},
   forward_message: {},
+  inverted: {},
   userData: {},
   workerData: {},
 };
@@ -19,8 +20,10 @@ export default function message(state= INITIAL_STATE, action) {
         break;
       }
       case '@message/UPDATE_CHAT_INFO': {
+        draft.inverted = action.payload.inverted;
         draft.userData = action.payload.userData;
         draft.workerData = action.payload.workerData;
+
         break;
       }
       default:

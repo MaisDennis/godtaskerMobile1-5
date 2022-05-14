@@ -6,22 +6,3 @@ export function signInSuccess(worker) {
     payload: { workerPhoneNumber, workerData },
   };
 };
-
-// export function signFailure() {
-//   return {
-//     type: '@worker/SIGN_IN_FAILURE',
-//   }
-// }
-
-// export function signOut() {
-//   return {
-//     type: '@worker/SIGN_OUT',
-//   }
-// }
-
-// export function workerCheckIn(workerData) {
-//   return {
-//     type: '@worker/WORKER_DATA',
-//     payload: { workerData },
-//   };
-// }

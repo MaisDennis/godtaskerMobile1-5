@@ -11,7 +11,7 @@ color: #000;
 export const Container = styled.SafeAreaView`
   height: 100%;
   background-color: ${Platform.OS === 'ios' ? '#ddd' : '#f5f5f5'};
-  background: #f00;
+  /* background: #f00; */
 `;
 
 export const DateText = styled.Text`

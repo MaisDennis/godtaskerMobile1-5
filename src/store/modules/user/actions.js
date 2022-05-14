@@ -1,14 +1,16 @@
 export function updateProfileRequest({
-  first_name, last_name, user_name,
-  oldPassword, password, confirmPassword,
-  phonenumber, email, birth_date, gender, image
+  first_name, last_name, email, instagram, linkedin, bio, image,
 }) {
   return {
     type: '@user/UPDATE_PROFILE_REQUEST',
     payload: {
-      first_name, last_name, user_name,
-      oldPassword, password, confirmPassword,
-      phonenumber, email, birth_date, gender, image
+      first_name,
+      last_name,
+      email,
+      instagram,
+      linkedin,
+      bio,
+      image,
     },
   };
 }

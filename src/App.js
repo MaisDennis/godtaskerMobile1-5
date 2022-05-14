@@ -3,28 +3,38 @@ import { Alert, Text, View } from 'react-native';
 import { useSelector } from 'react-redux';
 import SplashScreen from 'react-native-splash-screen';
 import messaging from '@react-native-firebase/messaging';
+import PushNotification from "react-native-push-notification";
+import { useTranslation } from 'react-i18next';
+import * as RNLocalize from 'react-native-localize';
 // -----------------------------------------------------------------------------
 import Routes from './routes';
 import api from '~/services/api';
 // -----------------------------------------------------------------------------
 export default function App() {
+  const { t, i18n } = useTranslation;
   const userId = useSelector( state => state.user.profile ? state.user.profile.id : null)
-  const workerId = useSelector( state => state.worker.profile ? state.worker.profile.id : null)
-  const[test, setTest] = useState();
-  // console.log('worker Id: ', workerId)
+  // const workerId = useSelector( state => state.worker.profile ? state.worker.profile.id : null)
+  // const authToken = useSelector( state => state.auth.token ? state.auth.token : null)
+  // const[test, setTest] = useState();
   let fcmUnsubscribe = null;
-
-  // messaging().setBackgroundMessageHandler(async remoteMessage => {
-  //   console.log('Message is handled in the background!', remoteMessage);
-  // })
 
   useEffect(() => {
     SplashScreen.hide();
-    // requestUserPermission();
+    console.log(RNLocalize.getLocales()[0].languageCode);
+    requestUserPermission();
     const unsubscribe = messaging().onMessage(async remoteMessage => {
-      console.log('A new FCM message arrived!', JSON.stringify(remoteMessage));
+      // console.log('A new FCM message arrived!', JSON.stringify(remoteMessage));
+      // PushNotification.localNotification({
+      //   channelId: 'godtaskerChannel01',
+      //   title: remoteMessage.notification.title,
+      //   message: remoteMessage.notification.body,
+      // })
+        PushNotification.localNotification({
+          channelId: 'godtaskerChannel01',
+          title: remoteMessage.data.title,
+          message: remoteMessage.data.message,
+        })
     });
-
     return unsubscribe;
   }, []);
 
@@ -39,24 +49,31 @@ export default function App() {
       console.log('Authorization status:', authStatus);
       const token = await messaging().getToken();
       console.log('Token: ', token)
-      setTest(token)
+      // setTest(token)
+      if(userId) {
+        await api.put(`users/notifications/${userId}`, {
+          notification_token: token,
+          // worker_id: workerId,
+        })
+      }
+
     }
 
     messaging().onTokenRefresh(async token => {
       console.log('messaging.onTokenRefresh: ', token)
-      await api.put(`users/${userId}/notifications`, {
+      await api.put(`users/notifications/${userId}`, {
         notification_token: token,
-        worker_id: workerId,
+        // worker_id: workerId,
       })
     });
 
-    fcmUnsubscribe = messaging().onMessage(async remoteMessage => {
-      console.log('A new message arrived!', remoteMessage)
-      Alert.alert(
-        remoteMessage.notification.title,
-        remoteMessage.onTokenRefresh.body,
-      )
-    })
+    // this is for testing
+    // fcmUnsubscribe = messaging().onMessage(async remoteMessage => {
+    //   console.log('A new message arrived!', remoteMessage)
+    //   console.log(
+    //     remoteMessage.data,
+    //   )
+    // })
 
     // messaging()
     //   .onNotificationOpenedApp(remoteMessage => {

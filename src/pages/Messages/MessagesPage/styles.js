@@ -4,13 +4,13 @@ import { TouchableOpacity } from 'react-native'
 
 export const AddIcon = styled(FeatherIcon)`
 font-weight: 700;
-margin: 0 16px;
+margin: 0 auto;
 color: #18A0FB;
 `;
 
 export const Container = styled.SafeAreaView`
   height: 100%;
-  background-color: ${Platform.OS === 'ios' ? '#ddd' : '#f5f5f5'};
+  background-color: ${Platform.OS === 'ios' ? '#eee' : '#f5f5f5'};
 `;
 
 export const Header = styled.View`
@@ -45,7 +45,7 @@ export const HeaderTouchable = styled(TouchableOpacity)`
   flex-direction: row;
   align-items: center;
   justify-content: flex-end;
-  width: 30%;
+  width: 15%;
   /* background-color: #f5f; */
 `;
 
@@ -59,7 +59,9 @@ export const List = styled.FlatList.attrs({
 
 export const SearchBarTextInput = styled.TextInput`
   height: 70%;
-  width: 50%;
+  width: 70%;
+  border: 1px;
+  border-color: #ccc;
   border-radius: 4px;
   padding: 4px 12px;
   margin: 0 auto;
@@ -71,7 +73,7 @@ export const SpaceView = styled.View`
   flex-direction: row;
   align-items: center;
   height: auto;
-  width: 30%;
+  width: 15%;
   background-color: #fff;
   /* background-color: #f5f; */
 `;

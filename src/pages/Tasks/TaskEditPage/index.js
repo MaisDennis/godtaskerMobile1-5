@@ -3,40 +3,43 @@ import { Alert } from 'react-native';
 import { useDispatch } from 'react-redux';
 import Modal from 'react-native-modal';
 import { parseISO, isBefore , isSameHour, subHours, addMinutes, format } from 'date-fns';
+import { useTranslation } from 'react-i18next';
 // -----------------------------------------------------------------------------
 import {
-  ButtonView, ButtonView2, ButtonText,
+  ButtonIcon, ButtonIcon02, ButtonIcon03, ButtonTagWrapper, ButtonView, ButtonView02, ButtonView03,
   CheckBoxWrapper, Container,
-  DateOptionsView, DateOptions,
+  DateOptionsView, DateOptions, DescriptionView01, DescriptionView02, DescriptionView03,
   FormScrollView,
   HrLine,
-  Input, ItemWrapperView,
+  Input, IosKeyboardAvoidingView, ItemWrapperView,
   LabelText,
-  ModalView,
+  MarginView02, MarginView04, MarginView08, ModalView, ModalWrapper,
   RadioButtonView, RadioButtonTag,
   RadioButtonLabel, RadioButtonOuter,
   RadioButtonInner1, RadioButtonInner2, RadioButtonInner3,
   RadioButtonInner4,
-  SubTaskButton, SubTaskButtonView,
-  SubTaskCancelIcon, SubTaskEditIcon,
-  SubTaskInput,
-  SubTaskLabelText, SubTaskLeftView, SubTaskRightView,
+  SubTaskButton, SubTaskButtonView, SubTaskCancelIcon, SubTaskConfirmButton, SubTaskConfirmIcon, SubTaskConfirmView,
+  SubTaskEditIcon, SubTaskInput, SubTaskLabelText,
+  SubTaskLeftView, SubTaskRightView,
   SubTaskTag, SubTaskText,
   SubTaskWeigeText, SubTaskWrapper, SubTaskView,
-  SubmitButton, SubmitButtonText,
   TitleText,
   WeigeView, WeigeTagView, WeigeText,
-} from './styles'
+} from '../TaskCreatePage/styles'
 import NumberInput from '~/components/NumberInput'
 import { updateTasks } from '~/store/modules/task/actions';
 import api from '~/services/api';
+import Button from '~/components/Button';
+// -----------------------------------------------------------------------------
 
 export default function TaskEditPage({ navigation, route }) {
+  const { t, i18n } = useTranslation();
   const dispatch = useDispatch();
   const data = route.params;
 
   const [name, setName] = useState(data.name);
   const [description, setDescription] = useState(data.description);
+  const [focusBorder, setFocusBorder] = useState(1);
   const [prior, setPrior] = useState(data.task_attributes[0]);
   const [urgent, setUrgent] = useState(data.task_attributes[1]);
   const [complex, setComplex] = useState(data.task_attributes[2]);
@@ -50,6 +53,7 @@ export default function TaskEditPage({ navigation, route }) {
   const [editSubTaskInputValue, setEditSubTaskInputValue] = useState();
   const [editWeigeInputValue, setEditWeigeInputValue] = useState(1);
   const [subTaskToggleEdit, setSubTaskToggleEdit] = useState(false);
+  const [toggleSubtaskConfirmController, setToggleSubtaskConfirmController] = useState(false);
   const [toggleDates, setToggleDates] = useState(false);
   const [sameHourCheck, setSameHourCheck] = useState(false)
 
@@ -93,17 +97,42 @@ export default function TaskEditPage({ navigation, route }) {
     // });
   }
 
+  function handleConfirmEditSubtask(position) {
+    let editedSubTaskList = subTaskList.map((s, index) => {
+      if (index === position) {
+        s.description = editSubTaskInputValue;
+        s.weige = editWeigeInputValue;
+      }
+      return s;
+    })
+    setSubTaskList(editedSubTaskList)
+    setEditSubTaskIndex(null);
+    setSubTaskToggleEdit(false);
+  }
+
   function handleDeleteSubTask(position) {
     let editedSubTaskList = subTaskList
-    editedSubTaskList.splice(position, 1)
-    setSubTaskList(editedSubTaskList)
-    navigation.navigate('TaskEdit',{
-      sub_task_list: subTaskList,
-    });
+    // editedSubTaskList.splice(position, 1)
+    // setSubTaskList(editedSubTaskList)
+    // navigation.navigate('TaskEdit',{
+    //   sub_task_list: subTaskList,
+    // });
+
+    try {
+      editedSubTaskList.splice(position, 1)
+    }
+    catch { console.log('error')}
+    finally {
+      setSubTaskList(editedSubTaskList)
+      setEditSubTaskIndex(null)
+      setSubTaskToggleEdit(false)
+      setToggleSubtaskConfirmController(!toggleSubtaskConfirmController)
+    }
   }
 
   function handleToggleDates() {
     setToggleDates(!toggleDates)
+    setFocusBorder(3)
   }
 
   function weigeToPercentage(subTasks) {
@@ -121,22 +150,31 @@ export default function TaskEditPage({ navigation, route }) {
   async function editTasks() {
     weigeToPercentage(subTaskList)
 
-    await api.put(`tasks/${data.id}/notification/user`, {
+    await api.put(`tasks/${data.id}/notification/worker`, {
       name: name,
       description: description,
       sub_task_list: subTaskList,
       task_attributes: [prior, urgent, complex],
       start_date: startDate,
       due_date: dueDate,
+      status: {
+        "status": 1,
+        "comment": `${t('TaskEdited')}: ${name}`,
+      },
     });
 
     dispatch(updateTasks(new Date()))
   }
 
+  function handlePrior(index) {
+    setFocusBorder(3)
+    setPrior(index)
+  }
+
   async function handleSubmit() {
     if (name === '') {
       Alert.alert(
-        'Please insert a Title',
+        t('PleaseInsertATitle'),
         '',
         [{ style: "default" }],
         { cancelable: true },
@@ -145,8 +183,8 @@ export default function TaskEditPage({ navigation, route }) {
     }
     if (isBefore(startDate, subHours(new Date(), 1))) {
       Alert.alert(
-        'Start Date is in the past',
-        'Start Date cannot be set before 1 hour prior to now',
+        t('StartDateIsInThePast'),
+        t('StartDateCannot'),
         [{ style: "default" }],
         { cancelable: true },
       )
@@ -154,8 +192,8 @@ export default function TaskEditPage({ navigation, route }) {
     }
     if (isBefore(dueDate, startDate)) {
       Alert.alert(
-        'Due Date is before Start Date',
-        'The Due Date & Time must be set after the Start Date & Time',
+        t('DueDateIsBefore'),
+        t('TheDueDateAndTime'),
         [{ style: "default" }],
         { cancelable: true },
       )
@@ -163,8 +201,8 @@ export default function TaskEditPage({ navigation, route }) {
     }
     if (!sameHourCheck && isSameHour(dueDate, new Date())) {
       Alert.alert(
-        'Due Date is set within the next hour',
-        'Are you sure this is OK?',
+        t('DueDateIsSetWithin'),
+        t('AreYouSure'),
         [{ style: "default" }],
         { cancelable: true },
       )
@@ -176,17 +214,17 @@ export default function TaskEditPage({ navigation, route }) {
       editTasks()
 
       Alert.alert(
-        'Success!',
-        'Task Edited',
+        t('Success'),
+        t('TaskRegistered'),
         [{ style: "default" }],
         { cancelable: true },
       )
     }
     catch(error) {
-      console.log(error)
+      console.log('error')
       Alert.alert(
-        'Error: Task not edited',
-        'Please try again',
+        t('ErrorTaskNotRegistered'),
+        t('PleaseTryAgain'),
         [{ style: "default" }],
         { cancelable: true },
       )
@@ -196,88 +234,117 @@ export default function TaskEditPage({ navigation, route }) {
   // ---------------------------------------------------------------------------
   return (
     <Container>
-      <FormScrollView contentContainerStyle={{ alignItems: 'center'}}>
-      <ItemWrapperView>
-          <LabelText>Sent to:</LabelText>
-          <TitleText>{data.worker.worker_name}</TitleText>
-          <HrLine/>
-        </ItemWrapperView>
+      <IosKeyboardAvoidingView
+        behavior={Platform.OS === "ios" ? "padding" : null}
+        keyboardVerticalOffset = {Platform.OS === "ios" ? "70" : null}
+      >
+        <FormScrollView contentContainerStyle={{ alignItems: 'center'}}>
+          <MarginView08/>
+          <DescriptionView01
+            focusColor = {focusBorder}
+          >
+            <ItemWrapperView>
+              <LabelText>{t('Title')}</LabelText>
+              <MarginView04/>
+              <Input
+                enablesReturnKeyAutomatically
+                multiline
+                value={name}
+                onChangeText={setName}
+                placeholder={t('WashTheCar')}
+                onFocus = {() => setFocusBorder(1)}
+              />
+            </ItemWrapperView>
+            <MarginView08/>
 
-        <ItemWrapperView>
-          <LabelText>Title:</LabelText>
-          <Input
-            enablesReturnKeyAutomatically
-            multiline
-            value={name}
-            onChangeText={setName}
-            placeholder="Wash the car"
-          />
-        </ItemWrapperView>
+            <ItemWrapperView>
+              <LabelText>{t('SentTo')}</LabelText>
+              <MarginView04/>
+              <TitleText>{data.worker.worker_name}</TitleText>
+            </ItemWrapperView>
+          </DescriptionView01>
 
-        <ItemWrapperView>
-          <LabelText>Sub-item:</LabelText>
-          <SubTaskView>
-            <SubTaskInput
-              enablesReturnKeyAutomatically
-              multiline
-              numberOfLines={4}
-              onChangeText={setAddSubTaskInputValue}
-              placeholder="1. Use soap..."
-              textBreakStrategy="highQuality"
-              value={addSubTaskInputValue}
-            />
-            <WeigeView>
-                <WeigeText>Sub-item weige:</WeigeText>
-                <NumberInput
-                  numberInputValue={addWeigeInputValue}
-                  setNumberInputValue={setAddWeigeInputValue}
+          <MarginView08/>
+          <DescriptionView02 focusColor = {focusBorder}>
+            <ItemWrapperView>
+              <LabelText>{t('SubItem')}</LabelText>
+              <MarginView04/>
+              <SubTaskView>
+                <SubTaskInput
+                  enablesReturnKeyAutomatically
+                  multiline
+                  numberOfLines={4}
+                  onChangeText={setAddSubTaskInputValue}
+                  placeholder={t('UseSoap')}
+                  textBreakStrategy="highQuality"
+                  value={addSubTaskInputValue}
+                  onFocus = {() => setFocusBorder(2)}
                 />
-            </WeigeView>
-          </SubTaskView>
+                <MarginView08/>
+                <WeigeView>
+                  <WeigeText>{t('SubItemWeige')}</WeigeText>
+                  <NumberInput
+                    numberInputValue={addWeigeInputValue}
+                    setNumberInputValue={setAddWeigeInputValue}
+                    focusColor={focusBorder}
+                  />
+                  <ButtonView02
+                    onPress={handleAddSubTask}
+                    focusColor = {focusBorder}
+                  >
+                    <ButtonIcon02
+                      name="plus-square"
+                      focusColor = {focusBorder}
+                    />
+                  </ButtonView02>
+                </WeigeView>
+                <MarginView08/>
+              </SubTaskView>
+            </ItemWrapperView>
 
-          <WeigeView>
-            <ButtonView onPress={handleAddSubTask}>
-              <ButtonText>Add sub-item</ButtonText>
-            </ButtonView>
-          </WeigeView>
-        </ItemWrapperView>
-
-        <ItemWrapperView>
-          {subTaskList != ''
-            ? (<LabelText>Sub-item List:</LabelText>)
-            : null
-          }
-          { subTaskList.map((s, index) => (
-            <SubTaskView key={index}>
-              {
-                subTaskToggleEdit && (editSubTaskIndex === index)
+            <ItemWrapperView>
+              <MarginView08/>
+              {subTaskList != ''
                 ? (
-                  <>
-                    <SubTaskWrapper>
-                    <SubTaskLeftView>
-                      <SubTaskTag>
-                        <SubTaskLabelText>{index+1}</SubTaskLabelText>
-                        <SubTaskText>{s.description}</SubTaskText>
-                      </SubTaskTag>
-                    </SubTaskLeftView>
+                    <>
+                      <MarginView08/>
+                      <LabelText>{t('SubItemList')}</LabelText>
+                      <MarginView04/>
+                    </>
+                  )
+                : null
+              }
+              { subTaskList.map((s, index) => (
+                <SubTaskView key={index}>
+                  {
+                    subTaskToggleEdit && (editSubTaskIndex === index)
+                    ? (
+                      <>
+                        <SubTaskWrapper>
+                          <SubTaskLeftView>
+                            <SubTaskTag>
+                              <SubTaskLabelText>{index+1}</SubTaskLabelText>
+                              <SubTaskText>{s.description}</SubTaskText>
+                            </SubTaskTag>
+                          </SubTaskLeftView>
 
-                    <SubTaskRightView>
-                      <SubTaskButtonView>
-                        <SubTaskButton onPress={() => handleEditSubTask(index)}>
-                          <SubTaskEditIcon name="edit-2"/>
-                        </SubTaskButton>
-                        <SubTaskButton onPress={() => handleDeleteSubTask(index)}>
-                          <SubTaskCancelIcon name="x-circle"/>
-                        </SubTaskButton>
-                      </SubTaskButtonView>
-                      <SubTaskTag>
-                        <WeigeTagView>
-                          <WeigeText>Weige:</WeigeText>
-                          <SubTaskWeigeText>{s.weige}</SubTaskWeigeText>
-                        </WeigeTagView>
-                      </SubTaskTag>
-                    </SubTaskRightView>
-                    </SubTaskWrapper>
+                          <SubTaskRightView>
+                            <SubTaskButtonView>
+                              <SubTaskButton onPress={() => handleEditSubTask(index)}>
+                                <SubTaskEditIcon name="edit-2"/>
+                              </SubTaskButton>
+                              <SubTaskButton onPress={() => handleDeleteSubTask(index)}>
+                                <SubTaskCancelIcon name="x-circle"/>
+                              </SubTaskButton>
+                            </SubTaskButtonView>
+                            <SubTaskTag>
+                              <WeigeTagView>
+                                <WeigeText>{t('Weige')}</WeigeText>
+                                <SubTaskWeigeText>{s.weige}</SubTaskWeigeText>
+                              </WeigeTagView>
+                            </SubTaskTag>
+                          </SubTaskRightView>
+                        </SubTaskWrapper>
 
                         <SubTaskInput
                           enablesReturnKeyAutomatically
@@ -286,148 +353,199 @@ export default function TaskEditPage({ navigation, route }) {
                           onChangeText={setEditSubTaskInputValue}
                           value={editSubTaskInputValue}
                         />
+                        <MarginView04/>
+                        <MarginView02/>
                         <WeigeView>
-                          <WeigeText>Sub-item Weige:</WeigeText>
+                          <WeigeText>{t('SubItemWeige')}</WeigeText>
                           <NumberInput
                             numberInputValue={editWeigeInputValue}
                             setNumberInputValue={setEditWeigeInputValue}
+                            focusColor={focusBorder}
                           />
                         </WeigeView>
+                        <MarginView04/>
+                        <MarginView02/>
+
+                        <SubTaskConfirmView>
+                        <SubTaskRightView>
+                        <SubTaskButton onPress={() => handleConfirmEditSubtask(index)}>
+                            <SubTaskConfirmIcon name="check-circle"/>
+                          </SubTaskButton>
+                          </SubTaskRightView>
+                        </SubTaskConfirmView>
+
+
+                        <MarginView02/>
+                        {/* ----------- */}
+                        <MarginView04/>
                         <HrLine/>
-                  </>
-                )
-                : (
-                  <>
-                    <SubTaskWrapper>
-                      <SubTaskLeftView>
-                        <SubTaskTag>
-                          <SubTaskLabelText>{index+1}.</SubTaskLabelText>
-                          <SubTaskText>{s.description}</SubTaskText>
-                        </SubTaskTag>
-                      </SubTaskLeftView>
+                        <MarginView04/>
+                        {/* ----------- */}
+                      </>
+                    )
+                    : (
+                      <>
+                        <SubTaskWrapper>
+                          <SubTaskLeftView>
+                            <SubTaskTag>
+                              <SubTaskLabelText>{index+1}.</SubTaskLabelText>
+                              <SubTaskText>{s.description}</SubTaskText>
+                            </SubTaskTag>
+                          </SubTaskLeftView>
 
-                      <SubTaskRightView>
-                        <SubTaskButtonView>
-                          <SubTaskButton onPress={() => handleOpenEditSubTask(index)}>
-                            <SubTaskEditIcon name="edit-2"/>
-                          </SubTaskButton>
-                          <SubTaskButton onPress={() => handleDeleteSubTask(index)}>
-                            <SubTaskCancelIcon name="x-circle"/>
-                          </SubTaskButton>
-                        </SubTaskButtonView>
-                        <SubTaskTag>
-                          <WeigeTagView>
-                            <WeigeText>Weige:</WeigeText>
-                            <SubTaskWeigeText>{s.weige}</SubTaskWeigeText>
-                          </WeigeTagView>
-                        </SubTaskTag>
-                      </SubTaskRightView>
-                    </SubTaskWrapper>
-                    <HrLine/>
-                  </>
-                )
-              }
-            </SubTaskView>
-          ))}
-        </ItemWrapperView>
+                          <SubTaskRightView>
+                            <SubTaskButtonView>
+                              <SubTaskButton onPress={() => handleOpenEditSubTask(index)}>
+                                <SubTaskEditIcon name="edit-2"/>
+                              </SubTaskButton>
+                              <SubTaskButton onPress={() => handleDeleteSubTask(index)}>
+                                <SubTaskCancelIcon name="x-circle"/>
+                              </SubTaskButton>
+                            </SubTaskButtonView>
+                            <SubTaskTag>
+                              <WeigeTagView>
+                                <WeigeText>{t('Weige')}</WeigeText>
+                                <SubTaskWeigeText>{s.weige}</SubTaskWeigeText>
+                              </WeigeTagView>
+                            </SubTaskTag>
+                          </SubTaskRightView>
+                        </SubTaskWrapper>
+                        {/* ----------- */}
+                        <MarginView04/>
+                        <HrLine/>
+                        <MarginView04/>
+                        {/* ----------- */}
+                      </>
+                    )
+                  }
+                </SubTaskView>
+              ))}
+            </ItemWrapperView>
+          </DescriptionView02>
+          <MarginView08/>
 
-        <ItemWrapperView>
-          <WeigeView>
-            <ButtonView2
-              onPress={handleToggleDates}
-              uppercase={false}
-              mode="outlined"
-            >
-              <ButtonText>Start & Due Dates</ButtonText>
-            </ButtonView2>
-          </WeigeView>
-        </ItemWrapperView>
-
-        <ItemWrapperView>
-          <LabelText>Priority:</LabelText>
-          <RadioButtonView>
-            <RadioButtonTag onPress={() => setPrior(1)}>
-              <RadioButtonLabel>Low</RadioButtonLabel>
-              <RadioButtonOuter>
-                <RadioButtonInner1 switch={prior}/>
-              </RadioButtonOuter>
-            </RadioButtonTag>
-            <RadioButtonTag onPress={() => setPrior(2)}>
-              <RadioButtonLabel>Medium</RadioButtonLabel>
-              <RadioButtonOuter>
-                <RadioButtonInner2 switch={prior}/>
-              </RadioButtonOuter>
-            </RadioButtonTag>
-            <RadioButtonTag onPress={() => setPrior(3)}>
-              <RadioButtonLabel>High</RadioButtonLabel>
-              <RadioButtonOuter>
-                <RadioButtonInner3 switch={prior}/>
-              </RadioButtonOuter>
-            </RadioButtonTag>
-            <RadioButtonTag onPress={() => setPrior(4)}>
-              <RadioButtonLabel>n/a</RadioButtonLabel>
-              <RadioButtonOuter>
-                <RadioButtonInner4 switch={prior}/>
-              </RadioButtonOuter>
-            </RadioButtonTag>
-          </RadioButtonView>
-        </ItemWrapperView>
-
-        <ItemWrapperView>
-          <LabelText>Other Comments:</LabelText>
-          <Input
-            value={description}
-            onChangeText={setDescription}
-          ></Input>
-        </ItemWrapperView>
-
-        <ItemWrapperView>
-          <SubmitButton onPress={handleSubmit}>
-            <SubmitButtonText>Send</SubmitButtonText>
-          </SubmitButton>
-        </ItemWrapperView>
-
-        <Modal isVisible={toggleDates}>
-          <ModalView>
-            <CheckBoxWrapper>
-            <LabelText>Start Date:</LabelText>
-            <DateOptionsView>
-              <DateOptions
-                mode={'datetime'}
-                date={startDate}
-                onDateChange={setStartDate}
-                locale='en'
-                minuteInterval={15}
-                // is24hourSource='locale'
-                androidVariant="nativeAndroid"
-                textColor="#000"
-                textSize="24"
+          <DescriptionView03
+            focusColor = {focusBorder}
+          >
+            <ItemWrapperView>
+              <MarginView04/>
+              <ButtonTagWrapper>
+                <LabelText>{t('StartAndDueDates')}</LabelText>
+                <ButtonView03
+                  onPress={handleToggleDates}
+                  focusColor = {focusBorder}
+                >
+                  <ButtonIcon03
+                    name="calendar"
+                    focusColor = {focusBorder}
+                  />
+                </ButtonView03>
+              </ButtonTagWrapper>
+              </ItemWrapperView>
+            <MarginView08/>
+            <MarginView04/>
+            <ItemWrapperView>
+              <LabelText>{t('Priority')}</LabelText>
+              <MarginView04/>
+              <RadioButtonView>
+                <RadioButtonTag onPress={() => handlePrior(1)}>
+                  <RadioButtonLabel>{t('Low')}</RadioButtonLabel>
+                  <RadioButtonOuter>
+                    <RadioButtonInner1 switch={prior}/>
+                  </RadioButtonOuter>
+                </RadioButtonTag>
+                <RadioButtonTag onPress={() => handlePrior(2)}>
+                  <RadioButtonLabel>{t('Medium')}</RadioButtonLabel>
+                  <RadioButtonOuter>
+                    <RadioButtonInner2 switch={prior}/>
+                  </RadioButtonOuter>
+                </RadioButtonTag>
+                <RadioButtonTag onPress={() => handlePrior(3)}>
+                  <RadioButtonLabel>{t('High')}</RadioButtonLabel>
+                  <RadioButtonOuter>
+                    <RadioButtonInner3 switch={prior}/>
+                  </RadioButtonOuter>
+                </RadioButtonTag>
+                <RadioButtonTag onPress={() => handlePrior(1)}>
+                  <RadioButtonLabel>{t('NA')}</RadioButtonLabel>
+                  <RadioButtonOuter>
+                    <RadioButtonInner4 switch={prior}/>
+                  </RadioButtonOuter>
+                </RadioButtonTag>
+              </RadioButtonView>
+            </ItemWrapperView>
+            <MarginView08/>
+            <MarginView04/>
+            <ItemWrapperView>
+              <LabelText>{t('OtherComments')}</LabelText>
+              <MarginView04/>
+              <Input
+                enablesReturnKeyAutomatically
+                multiline
+                numberOfLines={4}
+                value={description}
+                onChangeText={setDescription}
+                placeholder={t('DontForget')}
+                onFocus={() => setFocusBorder(3)}
               />
-            </DateOptionsView>
-            <LabelText>Due Date:</LabelText>
-            <DateOptionsView>
-              <DateOptions
-                mode={'datetime'}
-                date={dueDate}
-                onDateChange={setDueDate}
-                locale='en'
-                minuteInterval={15}
-                // is24hourSource='locale'
-                androidVariant="nativeAndroid"
-                textColor="#000"
-                textSize="24"
-              />
-            </DateOptionsView>
-              <HrLine/>
-
-              <ButtonView onPress={handleToggleDates}>
-                  <ButtonText>OK</ButtonText>
-              </ButtonView>
-            </CheckBoxWrapper>
-          </ModalView>
-        </Modal>
-
-      </FormScrollView>
+              <MarginView04/>
+            </ItemWrapperView>
+          </DescriptionView03>
+          <MarginView08/>
+          <ItemWrapperView>
+            <Button type={'submit'} onPress={handleSubmit}>
+              {t('Send')}
+            </Button>
+          </ItemWrapperView>
+          <MarginView08/>
+          <MarginView08/>
+          <MarginView08/>
+{/* ------------------------------------------------------------------------ */}
+          <Modal isVisible={toggleDates}>
+            <ModalView>
+              <ModalWrapper>
+                <MarginView04/>
+                <LabelText>{t('StartDate')}</LabelText>
+                <MarginView04/>
+                <DateOptionsView>
+                  <DateOptions
+                    mode={'datetime'}
+                    date={startDate}
+                    onDateChange={setStartDate}
+                    locale={i18n.language}
+                    minuteInterval={15}
+                    is24hourSource='locale'
+                    androidVariant="nativeAndroid"
+                    textColor="#000"
+                    textSize="24"
+                  />
+                </DateOptionsView>
+                <MarginView08/>
+                <LabelText>{t('DueDate')}</LabelText>
+                <MarginView04/>
+                <DateOptionsView>
+                  <DateOptions
+                    mode={'datetime'}
+                    date={dueDate}
+                    onDateChange={setDueDate}
+                    locale={i18n.language}
+                    minuteInterval={15}
+                    is24hourSource='locale'
+                    androidVariant="nativeAndroid"
+                    textColor="#000"
+                    textSize="20"
+                  />
+                </DateOptionsView>
+                <MarginView08/>
+                <Button type='inverted' onPress={handleToggleDates}>
+                  OK
+                </Button>
+                <MarginView08/>
+              </ModalWrapper>
+            </ModalView>
+          </Modal>
+        </FormScrollView>
+      </IosKeyboardAvoidingView>
     </Container>
   )
 }

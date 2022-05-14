@@ -1,10 +1,13 @@
 import styled from 'styled-components/native';
 
+const primaryFont = 'OpenSans-Bold';
+const secondaryFont = 'OpenSans-Regular';
+
 export const AlignView = styled.View`
   display: flex;
   flex-direction: row;
   align-items: center;
-  /* width: 40%; */
+  width: 90%;
   height: 100%;
   background-color: #fff;
   /* background: #4433ee; */
@@ -24,6 +27,7 @@ export const HeaderContainer = styled.View`
 export const HeaderText = styled.Text`
   color: #222;
   font-size: ${Platform.OS === 'ios' ? '16px' : '14px'};
+  
   font-weight: bold;
   margin-left: 16px;
   padding: 2px;
@@ -48,5 +52,22 @@ export const HeaderImageBackgroundView = styled.View`
   border-radius: 44px;
   border-width: 1px;
   border-color: #18A0FB;
+  /* background-color: #4ee; */
+`;
+
+export const HeaderLogo = styled.Image`
+height: 30px;
+width: 32px;
+/* margin-right: 8px; */
+/* background: #f00; */
+`;
+
+export const RightView = styled.View`
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  width: 10%;
+  right: -16px;
   /* background-color: #4ee; */
 `;

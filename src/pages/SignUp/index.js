@@ -1,137 +1,197 @@
-import React, { useRef, useState } from 'react';
-import { useDispatch } from 'react-redux';
-import { Alert } from 'react-native';
+import React, { useRef, useState, useEffect } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { Alert, Linking } from 'react-native';
+import auth from '@react-native-firebase/auth';
+import { useTranslation } from 'react-i18next';
 // import * as Yup from 'yup';
 // -----------------------------------------------------------------------------
-import Background from '~/components/Background';
-// import logo from '~/assets/detective/detectiveBlack.png';
-// import godtaskerFont from '~/assets/detective/godtaskerFontPlainGreySmall.png';
 import {
   AllIcon,
-  ButtonText,
   Container,
   EyeButton, EyeIcon,
-  Form, FormInput,
-  GenderDiv,
+  ForgotPasswordLink, ForgotPasswordText, Form, FormInput,
   IconView,
-  LabelText,
-  // ImageGodtaskerFont, ImageLogo,
-  PhoneMask,
-  RadioButtonView, RadioButtonTag,
-  RadioButtonLabel, RadioButtonOuter, RadioButtonInner0,
-  RadioButtonInner1, RadioButtonInner2, RadioButtonInner3,
-  RadioButtonInner4, RadioButtonLabelText,
-  SignUpErrorText,
-  SubmitButton,
+  MarginView02, MarginView04, MarginView08,
+  SignUpText, SignUpTextView,
   Wrapper,
-} from './styles';
-import { signUpRequest } from '~/store/modules/auth/actions';
-// import { goBack } from '../../services/NavigationService';
+} from '../SignIn/styles';
+import Button from '~/components/Button'
+import { signUpRequest, signUpToggleOut, signOut } from '~/store/modules/auth/actions';
 // -----------------------------------------------------------------------------
-export default function SignUp({ navigation, route }) {
+export default function SignUp(
+  {
+    // navigation
+    // route
+  }
+) {
+  const { t, i18n } = useTranslation();
   const dispatch = useDispatch();
+  const signedUp = useSelector(state => state.auth.signedup);
 
-  const [firstName, setFirstName] = useState();
-  const [lastName, setLastName] = useState();
   const [userName, setUserName] = useState();
   const [password, setPassword] = useState();
   const [confirmPassword, setConfirmPassword] = useState();
-  const [phonenumber, setPhonenumber] = useState();
-  const [email, setEmail] = useState();
-  const [birthDate, setBirthDate] = useState();
-  const [gender, setGender] = useState("feminino");
-  const [signUpError, setSignUpError] = useState();
-  const [secureText, setSecureText] = useState(true);
-  // const test = route.params.phonenumber;
-  // console.log(test)
 
-  const genderOptions = [ 'feminino', 'masculino', 'alien', 'outro', '']
+  const [email, setEmail] = useState();
+  const [secureText, setSecureText] = useState(true);
+
   const placeHolderColor = '#999';
 
   function handleSubmit() {
-    // if (!firstName || !lastName) {
-    //   Alert.alert(
-    //     'Please complete your name and lastname',
-    //     'Your bio will show your full name',
-    //     [{ style: "default" }],
-    //     { cancelable: true },
-    //   );
-    //   return;
-    // }
-    // if (!userName) {
-    //   Alert.alert(
-    //     'Please complete username',
-    //     'Your username is unique to you in Godtasker',
-    //     [{ style: "default" }],
-    //     { cancelable: true },
-    //   );
-    //   return;
-    // }
-    // if (!email) {
-    //   Alert.alert(
-    //     'Please enter e-mail address',
-    //     '',
-    //     [{ style: "default" }],
-    //     { cancelable: true },
-    //   );
-    //   return;
-    // }
-    // if (!phonenumber || (phonenumber.length < 15)) {
-    //   Alert.alert(
-    //     'Please enter a valid phonenumber',
-    //     'Ex. (99) 91234-1234',
-    //     [{ style: "default" }],
-    //     { cancelable: true },
-    //   );
-    //   return;
-    // }
-    // if (!birthDate || (birthDate.length < 10)) {
-    //   Alert.alert(
-    //     'Please enter a valid birth date',
-    //     'Ex. 01/01/2001',
-    //     [{ style: "default" }],
-    //     { cancelable: true },
-    //   );
-    //   return;
-    // }
-    // if ((password.length < 8) || (confirmPassword.length < 8)) {
-    //   Alert.alert(
-    //     'Please enter a password and confirm password',
-    //     'Mininum 8 charaters',
-    //     [{ style: "default" }],
-    //     { cancelable: true },
-    //   );
-    //   return;
-    // }
-    // if (password  !== confirmPassword) {
-    //   Alert.alert(
-    //     'Password and confirm password do not match',
-    //     'Use "eye" to visualize password, if needed',
-    //     [{ style: "default" }],
-    //     { cancelable: true },
-    //   );
-    //   return;
-    // }
-
     try {
-    const unmaskedPhoneNumber = (
-      maskedPhoneNumber => maskedPhoneNumber.replace(/[()\s-]/g, '')
-    )
-    const countryCode = '+55'
-    const parsedPhonenumber = countryCode+unmaskedPhoneNumber(phonenumber)
-
-      dispatch(signUpRequest(
-        firstName, lastName, userName, password,
-        parsedPhonenumber, email, birthDate, gender
+      const bio = t("SignUpBio", { userName: `${userName}` })
+      const res = dispatch(signUpRequest(
+        userName,
+        password,
+        email,
+        bio,
       ));
-      // navigation.goBack();
+
+      if (res) {
+        auth()
+        .createUserWithEmailAndPassword(email, password)
+        .then((response) => {
+          response.user.sendEmailVerification();
+
+
+        })
+        .catch(error => {
+          if (error.code === 'auth/email-already-in-use') {
+            console.log(error.message);
+            Alert.alert(
+            t("EmailAlreadyInUse"),
+          )
+          }
+
+          if (error.code === 'auth/invalid-email') {
+            console.log(error.message);
+            Alert.alert(
+              t("InvalidEmail"),
+            )
+          } else {
+            console.error(error);
+            Alert.alert(
+              ':(',
+            )
+          }
+        });
+
+        console.log('User account created & signed in!');
+        Alert.alert(
+          t("ThankYou"),
+          t("AnEmailHasBeenSent", { email: `${email}` })
+        )
+      } else {
+        Alert.alert(
+          t('ErrorInData'),
+        )
+      }
+
+    // auth()
+    // .createUserWithEmailAndPassword(email, password)
+    // .then((response) => {
+    //   response.user.sendEmailVerification();
+    //   const bio = t("SignUpBio", { userName: `${userName}` })
+    //   const res = dispatch(signUpRequest(
+    //     userName,
+    //     password,
+    //     email,
+    //     bio,
+    //   ));
+
+    //   if (res) {
+    //     console.log('User account created & signed in!');
+    //     Alert.alert(
+    //       t("ThankYou"),
+    //       t("AnEmailHasBeenSent", { email: `${email}` })
+    //     )
+    //   } else {
+    //     Alert.alert(
+    //       t('ErrorInData'),
+    //     )
+    //   }
+    // })
+    // .catch(error => {
+    //   if (error.code === 'auth/email-already-in-use') {
+    //     console.log(error.message);
+    //     Alert.alert(
+    //     t("EmailAlreadyInUse"),
+    //   )
+    //   }
+
+    //   if (error.code === 'auth/invalid-email') {
+    //     console.log(error.message);
+    //     Alert.alert(
+    //       t("InvalidEmail"),
+    //     )
+    //   } else {
+    //     console.error(error);
+    //     Alert.alert(
+    //       ':(',
+    //     )
+    //   }
+
+    // });
+
     }
     catch (error) {
       Alert.alert(
-        'Error in data',
+        t('ErrorInData'),
         `${error}`
       )
     }
+  }
+
+  function handleTerms() {
+    try {
+      Linking.openURL(`https://godtasker.com/`)
+    }
+    catch(error) {
+      console.log(error)
+    }
+  }
+
+  function handlePrivacy() {
+    try {
+      Linking.openURL(`https://godtasker.com/`)
+    }
+    catch(error) {
+      console.log(error)
+    }
+  }
+
+  function handleEula() {
+    try {
+      Linking.openURL(`https://godtasker.com/`)
+    }
+    catch(error) {
+      console.log(error)
+    }
+  }
+
+  if (signedUp) {
+    // navigation.navigate('SignIn');
+    // dispatch(signUpToggleOut());
+  }
+
+  function handleUser() {
+    // auth()
+    //   .signOut()
+    //   .then(() => console.log('User signed out!'));
+
+    auth().onAuthStateChanged((user) => {
+      if (user) {
+        // User is signed in, see docs for a list of available properties
+        // https://firebase.google.com/docs/reference/js/firebase.User
+        const uid = user.emailVerified;
+        const signed = user.signed
+        console.log(signed)
+        // ...
+      } else {
+        // User is signed out
+        // ...
+      }
+    })
   }
 
   function handleSecureText() {
@@ -139,147 +199,113 @@ export default function SignUp({ navigation, route }) {
   }
   // -----------------------------------------------------------------------------
   return (
-    <Background>
-      <Container>
-        {/* <ImageLogo source={logo} />
-        <ImageGodtaskerFont source={godtaskerFont} /> */}
-        <Form contentContainerStyle={{ alignItems: 'center' }}>
-          <Wrapper>
-            <IconView>
-              <AllIcon name='user'/>
-            </IconView>
-            <FormInput
-              autoCorrect={false}
-              placeholder="Name"
-              placeholderTextColor={placeHolderColor}
-              returnKeyType="next"
-              value={firstName}
-              onChangeText={setFirstName}
-            />
-            <FormInput
-              autoCorrect={false}
-              placeholder="Lastname"
-              placeholderTextColor={placeHolderColor}
-              returnKeyType="next"
-              value={lastName}
-              onChangeText={setLastName}
-            />
-            <FormInput
-              autoCorrect={false}
-              autoCapitalize="none"
-              placeholder="Username"
-              placeholderTextColor={placeHolderColor}
-              returnKeyType="next"
-              value={userName}
-              onChangeText={setUserName}
-            />
-            {/* <HrLine/> */}
-            <IconView>
-              <AllIcon name='info'/>
-            </IconView>
-
-            <FormInput
-              keboardType="email-address"
-              autoCorrect={false}
-              autoCapitalize="none"
-              placeholder="e-mail"
-              placeholderTextColor={placeHolderColor}
-              value={email}
-              onChangeText={setEmail}
-            />
-            <PhoneMask
-              type={'cel-phone'}
-              options={{
-                maskType: 'BRL',
-                withDDD: true,
-                dddMask: '(99) ',
-              }}
-              placeholder="Phonenumber"
-              placeholderTextColor={placeHolderColor}
-
-              returnKeyType="next"
-              value={phonenumber}
-              onChangeText={setPhonenumber}
-            />
-            <PhoneMask
-              type={'datetime'}
-              options={{
-                format: 'DD/MM/YYYY',
-              }}
-              placeholder="Birthdate (DD/MM/YYYY)"
-              placeholderTextColor={placeHolderColor}
-              returnKeyType="next"
-              value={birthDate}
-              onChangeText={setBirthDate}
-            />
-            <GenderDiv>
-              <LabelText>Gender:</LabelText>
-              <RadioButtonView>
-                <RadioButtonTag onPress={() => setGender('feminino')}>
-                  <RadioButtonLabel>female</RadioButtonLabel>
-                  <RadioButtonOuter>
-                    <RadioButtonInner1 switch={gender}/>
-                  </RadioButtonOuter>
-                </RadioButtonTag>
-                <RadioButtonTag onPress={() => setGender('masculino')}>
-                  <RadioButtonLabel>male</RadioButtonLabel>
-                  <RadioButtonOuter>
-                    <RadioButtonInner2 switch={gender}/>
-                  </RadioButtonOuter>
-                </RadioButtonTag>
-                <RadioButtonTag onPress={() => setGender('alien')}>
-                  <RadioButtonLabel>alien</RadioButtonLabel>
-                  <RadioButtonOuter>
-                    <RadioButtonInner3 switch={gender}/>
-                  </RadioButtonOuter>
-                </RadioButtonTag>
-                <RadioButtonTag onPress={() => setGender('outro')}>
-                  <RadioButtonLabel>other</RadioButtonLabel>
-                  <RadioButtonOuter>
-                    <RadioButtonInner4 switch={gender}/>
-                  </RadioButtonOuter>
-                </RadioButtonTag>
-              </RadioButtonView>
-            </GenderDiv>
-            {/* <HrLine/> */}
-
-            <IconView>
-              <AllIcon name='unlock'/>
-              <EyeButton onPress={handleSecureText}>
-                {secureText
-                  ? (<EyeIcon name='eye'/>)
-                  : (<EyeIcon name='eye-off'/>)
-                }
-              </EyeButton>
-            </IconView>
+    <Container>
+      <Form
+        // contentContainerStyle={{ alignItems: 'center' }}
+        // behavior={Platform.OS === "ios" ? "padding" : "position"}
+        // keyboardVerticalOffset = {Platform.OS === "ios" ? "100" : null }
+      >
+        <Wrapper contentContainerStyle={{ alignItems: 'center', justifyContent: 'center'}}>
+          <MarginView08/>
+          <MarginView08/>
+          <MarginView08/>
+          <MarginView08/>
+          <MarginView08/>
+          <MarginView08/>
+          <IconView>
+            <AllIcon name='user'/>
+          </IconView>
+          <MarginView04/>
+          <FormInput
+            autoCorrect={false}
+            autoCapitalize="none"
+            placeholder={t('UserName')}
+            placeholderTextColor={placeHolderColor}
+            returnKeyType="next"
+            value={userName}
+            onChangeText={setUserName}
+          />
+          <MarginView04/>
+          <FormInput
+            keboardType="email-address"
+            autoCorrect={false}
+            autoCapitalize="none"
+            placeholder="e-mail"
+            placeholderTextColor={placeHolderColor}
+            value={email}
+            onChangeText={setEmail}
+          />
+          <MarginView08/>
+          <MarginView04/>
+          <IconView>
+            <AllIcon name='unlock'/>
+            <EyeButton onPress={handleSecureText}>
+              {secureText
+                ? (<EyeIcon name='eye'/>)
+                : (<EyeIcon name='eye-off'/>)
+              }
+            </EyeButton>
+          </IconView>
+          <MarginView08/>
           <FormInput
             secureTextEntry = {secureText}
             autoCapitalize="none"
-            placeholder="Password"
+            placeholder={t('Password')}
             placeholderTextColor={placeHolderColor}
             returnKeyType="send"
             value={password}
             onChangeText={setPassword}
           />
+          <MarginView04/>
           <FormInput
             secureTextEntry = {secureText}
             autoCapitalize="none"
-            placeholder="Confirm password"
+            placeholder={t('ConfirmPassword')}
             placeholderTextColor={placeHolderColor}
             returnKeyType="send"
             onSubmitEditing={handleSubmit}
             value={confirmPassword}
             onChangeText={setConfirmPassword}
           />
-          {signUpError && (
-            <SignUpErrorText>{signUpError}</SignUpErrorText>
-          )}
-          <SubmitButton onPress={handleSubmit}>
-            <ButtonText>Send</ButtonText>
-          </SubmitButton>
-          </Wrapper>
-        </Form>
-      </Container>
-    </Background>
+          <MarginView08/>
+          <Button
+            type={'submit'}
+            onPress={handleSubmit}>
+            {t('Submit')}
+          </Button>
+          <MarginView08/>
+          <SignUpText>Ao se cadastrar, você concorda com os nossos:</SignUpText>
+          <MarginView02/>
+          <SignUpTextView>
+
+            <ForgotPasswordLink
+              onPress={handleTerms}
+            >
+              <ForgotPasswordText>
+                Termos e Condições
+              </ForgotPasswordText>
+            </ForgotPasswordLink>
+            <ForgotPasswordLink
+              onPress={handlePrivacy}
+            >
+              <ForgotPasswordText>
+              Política de Privacidade
+              </ForgotPasswordText>
+            </ForgotPasswordLink>
+            <ForgotPasswordLink
+              onPress={handleEula}
+            >
+              <ForgotPasswordText>
+              EULA
+              </ForgotPasswordText>
+            </ForgotPasswordLink>
+          </SignUpTextView>
+          <MarginView08/>
+          <MarginView08/>
+          <MarginView08/>
+        </Wrapper>
+      </Form>
+    </Container>
+
   );
 }

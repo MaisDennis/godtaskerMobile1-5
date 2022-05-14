@@ -3,6 +3,7 @@ import { Text, TouchableOpacity, SafeAreaView } from 'react-native'
 import { useSelector } from 'react-redux';
 import { format } from 'date-fns';
 import pt from 'date-fns/locale/pt';
+import { useTranslation } from 'react-i18next';
 // -----------------------------------------------------------------------------
 import {
   AddIcon,
@@ -18,7 +19,10 @@ import logo from '~/assets/detective/detective_remake.png'
 import Contacts from '~/components/Contacts'
 import api from '~/services/api';
 
-export default function FollowPage({ navigation }) {
+export default function FollowPage({ navigation, route }) {
+  const { t, i18n } = useTranslation()
+  const data = route.params;
+  console.log(data)
   const userId = useSelector( state => state.user.profile.id)
   const user_name = useSelector(state => state.user.profile.user_name);
   const contacts_update = useSelector( state => state.contact.profile)
@@ -28,7 +32,7 @@ export default function FollowPage({ navigation }) {
   const [inputState, setInputState] = useState('');
 
   useEffect(() => {
-    loadContacts(userId, '');
+    loadContacts(data.contact_name, '');
   }, [contacts_update]);
 
   const formattedDate = fdate =>
@@ -37,11 +41,11 @@ export default function FollowPage({ navigation }) {
     : format(fdate, "dd 'de' MMMM',' yyyy", { locale: pt });
   const todayDate = formattedDate(new Date())
 
-  async function loadContacts(userID, input) {
-    console.log(userID)
+  async function loadContacts(contact_name, input) {
     setInputState(input)
-    const response = await api.get(`users/${userID}/following`, {
+    const response = await api.get(`users/following`, {
       params: {
+        contactName: contact_name,
         nameFilter: `${input}`,
       }
     })
@@ -98,7 +102,7 @@ export default function FollowPage({ navigation }) {
       <Header>
         <SearchBarTextInput
           placeholder='Search'
-          onChangeText={(input) => loadContacts( userId, input)}
+          onChangeText={(input) => loadContacts( data.worker_name, input)}
           returnKeyType='search'
           value={inputState}
         />
@@ -106,16 +110,16 @@ export default function FollowPage({ navigation }) {
 
       { contacts == ''
         ? (
-          <Title>Não há contatos cadastrados.</Title>
+          <Title>{t('NoContactsRegistered')}</Title>
         )
         : (
           <List
             data={contacts}
-            keyExtractor={item => String(item.phonenumber)}
+            keyExtractor={item => String(item.email)}
 
             renderItem={({ item }) => (
               <Contacts
-                key={item.phonenumber}
+                key={item.emal}
                 data={item}
                 navigation={navigation}
               />

@@ -1,5 +1,8 @@
 import styled from 'styled-components/native';
 
+const primaryFont = 'OpenSans-Bold';
+const secondaryFont = 'OpenSans-Regular';
+
 export const AlignView = styled.View`
   display: flex;
   flex-direction: row;

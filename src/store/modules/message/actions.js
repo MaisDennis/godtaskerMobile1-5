@@ -12,9 +12,9 @@ export function updateForwardMessage(message) {
   };
 }
 
-export function updateChatInfo(userData, workerData) {
+export function updateChatInfo(userData, workerData, inverted) {
   return {
     type: '@message/UPDATE_CHAT_INFO',
-    payload: { userData, workerData },
+    payload: { userData, workerData, inverted },
   };
 }

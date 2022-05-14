@@ -1,67 +1,120 @@
 import React from 'react';
+import defaultAvatar from '~/assets/defaultAvatar.png';
 // -----------------------------------------------------------------------------
+
 import {
-  Body,
+  BodyView, BodyWrapper,
   Container,
-  Image, ImageBackgroundView,
-  TextBio, TextFirstName, TextFollowedBy,
-  TextLastName, TextNameView, TextWorkerName, TextView,
-  UserInfoView,
-} from './styles'
-import { updateContacts } from '~/store/modules/contact/actions';
-import api from '~/services/api';
+  DatesAndButtonView,
+  LeftContactView,
+  MarginView02, MarginView04, MarginView08,
+  TextBio, TextPoints, TitleView, TitleText,
+  UserImage, WorkerImageBackground,
+} from '../Tasks/styles';
 
 
 export default function Contacts({ navigation, data }) {
+const taskConditionIndex = 1;
+
   function handleWorkerPage() {
     navigation.navigate('WorkerPage', {
       id: data.id,
+      worker_name: data.worker_name,
+      email: data.email,
+
       first_name: data.first_name,
       last_name: data.last_name,
-      worker_name: data.worker_name,
       department: data.department,
-      // phonenumber: data.phonenumber,
+      points: data.points,
       instagram: data.instagram,
       linkedin: data.linkedin,
       bio: data.bio,
-      avatar: data.avatar ? data.avatar.url : ''
+      avatar: data.avatar,
+      blocked_list: data.blocked_list,
+      flagged_list: data.flagged_list,
     })
   }
 
   // ---------------------------------------------------------------------------
   return (
-    <Container onPress={handleWorkerPage}>
-      <Body>
-        <UserInfoView>
-          { data === undefined || data.avatar === null
+    <Container taskConditionIndex={taskConditionIndex} onPress={handleWorkerPage}>
+      <LeftContactView>
+        { data === undefined || data.avatar === null
+          ? (
+            <WorkerImageBackground>
+              <UserImage source={defaultAvatar}/>
+            </WorkerImageBackground>
+
+          )
+          : (
+            <WorkerImageBackground>
+              <UserImage source={{ uri: data.avatar.url }}/>
+            </WorkerImageBackground>
+          )
+        }
+      </LeftContactView>
+
+      <BodyView>
+        <BodyWrapper>
+        <MarginView04/>
+          <TitleView>
+            {
+              data.worker_name
+              ? (
+                <TitleText>{data.worker_name}</TitleText>
+              )
+              : (
+                <TitleText>{data.user_name}</TitleText>
+              )
+            }
+            <TextPoints>({data.points})</TextPoints>
+          </TitleView>
+          <MarginView02/>
+          <DatesAndButtonView>
+
+            {
+              data.first_name && data.last_name
+              ? (
+                <TextBio
+                  numberOfLines={1}
+                >
+                {data.first_name} {data.last_name}
+                </TextBio>
+              )
+              : (
+                <TextBio
+                  numberOfLines={1}
+                >
+                -
+                </TextBio>
+              )
+            }
+          </DatesAndButtonView>
+          <MarginView02/>
+          <DatesAndButtonView>
+
+
+          { data.bio
             ? (
-              <ImageBackgroundView>
-                <Image/>
-              </ImageBackgroundView>
+              <TextBio
+                numberOfLines={1}
+              >
+                {data.bio}
+              </TextBio>
             )
             : (
-              <ImageBackgroundView>
-                <Image source={{ uri: data.avatar.url }}/>
-              </ImageBackgroundView>
+              <TextBio
+                numberOfLines={1}
+              >
+                -
+              </TextBio>
             )
           }
-          <TextView>
-            <TextWorkerName>{data.worker_name}</TextWorkerName>
-            <TextNameView>
-              <TextFirstName>{data.first_name}</TextFirstName>
-              <TextLastName>{data.last_name}</TextLastName>
-            </TextNameView>
-            <TextBio
-              numberOfLines={1}
-            >
-              {data.bio}
-              {/* Accountant, Tax Specialist, humanitarian movement coordinator */}
-            </TextBio>
-            {/* <TextFollowedBy>Followed by nina_ + 5 more</TextFollowedBy> */}
-          </TextView>
+          </DatesAndButtonView>
+          <MarginView04/>
+        </BodyWrapper>
+      </BodyView>
 
-        </UserInfoView>
-      </Body>
     </Container>
   )
 }

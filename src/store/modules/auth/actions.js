@@ -1,32 +1,61 @@
-export function signInRequest( phonenumber, password) {
+export function signInRequest(
+  email,
+  password
+) {
   return {
     type: '@auth/SIGN_IN_REQUEST',
-    payload: { phonenumber, password },
+    payload: {
+      email,
+      password
+    },
   };
 }
+// -----------------------------------------------------------------------------
 export function signInSuccess(token, user, worker) {
   return {
     type: '@auth/SIGN_IN_SUCCESS',
     payload: {token, user, worker },
   };
 };
+// -----------------------------------------------------------------------------
 export function signFailure() {
   return {
     type: '@auth/SIGN_IN_FAILURE',
   }
-}
+};
+// -----------------------------------------------------------------------------
 export function signUpRequest(
-  first_name, last_name, user_name,
-  password, phonenumber, email, birth_date, gender
+  user_name,
+  password,
+  email,
+  bio,
 ) {
   return {
     type: '@auth/SIGN_UP_REQUEST',
     payload: {
-      first_name, last_name, user_name,
-      password, phonenumber, email, birth_date, gender
+      user_name,
+      password,
+      email,
+      bio,
     },
+
   }
 }
+
+export function signUpSuccess(user) {
+  return {
+    type: '@auth/SIGN_UP_SUCCESS',
+    payload: {user},
+  };
+};
+
+export function signUpToggleOut(message) {
+  return {
+    type: '@auth/SIGN_UP_TOGGLEOUT',
+    payload: {message},
+  }
+}
+
 export function signOut() {
   return {
     type: '@auth/SIGN_OUT',

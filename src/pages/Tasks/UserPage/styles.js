@@ -4,14 +4,46 @@ import { TouchableOpacity } from 'react-native'
 
 export const AddIcon = styled(FeatherIcon)`
 font-weight: 700;
+margin: 0 auto;
 color: #18A0FB;
+/* color: #fff; */
+/* background-color: #4433ee; */
+`;
+
+export const AddIcon02 = styled(FeatherIcon)`
+font-weight: 700;
+/* color: #18A0FB; */
+color: #fff;
 /* background-color: #4433ee; */
 `;
 
 export const Container = styled.SafeAreaView`
   height: 100%;
-  background-color: ${Platform.OS === 'ios' ? '#ddd' : '#f5f5f5'};
+  background-color: ${Platform.OS === 'ios' ? '#eee' : '#f5f5f5'};
   /* background-color: #f5f5; */
+`;
+
+export const Floater = styled.View`
+
+  position: absolute;
+  right: 5%;
+  top: ${Platform.OS === 'ios' ? '93%' : '90%'};
+  height: 50px;
+  width: 50px;
+  z-index: 10;
+  /* background-color: #ee3; */
+`;
+
+export const FloaterButton = styled(TouchableOpacity)`
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  height: 50px;
+  width: 50px;
+  border-radius: 50px;
+
+  background-color: #18A0FB;
 `;
 
 export const Header = styled.View`
@@ -37,7 +69,7 @@ flex-direction: row;
 justify-content: space-between;
 width: 100%;
 height: auto;
-padding: 4px 0;
+padding: 2px 0;
 background-color: #fff;
 /* background-color: #f5f; */
 `;
@@ -45,9 +77,8 @@ export const HeaderTouchable = styled(TouchableOpacity)`
 display: flex;
 flex-direction: row;
 align-items: center;
-justify-content: center;
-width: 12%;
-height: 100%;
+justify-content: flex-end;
+width: 15%;
 /* background-color: #f5f; */
 `;
 
@@ -63,23 +94,24 @@ export const List = styled.FlatList.attrs({
 //   height: 100%;
 // `;
 
+export const SearchBarTextInput = styled.TextInput`
+  height: 70%;
+  width: 70%;
+  border: 1px;
+  border-color: #ccc;
+  border-radius: 4px;
+  padding: 4px 12px;
+  margin: 0 auto;
+  background-color: #eee;
+`;
+
 export const SpaceView = styled.View`
   display: flex;
   flex-direction: row;
   align-items: center;
-  height: 100%;
-  width: 24%;
-  background-color: #fff;
+  height: auto;
+  width: 15%;
   /* background-color: #f5f; */
-`;
-
-export const SearchBarTextInput = styled.TextInput`
-  height: 70%;
-  width: 50%;
-  border-radius: 8px;
-  padding: 4px 12px;
-  margin: 0 auto;
-  background-color: #eee;
 `;
 
 export const Title = styled.Text`
@@ -103,33 +135,33 @@ export const UpperTabView = styled(TouchableOpacity)`
   align-items: center;
   justify-content: center;
   height: 28px;
-  width: 25%;
-  border-width: 1px;
-  border-style: solid;
-  border-color: #ccc;
-  border-radius: 16px;
-  margin: 4px auto;
-  background-color: #fff;
+  width: 33%;
+  /* background-color: #f5f; */
 `;
 export const UpperTabText = styled.Text`
-  font-size: 12px;
+  font-size: ${Platform.OS === 'ios' ? '14px' : '12px'};
   font-weight: 700;
   color: #ccc;
 `;
 
+export const UpperTabSelectedBarView = styled.View`
+  position: absolute;
+  top: 100%;
+  height: 4px;
+  width: 100%;
+  background-color: #1B2432;
+`;
+
 export const UpperTabSelectedView = styled(TouchableOpacity)`
-  display: flex;
-  flex-direction: row;
+display: flex;
+  flex-direction: column;
   align-items: center;
   justify-content: center;
   height: 28px;
-  width: 25%;
-  border-radius: 16px;
-  margin: 4px auto;
-  background-color: #1B2432;
+  width: 33%;
 `;
 export const UpperTabSelectedText = styled.Text`
   font-size: ${Platform.OS === 'ios' ? '14px' : '12px'};
   font-weight: 700;
-  color: #fff;
+  color: #1B2432;
 `;

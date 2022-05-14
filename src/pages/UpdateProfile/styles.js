@@ -6,6 +6,10 @@ import Icon from 'react-native-vector-icons/Feather';
 import Input from '~/components/Input';
 import Button from '~/components/Button';
 // import { ImageBackgroundView } from '../Messages/MessagesConversationPage/styles';
+
+const primaryFont = 'OpenSans-Bold';
+const secondaryFont = 'OpenSans-Regular';
+
 // -----------------------------------------------------------------------------
 export const AllIcon = styled(Icon)`
   font-size: 16px;
@@ -34,30 +38,29 @@ color: #fff;
 // `;
 
 export const Container = styled.SafeAreaView`
-  display: flex;
-  height: 100%;
   background-color: ${Platform.OS === 'ios' ? '#ddd' : '#f5f5f5'};
-  /* background-color: #4433ee; */
+  background-color: #fff;
 `;
 
 export const Form = styled.ScrollView`
   display: flex;
   flex-direction: column;
-  width: 100%;
-  background-color: #fff;
+  width: 80%;
+  /* background-color: #fff; */
 `;
 export const FormInput = styled.TextInput`
   display: flex;
   min-height: 44px;
   height: auto;
-  width: 80%;
+  width: 100%;
   font-size: ${Platform.OS === 'ios' ? '14px' : '12px'};
-  line-height: ${Platform.OS === 'ios' ? '20px' : '18px'};
+  
+  line-height: ${Platform.OS === 'ios' ? '18px' : '18px'};
   padding: 4px 12px;
-  border-radius: 8px;
+  border-radius: 4px;
   border-width: 1px;
-  border-color: #1B2432;
-  margin: 8px 0;
+  border-color: #ccc;
+  /* margin: 16px 0 8px 0; */
   color: #1B2432;
   background-color: #eee;
 `;
@@ -84,7 +87,11 @@ export const ImageWrapper = styled.View`
 `;
 
 export const IosKeyboardAvoidingView = styled(KeyboardAvoidingView)`
-
+  display: flex;
+  align-items: center;
+  height: 100%;
+  width: 100%;
+  /* background-color: #4433ee; */
 `;
 
 export const LabelText = styled.Text`
@@ -92,6 +99,21 @@ export const LabelText = styled.Text`
   font-size: ${Platform.OS === 'ios' ? '14px' : '12px'};
   margin-right: 8px;
   color: #1B2432;
+`;
+
+export const MarginView02 = styled.View`
+  width: 100%;
+  margin: 2px 0;
+`;
+
+export const MarginView04 = styled.View`
+  width: 100%;
+  margin: 4px 0;
+`;
+
+export const MarginView08 = styled.View`
+  width: 100%;
+  margin: 8px 0;
 `;
 
 export const PhoneMask = styled(InputMask)`

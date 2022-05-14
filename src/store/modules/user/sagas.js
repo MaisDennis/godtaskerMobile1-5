@@ -7,9 +7,12 @@ import { updateProfileSuccess, updateProfileFailure } from './actions';
 export function* updateProfile({ payload }) {
   try {
     const {
-      first_name, last_name, user_name,
-      oldPassword, password, confirmPassword,
-      phonenumber, email, birth_date, gender,
+      first_name,
+      last_name,
+      email,
+      instagram,
+      linkedin,
+      bio,
       image,
     } = payload;
     // console.log(payload)
@@ -21,37 +24,20 @@ export function* updateProfile({ payload }) {
       response = yield call(api.put, 'users/no-photo', {
         first_name,
         last_name,
-        user_name,
-        oldPassword,
-        password,
-        confirmPassword,
-        phonenumber,
-        birth_date,
-        gender,
-        // instagram,
-        // linkedin,
-        // bio,
-        // avatar_id
+        email,
+        instagram,
+        linkedin,
+        bio,
       });
       responseWorker = yield call(api.put, 'workers/no-photo', {
         first_name,
         last_name,
-        worker_name: user_name,
-        oldPassword,
-        password,
-        confirmPassword,
-        phonenumber,
         email,
-        birth_date,
-        gender,
-        // instagram,
-        // linkedin,
-        // bio,
-        // avatar_id
+        instagram,
+        linkedin,
+        bio,
       });
-
     } else {
-
       const imageResponse = yield call(api.get, 'files', {
         params: { image },
       })
@@ -60,35 +46,25 @@ export function* updateProfile({ payload }) {
       response = yield call(api.put, 'users', {
         first_name,
         last_name,
-        user_name,
-        oldPassword,
-        password,
-        confirmPassword,
-        phonenumber,
-        birth_date,
-        gender,
+        email,
         avatar_id
       });
-      console.log(response)
+      console.log('user with photo sagas')
 
       responseWorker = yield call(api.put, 'workers', {
         first_name,
         last_name,
-        worker_name: user_name,
-        phonenumber,
-        birth_date,
-        gender,
+        email,
         avatar_id,
       });
     }
-
-    Alert.alert('Perfil atualizado com sucesso!');
-    console.log(responseWorker.data);
+    Alert.alert('Profile update success!');
+      // console.log(response.data);
     yield put(updateProfileSuccess(response.data));
 
   } catch (error) {
     console.log(error)
-    Alert.alert('Erro ao atualizar o perfil');
+    Alert.alert('Profile update error');
 
     // Alert.alert(error.data.error);
     // yield put(updateProfileFailure());

@@ -49,25 +49,28 @@ export const ImageBackgroundView = styled.View`
 export const TextBio = styled.Text`
   font-size: ${Platform.OS === 'ios' ? '14px' : '12px'};
   font-weight: normal;
+  margin: 2px 4px;
   color: #666;
+  /* background-color: #ee3; */
 `;
 
 export const TextFirstName = styled.Text`
   font-size: ${Platform.OS === 'ios' ? '16px' : '14px'};
   font-weight: bold;
   margin-right: 4px;
-  color: #000;
+  color: #1B2432;
 `;
 
 export const TextLastName = styled.Text`
   font-size: ${Platform.OS === 'ios' ? '16px' : '14px'};
   font-weight: bold;
-  color: #000;
+  color: #1B2432;
 `;
 
 export const TextNameView = styled.View`
   display: flex;
   flex-direction: row;
+  align-items: center;
 `;
 
 export const TextFollowedBy = styled.Text`
@@ -84,10 +87,19 @@ export const TextWorkerName = styled.Text`
   color: #334466;
 `;
 
+export const TextPoints = styled.Text`
+  font-size: ${Platform.OS === 'ios' ? '13px' : '11px'};
+  font-weight: normal;
+  margin: 0px 4px;
+  color: #18A0FB;
+  color: #334466;
+`;
+
 export const TextView = styled.View`
   display: flex;
   flex-direction: column;
-  margin: 12px 16px;
+  justify-content: center;
+  margin: 0px 16px;
 `;
 
 export const UserInfoView = styled.View`
@@ -96,7 +108,7 @@ export const UserInfoView = styled.View`
   /* justify-content: space-between; */
   align-items: center;
   height: 100%;
-  width: 85%;
+  width: 100%;
   padding: 0 12px;
   /* background-color: #4433ee; */
 `;

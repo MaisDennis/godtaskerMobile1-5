@@ -1,66 +1,83 @@
 /* eslint-disable react/prop-types */
 import React, { useEffect, useState, useMemo } from 'react';
-import { ActivityIndicator, Alert } from 'react-native';
-import { useDispatch } from 'react-redux';
+import { ActivityIndicator, Alert, StyleSheet } from 'react-native';
+import { useDispatch, useSelector } from 'react-redux';
 import { format, parseISO } from 'date-fns';
 import CheckBox from '@react-native-community/checkbox';
 import Modal from 'react-native-modal';
 import ImagePicker from 'react-native-image-crop-picker';
 import firestore from '@react-native-firebase/firestore';
-import { enUS, pt } from 'date-fns/locale/pt';
+import { enUS, ptBR } from 'date-fns/locale';
+import defaultAvatar from '~/assets/defaultAvatar.png';
+import { useTranslation } from 'react-i18next';
+// import PushNotification from "react-native-push-notification";
 // -----------------------------------------------------------------------------
 import {
-  AcceptButton, AcceptButtonView,
+  AcceptButtonView,
   AlignCheckBoxView, AlignDetailsView,
-  BackButton, BodyView, BodyWrapper,
-  ButtonView, ButtonText, BottomHeaderView,
-  BellIcon, ButtonIcon, ButtonWrapper,
-  CenterView, ConfirmButton, ConfirmIcon,
-  CheckBoxView, Container, CameraButton,
-  DescriptionView, DescriptionBorderView, DescriptionSpan,
-  DatesAndButtonView, DueTimeView, DueTime, DetailsView,
+  BackButton, BackIcon, BackIcon02, BackText, BodyView, BodyWrapper,
+  BellIcon, BottomHeaderView, ButtonForModal, ButtonForModalRight, ButtonIcon, ButtonWrapper, ButtonWrapperConfirm,
+  CenterView, CheckBoxView, CheckBoxWrapper, ConfirmIcon, Container,
+  DescriptionView, DescriptionSpan, DescriptionSpan02,
+  DatesAndButtonView, DueTimeView, DueTime,
   FormScrollView,
   HrLine,
   IconsView,
   Image, ImageView, ImageWrapper, InnerStatusView,
   Label, LabelInitiated, LabelEnded, LeftView,
-  ModalView, ModalText,
+  MarginView02, MarginView04, MarginView08,
+  ModalHeaderCenter, ModalHeaderLeft, ModalHeaderRight, ModalHeaderView, ModalView, ModalText,
   NameText,
   OuterStatusView,
-  RejectTaskInput, RejectButton, RightView,
+  RejectTaskInput, RightView,
   StartTimeView, StartTime,
-  TagView, TitleView, TaskIcon,
-  TitleText, TaskAttributesView, ToWorkerView, ToText, TitleIcon,
-  TitleBorderView, TitleTextModal,
-  UnreadMessageCountText, UserImage, UserImageBackground,
+  TagView, TitleView, TaskIcon, TitleIcon,
+  TitleText, TitleTextModal, TaskAttributesView,
+  ToText, ToTextModal, ToWorkerView,
+  UnreadMessageCountText, UserImage, WorkerImageBackground,
 } from './styles';
 import { updateTasks } from '~/store/modules/task/actions';
 import { updateChatInfo } from '~/store/modules/message/actions';
 import api from '~/services/api';
+import Button from '~/components/Button'
+import ButtonForIcon from '~/components/ButtonForIcon'
 // -----------------------------------------------------------------------------
-const taskAttributesArray = [ 'low', 'medium', 'high', '-']
-const formattedDate = fdate =>
-  fdate == null
-    ? '-'
-    : format(parseISO(fdate), "MMM'-'dd'-'yyyy", { locale: enUS });
-
-const formattedDateTime = fdate =>
-  fdate == null
-    ? '-'
-    : format(parseISO(fdate), "MMM'-'dd'-'yyyy HH:mm", { locale: enUS });
-
 export default function Task({ data, navigation, taskConditionIndex }) {
-  // console.log(data)
+  const profileUserEmail = useSelector(state => state.user.profile.email)
+
+  const { t, i18n } = useTranslation();
   const dispatch = useDispatch();
 
-  const user_id = data.user.id;
-  const worker_id = data.worker.id;
+  const formattedDate = fdate =>
+  fdate == null
+    ? '-'
+    : i18n.language === 'en'
+      ? format(parseISO(fdate), "MMM'/'dd'/'yyyy", { locale: enUS })
+      : format(parseISO(fdate), "dd'/'MMM'/'yyyy", { locale: ptBR })
+
+  const formattedDateTime = fdate =>
+    fdate == null
+      ? '-'
+      : i18n.language === 'en'
+        ? format(parseISO(fdate), "MMM'/'dd'/'yyyy h:mm aaa", { locale: enUS })
+        : format(parseISO(fdate), "dd'/'MMM'/'yyyy HH:mm", { locale: ptBR });
+
   const task_id = data.id;
+
+  const user_email = data.user.email;
   const userData = data.user;
+
+  const worker_id = data.worker.id;
+  const worker_email = data.worker.email;
   const workerData = data.worker;
+
+  const userIsWorker = profileUserEmail === worker_email;
+
   const dueDate = parseISO(data.due_date);
   const endDate = parseISO(data.end_date);
   const subTasks = data.sub_task_list;
+  const points = data.points;
+  const subPoints = points - 100;
   const confirmPhoto = data.confirm_photo;
 
   const [toggleTask, setToggleTask] = useState();
@@ -71,7 +88,10 @@ export default function Task({ data, navigation, taskConditionIndex }) {
   const [updateStatus, setUpdateStatus] = useState();
   const [messageBell, setMessageBell] = useState();
   const[statusResult, setStatusResult] = useState(0);
+  const[scoreResult, setScoreResult] = useState(0);
   const [ sendingIndicator, setSendingIndicator ] = useState();
+
+  const taskAttributesArray = [ t('Low'), t('Medium'), t('High'), '-']
 
   useEffect (() => {
     handleMessageBell()
@@ -106,16 +126,19 @@ export default function Task({ data, navigation, taskConditionIndex }) {
 
   async function handleStatus() {
     let weige = 0;
+    let tempScore = subPoints;
     subTasks.map(s => {
       if(s.complete === true) {
         weige = weige + s.weige_percentage
       }
     })
-
+    tempScore = Math.round(tempScore * (weige / 100))
     const response = await api.put(`tasks/${data.id}`, {
-      status_bar: Math.round(weige)
+      status_bar: Math.round(weige),
+      score: tempScore,
     })
     setStatusResult(response.data.status_bar)
+    setScoreResult(response.data.score)
     // return Math.round(weige);
     return;
   }
@@ -154,72 +177,52 @@ export default function Task({ data, navigation, taskConditionIndex }) {
     editedSubTaskList[position].complete = value
     editedSubTaskList[position].user_read = false
 
-    await api.put(`tasks/${data.id}`, {
+    await api.put(`tasks/${task_id}`, {
       sub_task_list: editedSubTaskList,
     })
+
+    await api.put(`/tasks/${task_id}/notification/worker/subtask`, {
+      position: position,
+      text: [t('Task'), t('Completed'), t('Subtask'), t('Unchecked')]
+    })
+
     dispatch(updateTasks(new Date()))
     setUpdateStatus(new Date())
   }
 
   async function handleMessageConversation() {
     setToggleTask(!toggleTask)
-    const response = await api.get('/messages', {
+    const response = await api.get('/messages/worker', {
       params: {
-        user_id: worker_id,
-        worker_id: user_id,
+        user_email: user_email,
+        worker_email: profileUserEmail,
       },
     })
     const messageData = response.data
-    console.log(response.data)
+    // console.log(response.data)
     if(response.data.message === null) {
       const chat_id = Math.floor(Math.random() * 1000000)
 
       navigation.navigate('MessagesConversationPage', {
-        // id: data.id,
-        user_id: worker_id,
-        user_name: workerData.worker_name,
-        userData: workerData,
-        worker_id: user_id,
-        worker_name: userData.user_name,
-        workerData: userData,
+        userData: userData,
+        workerData: workerData,
+
         chat_id: chat_id,
-        avatar: userData.avatar,
+        inverted: true,
         first_message: true,
       });
-      dispatch(updateChatInfo(userData, workerData));
+      dispatch(updateChatInfo(userData, workerData, true));
       return
     }
 
     navigation.navigate('MessagesConversationPage', {
-      // id: data.id,
-      user_id: workerData.id,
-      user_name: workerData.worker_name,
-      userData: workerData,
-      worker_id: userData.id,
-      worker_name: userData.user_name,
-      workerData: userData,
-      avatar: userData.avatar,
+      userData: userData,
+      workerData: workerData,
+
       chat_id: response.data.message.chat_id,
       inverted: response.data.inverted,
     });
-    dispatch(updateChatInfo(userData, workerData));
-  }
-
-  function handleConfirm() {
-    if(data.confirm_photo) {
-      // navigation.navigate('Confirm', {
-      //   task_id: data.id, taskName: data.name
-      // });
-      setTogglePhotoModal(!togglePhotoModal)
-    } else {
-      setToggleConfirmModal(!toggleConfirmModal)
-    }
-  }
-
-  async function handleConfirmWithoutPhoto() {
-    await api.put(`tasks/confirm/${data.id}`);
-    setToggleConfirmModal(!toggleConfirmModal)
-    dispatch(updateTasks(new Date()))
+    dispatch(updateChatInfo(userData, workerData, response.data.inverted));
   }
 
   async function handleToggleAccept() {
@@ -227,7 +230,7 @@ export default function Task({ data, navigation, taskConditionIndex }) {
     await api.put(`tasks/${data.id}/notification/worker`, {
       status: {
         status: 2,
-        comment: `Accepted on ${new Date()}`,
+        comment: t('AcceptedComment', { taskName: `${data.name}` })
       },
       initiated_at: new Date(),
     })
@@ -239,7 +242,7 @@ export default function Task({ data, navigation, taskConditionIndex }) {
       status: {
         status: 4,
         canceled_by: "worker",
-        comment: `Declined. Comment: ${rejectTaskInputValue}`,
+        comment: t('DeclinedComment', { taskName: `${data.name}`, comment: `${rejectTaskInputValue}` }),
       },
       canceled_at: new Date(),
     });
@@ -261,7 +264,28 @@ export default function Task({ data, navigation, taskConditionIndex }) {
     }
   }
 
+  function handleConfirm() {
+    if(data.confirm_photo) {
+      setTogglePhotoModal(!togglePhotoModal)
+    } else {
+      setToggleConfirmModal(!toggleConfirmModal)
+    }
+  }
+
+  async function handleConfirmWithoutPhoto() {
+    let tempScore = scoreResult + 100;
+    await api.put(`tasks/confirm/${data.id}`, {
+      score: tempScore,
+    });
+    await api.put(`users/points/${worker_id}`, {
+      points: tempScore,
+    })
+    setToggleConfirmModal(!toggleConfirmModal)
+    dispatch(updateTasks(new Date()))
+  }
+
   async function takePhotoFromCamera() {
+    let tempScore = scoreResult + 100;
     ImagePicker.openCamera({
       width: 300,
       height: 400,
@@ -270,26 +294,33 @@ export default function Task({ data, navigation, taskConditionIndex }) {
       // console.log(image)
       const formData = new FormData();
       formData.append('signatureImage', {
-        uri: Platform.OS === 'ios' ? image.sourceURL : image.path,
-        // uri: image.path,
+        // uri: Platform.OS === 'ios' ? image.sourceURL : image.path,
+        uri: image.path,
         // type: "image/jpg",
         type: "image/jpg",
         name: `signature_${task_id}.jpg`,
       });
-      setSendingIndicator(!sendingIndicator)
-      try {
 
+      try {
+        setSendingIndicator(!sendingIndicator)
         const response = await api.post('signatures', formData);
 
         const { signature_id } = response.data;
+        tempScore = tempScore + 100;
 
         await api.put(`tasks/confirm/${task_id}`, {
           signature_id,
+          score: tempScore,
+          messageTitle: t('TaskTitle',  { taskName: `${data.name}` }),
+          messageMessage: t('TaskMessage', { taskName: `${workerData.worker_name}` }),
         });
-        setSendingIndicator(false)
+
+        await api.put(`users/points/${worker_id}`, {
+          points: tempScore,
+        })
         Alert.alert(
-          'Success!',
-          'Photo sent!',
+          t('Success'),
+          t('PhotoSent'),
           [
             {
               text: 'OK',
@@ -298,12 +329,14 @@ export default function Task({ data, navigation, taskConditionIndex }) {
           ],
           {cancelable: false }
         )
+        setSendingIndicator(false)
+        setTogglePhotoModal(!togglePhotoModal)
       }
       catch {
         setSendingIndicator(false)
         Alert.alert(
-          'Error: Not able to send photo',
-          'Please try again',
+          t('ErrorNotAblePhoto'),
+          t('PleaseTryAgain'),
           [
             {
               text: 'OK',
@@ -315,13 +348,14 @@ export default function Task({ data, navigation, taskConditionIndex }) {
         setTogglePhotoModal(!togglePhotoModal)
       }
     })
-    setTogglePhotoModal(!togglePhotoModal)
-    setToggleTask(!toggleTask)
-    console.log('Here')
+    // setTogglePhotoModal(!togglePhotoModal)
+    // setToggleTask(!toggleTask)
   }
 
   async function chooseFromLibrary() {
     // console.warn('choose Photo')
+      let tempScore = scoreResult + 100;
+
       ImagePicker.openPicker({
         width: 300,
         height: 400,
@@ -344,13 +378,20 @@ export default function Task({ data, navigation, taskConditionIndex }) {
 
           const { signature_id } = response.data;
 
+
           await api.put(`tasks/confirm/${task_id}`, {
             signature_id,
+            score: tempScore,
+            messageTitle: t('TaskTitle',  { taskName: `${data.name}` }),
+            messageMessage: t('TaskMessage', { taskName: `${workerData.worker_name}` }),
           });
-          setSendingIndicator(!sendingIndicator)
+
+          await api.put(`users/points/${worker_id}`, {
+            points: tempScore,
+          })
           Alert.alert(
-            'Success!',
-            'Photo sent!',
+            t('Success'),
+            t('PhotoSent'),
             [
               {
                 text: 'OK',
@@ -359,13 +400,14 @@ export default function Task({ data, navigation, taskConditionIndex }) {
             ],
             {cancelable: false }
           )
+          setSendingIndicator(false)
           setTogglePhotoModal(!togglePhotoModal)
 
         }
         catch {
           Alert.alert(
-            'Error: Not able to send photo',
-            'Please try again',
+            t('ErrorNotAblePhoto'),
+            t('PleaseTryAgain'),
             [
               {
                 text: 'OK',
@@ -388,22 +430,24 @@ export default function Task({ data, navigation, taskConditionIndex }) {
       <LeftView>
         { userData === undefined || userData.avatar === null
           ? (
-            <UserImage/>
-            // <SenderText>Hi</SenderText>
+            <UserImage source={defaultAvatar}/>
           )
           : (
-            <UserImageBackground>
+            <WorkerImageBackground>
               <UserImage source={{ uri: userData.avatar.url }}/>
-            </UserImageBackground>
+            </WorkerImageBackground>
           )
         }
       </LeftView>
 
       <BodyView>
         <BodyWrapper>
-        <TitleView>
+          <MarginView04/>
+          <TitleView>
             <TitleText numberOfLines={2}>{data.name}</TitleText>
           </TitleView>
+          <MarginView04/>
+
           <ToWorkerView>
             <TitleIcon name="coffee"/>
             <ToText numberOfLines={1}>{data.user.user_name}</ToText>
@@ -415,10 +459,15 @@ export default function Task({ data, navigation, taskConditionIndex }) {
             <TagView>
               { data.initiated_at
                 ? (
-                  <LabelInitiated>Started</LabelInitiated>
+                  <>
+                    { taskConditionIndex === 2
+                      ? (<Label>-</Label>)
+                      : (<LabelInitiated>{t('Started')}</LabelInitiated>)
+                    }
+                  </>
                 )
                 : (
-                  <Label>Received</Label>
+                  <Label>{t('SingularReceived')}</Label>
                 )
               }
             </TagView>
@@ -426,7 +475,7 @@ export default function Task({ data, navigation, taskConditionIndex }) {
               { data.end_date
                 ? (
                   <>
-                    <LabelEnded pastDueDate={pastDueDate()}>Ended:</LabelEnded>
+                    <LabelEnded pastDueDate={pastDueDate()}>{t('Ended')}</LabelEnded>
                     <DueTimeView pastDueDate={endPastDueDate()}>
                       <DueTime>{formattedDate(data.end_date)}</DueTime>
                     </DueTimeView>
@@ -434,7 +483,7 @@ export default function Task({ data, navigation, taskConditionIndex }) {
                 )
                 : (
                   <>
-                    <Label>Due:</Label>
+                    <Label>{t('Due')}</Label>
                     <DueTimeView pastDueDate={pastDueDate()}>
                       <DueTime>{formattedDate(data.due_date)}</DueTime>
                     </DueTimeView>
@@ -443,6 +492,7 @@ export default function Task({ data, navigation, taskConditionIndex }) {
               }
             </TagView>
           </DatesAndButtonView>
+
           <BottomHeaderView>
             <OuterStatusView>
               <InnerStatusView
@@ -452,8 +502,9 @@ export default function Task({ data, navigation, taskConditionIndex }) {
                 style={{ width: `${statusResult}%`}}
               ></InnerStatusView>
             </OuterStatusView>
-            <StartTime>{statusResult}%</StartTime>
+            <StartTime>{Math.round(statusResult*(subPoints)/100)+100}/{points}</StartTime>
           </BottomHeaderView>
+          <MarginView04/>
         </BodyWrapper>
       </BodyView>
 
@@ -481,267 +532,382 @@ export default function Task({ data, navigation, taskConditionIndex }) {
       </RightView>
 {/* ------------------------------------------------------------------------ */}
       <Modal isVisible={toggleTask}>
-        <ModalView>
-          <FormScrollView>
-            <CenterView>
-              <TitleBorderView>
-                <TitleIcon name="clipboard"/>
-                <TitleTextModal>{data.name}</TitleTextModal>
-              </TitleBorderView>
-            </CenterView>
+        <FormScrollView>
+          <MarginView02/>
+          <ModalHeaderView>
+            <ModalHeaderLeft>
+              <ButtonForModal
+                type='submit'
+                onPress={handleToggleTask}
+              >
+                { Platform.OS === 'ios'
+                  ? (
+                    <BackIcon name="chevron-left" size={24}/>
+                  )
+                  : (
+                    <BackIcon name="arrow-left" size={20}/>
+                  )
+                }
+                <BackText>{t('Back')}</BackText>
+              </ButtonForModal>
+            </ModalHeaderLeft>
+            <ModalHeaderCenter/>
+            <ModalHeaderRight>
+            <ButtonForModalRight
+                type='submit'
+                onPress={handleToggleTask}
+              >
+                { Platform.OS === 'ios'
+                  ? (
+                    <BackIcon02
+                      name="message-square"
+                      size={24}
+                      onPress={handleMessageConversation}
+                    />
+                  )
+                  : (
+                    <BackIcon02
+                      name="message-square"
+                      size={20}
+                      onPress={handleMessageConversation}
+                    />
+                  )
+                }
 
-            <DescriptionView>
-              <Label>Sub-items</Label>
-              <DescriptionBorderView pastDueDate={pastDueDate()}>
-                { data.sub_task_list.map((s, index) => (
-                  <AlignCheckBoxView key={index}>
-                    <CheckBoxView>
-                        <CheckBox
-                          disabled={data.status.status === 1 ? true : false}
-                          value={s.complete}
-                          onValueChange={
-                            (newValue) => handleToggleCheckBox(newValue, index)
-                          }
-                        />
-                        <DescriptionSpan>{s.weige_percentage}%</DescriptionSpan>
-                        <DescriptionSpan type="check-box">{s.description}</DescriptionSpan>
-                    </CheckBoxView>
-                  </AlignCheckBoxView>
-                ))}
-              </DescriptionBorderView>
-            </DescriptionView>
+              </ButtonForModalRight>
+
+            </ModalHeaderRight>
+          </ModalHeaderView>
+
+          <MarginView02/>
+          <DescriptionView>
+            <MarginView04/>
+            <CenterView>
+              <TitleIcon name="clipboard"/>
+              <TitleTextModal>{data.name}</TitleTextModal>
+            </CenterView>
+            <MarginView04/>
 
             <AlignDetailsView>
-              <DetailsView>
-                <TagView>
-                  <Label>Start Date:</Label>
-                  { data.initiated_at
-                    ? (
-                      <>
+              <MarginView02/>
+              <TagView>
+                <Label>{t('From')}</Label>
+                  <ToTextModal>{data.user.user_name}</ToTextModal>
+              </TagView>
+              <TagView>
+                <Label>{t('StartedDateAndTime')}</Label>
+                { data.initiated_at
+                  ? (
+                    <>
 
-                        <StartTimeView>
-                          <StartTime>{formattedDateTime(data.initiated_at)}</StartTime>
-                        </StartTimeView>
-                      </>
-                    )
-                    : (
-                      <>
+                      <StartTimeView>
+                        <StartTime>{formattedDateTime(data.initiated_at)}</StartTime>
+                      </StartTimeView>
+                    </>
+                  )
+                  : (
+                    <>
 
-                        <StartTimeView initiated={data.initiated_at}>
-                          <StartTime>{formattedDateTime(data.start_date)}</StartTime>
-                        </StartTimeView>
-                      </>
-                    )
-                  }
-                </TagView>
-              </DetailsView>
-
-              <DetailsView>
-                <TagView>
-                  <Label>Due Date:</Label>
-                  { data.end_date !== null
-                    ? (
-                      <DueTimeView style={{backgroundColor:'#f5f5f5'}}>
-                        <DueTime>{formattedDateTime(data.due_date)}</DueTime>
-                      </DueTimeView>
-                    )
-                    : (
-                      <DueTimeView pastDueDate={pastDueDate()}>
-                        <DueTime>{formattedDateTime(data.due_date)}</DueTime>
-                      </DueTimeView>
-                    )
-                  }
-                </TagView>
-              </DetailsView>
+                      <StartTimeView initiated={data.initiated_at}>
+                        <StartTime>{formattedDateTime(data.start_date)}</StartTime>
+                      </StartTimeView>
+                    </>
+                  )
+                }
+              </TagView>
+              <TagView>
+                <Label>{t('DueDateAndTime')}</Label>
+                { data.end_date !== null
+                  ? (
+                    <DueTimeView style={{backgroundColor:'#eee'}}>
+                      <DueTime>{formattedDateTime(data.due_date)}</DueTime>
+                    </DueTimeView>
+                  )
+                  : (
+                    <DueTimeView pastDueDate={pastDueDate()}>
+                      <DueTime>{formattedDateTime(data.due_date)}</DueTime>
+                    </DueTimeView>
+                  )
+                }
+              </TagView>
               { data.end_date !== null &&
                 (
-                  <DetailsView>
                     <TagView>
-                      <Label>Ended:</Label>
+                      <Label>{t('Ended:')}</Label>
                       <DueTimeView pastDueDate={endPastDueDate()}>
                         <DueTime>{formattedDateTime(data.end_date)}</DueTime>
                       </DueTimeView>
                     </TagView>
-                  </DetailsView>
                 )
               }
-
-              <DetailsView>
-                <TagView>
-                  <Label>Priority:</Label>
-                  <TaskAttributesView taskAttributes={data.task_attributes[0]-1}>
-                    <DueTime>{taskAttributesArray[JSON.stringify(data.task_attributes[0]-1)]}</DueTime>
-                  </TaskAttributesView>
-                </TagView>
-              </DetailsView>
-
-              <DetailsView>
-                <TagView>
-                  <Label>Confirmation with photograph?</Label>
-                  { confirmPhoto
-                    ? (
-                      <ToText>Yes</ToText>
-                    )
-                    : (
-                      <ToText>No</ToText>
-                    )
-
-                  }
-
-                </TagView>
-              </DetailsView>
+              <TagView>
+                <Label>{t('Priority')}</Label>
+                <TaskAttributesView taskAttributes={data.task_attributes[0]-1}>
+                  <DueTime>{taskAttributesArray[JSON.stringify(data.task_attributes[0]-1)]}</DueTime>
+                </TaskAttributesView>
+              </TagView>
+              <TagView>
+                <Label>{t('ConfirmWithPhoto')}</Label>
+                { confirmPhoto
+                  ? (
+                    <ToText>{t('Yes')}</ToText>
+                  )
+                  : (
+                    <ToText>{t('No')}</ToText>
+                  )
+                }
+              </TagView>
+              <MarginView04/>
             </AlignDetailsView>
+          </DescriptionView>
+          <MarginView08/>
 
-            <DescriptionView>
-              <HrLine/>
-              <Label>Comments:</Label>
-              <DescriptionBorderView pastDueDate={pastDueDate()}>
-                <DescriptionSpan>{data.description}</DescriptionSpan>
-              </DescriptionBorderView>
-            </DescriptionView>
+          <DescriptionView>
+            <MarginView04/>
+            <Label>{t('SubItems')}</Label>
+            <MarginView04/>
+            <CheckBoxWrapper>
+              { data.sub_task_list.map((s, index) => (
+                <AlignCheckBoxView key={index}>
+                  <CheckBoxView>
+                      <CheckBox
+                        disabled={
+                          data.status.status === 1
+                          ? true
+                          : ( taskConditionIndex !== 1
+                              ? true
+                              : false
+                          )
+                        }
+                        value={s.complete}
+                        onValueChange={
+                          (newValue) => handleToggleCheckBox(newValue, index)
+                        }
+                      />
+                      <DescriptionSpan>{s.weige_percentage}%</DescriptionSpan>
+                      <DescriptionSpan type="check-box">{s.description}</DescriptionSpan>
+                  </CheckBoxView>
+                </AlignCheckBoxView>
+              ))}
+            </CheckBoxWrapper>
+            <MarginView04/>
+          </DescriptionView>
 
-            { data.status && data.status.status !== 1
-              ? (
-                <IconsView>
-                  <ButtonView onPress={handleMessageConversation}>
-                    <TaskIcon name="message-square"/>
-                  </ButtonView>
+          { data.description
+            ? (
+              <>
+                <MarginView08/>
+                <DescriptionView>
+                  <MarginView04/>
+                  <Label>{t('OtherComments')}</Label>
+                  <MarginView04/>
+                  <DescriptionSpan02>{data.description}</DescriptionSpan02>
+                  <MarginView08/>
+                </DescriptionView>
+              </>
+            )
+            : null
+          }
+          { data.status.status === 3 &&
+              <>
+                <MarginView08/>
+                <AcceptButtonView>
+                  <MarginView04/>
+                  <Label>
+                    {t('CanceledAt', { user: data.user.user_name })}
+                    {`${formattedDateTime(data.updatedAt)}`}
+                  </Label>
+                  {/* <DescriptionSpan>{`${data.status.comment}:`}</DescriptionSpan> */}
+                  <MarginView04/>
+                </AcceptButtonView>
+              </>
+            }
+
+            { data.status.status === 4 &&
+              <>
+                <MarginView08/>
+                <AcceptButtonView>
+                  <MarginView04/>
+                  <Label>
+                    {t('DeclinedAt', { worker: `${data.worker.worker_name}` })}
+                    {`${formattedDateTime(data.updatedAt)}`}
+                  </Label>
+                  <DescriptionSpan>{`${data.status.comment}:`}</DescriptionSpan>
+                  <MarginView08/>
+                </AcceptButtonView>
+              </>
+            }
+          <MarginView08/>
+          { data.status && data.status.status !== 1
+            ? (
+                <>
                   { taskConditionIndex === 1
                     ? (
-                      <ButtonView onPress={handleConfirm}>
-                        <ConfirmIcon name="check"/>
-                      </ButtonView>
+                      <ButtonWrapperConfirm>
+                      <Button
+                      type='submit'
+                      onPress={handleConfirm}
+                      >
+                        {t('EndTask')}
+                      </Button>
+                      </ButtonWrapperConfirm>
+                    )
+                    : null
+
+                  }
+                </>
+            )
+            : (
+              <AcceptButtonView>
+                <MarginView04/>
+                <CenterView>
+                  <ModalText>{t('AcceptThisTask')}</ModalText>
+                </CenterView>
+                <MarginView04/>
+                <ButtonWrapper>
+                  { taskConditionIndex === 1
+                    ? (
+                      <>
+                        <Button type={'submit'} small={true} onPress={handleToggleAccept}>
+                          {t('Yes')}
+                        </Button>
+                        <Button type={'inverted'} small={true} onPress={() => setToggleModal(!toggleModal)}>
+                          {t('No')}
+                        </Button>
+                      </>
                     )
                     : (
-                      <ButtonView>
-                        <ButtonIcon name="trash-2" style={{color: '#ccc'}}/>
-                      </ButtonView>
+                      null
                     )
                   }
-                </IconsView>
-              )
-              : (
-                <AcceptButtonView>
-                  <ModalText>Accept this task?</ModalText>
-                  <ButtonWrapper>
-                    { taskConditionIndex === 1
-                      ? (
-                        <>
-                          <ButtonView onPress={() => setToggleModal(!toggleModal)}>
-                            <RejectButton>
-                            <ButtonText>Decline</ButtonText>
-                            </RejectButton>
-                          </ButtonView>
-                          <ButtonView onPress={handleToggleAccept}>
-                            <AcceptButton>
-                              <ButtonText>Accept</ButtonText>
-                            </AcceptButton>
-                          </ButtonView>
-                        </>
-                      )
-                      : (
-                        null
-                      )
-                    }
-                  </ButtonWrapper>
-                </AcceptButtonView>
-              )
-            }
-            { data.signature &&
-              <ImageWrapper>
-                <Label>Confirmation Photo:</Label>
+                </ButtonWrapper>
+                <MarginView08/>
+              </AcceptButtonView>
+            )
+          }
+
+
+          { data.signature &&
+            <>
+              <MarginView08/>
+              <DescriptionView>
+                <MarginView04/>
+                <Label>{t('ConfirmationPhoto')}</Label>
+                <MarginView04/>
                 <ImageView>
                   <Image source={{ uri: data.signature.url }}/>
                 </ImageView>
-              </ImageWrapper>
-            }
-            <DescriptionView>
-              <BackButton onPress={handleToggleTask}>
-                <ButtonText>Back</ButtonText>
-              </BackButton>
-            </DescriptionView>
+                <MarginView08/>
+              </DescriptionView>
 
-            <Modal isVisible={toggleConfirmModal}>
-              <ModalView>
-                <AcceptButtonView>
-                  <ModalText>Confirm and end this task?</ModalText>
-                  <ButtonWrapper>
-                    <ButtonView onPress={() => setToggleConfirmModal(!toggleConfirmModal)}>
-                      <RejectButton>
-                        <ButtonText>Back</ButtonText>
-                      </RejectButton>
-                    </ButtonView>
-                    <ButtonView onPress={handleConfirmWithoutPhoto}>
-                      <AcceptButton>
-                        <ButtonText>Yes</ButtonText>
-                      </AcceptButton>
-                    </ButtonView>
+            </>
+          }
+          <MarginView04/>
+          <MarginView08/>
 
-                  </ButtonWrapper>
-                </AcceptButtonView>
-              </ModalView>
-            </Modal>
+          <Modal isVisible={toggleConfirmModal}>
+            <ModalView>
+              <MarginView08/>
+              <CenterView>
+                <ModalText>{t('ConfirmAndEnd')}</ModalText>
+              </CenterView>
+              <MarginView04/>
+              <ButtonWrapper>
+                <Button type={'submit'} small={true} onPress={handleConfirmWithoutPhoto}>
+                {t('Yes')}
+                </Button>
+                <Button type={'inverted'} small={true} onPress={() => setToggleConfirmModal(!toggleConfirmModal)}>
+                {t('Back')}
+                </Button>
+              </ButtonWrapper>
+              <MarginView08/>
+            </ModalView>
+          </Modal>
 
-            <Modal isVisible={toggleModal}>
-              <ModalView>
-                <RejectTaskInput
-                  placeholder="Comments"
-                  value={rejectTaskInputValue}
-                  onChangeText={setRejectTaskInputValue}
-                  mutiline={true}
-                />
-                <AcceptButtonView>
-                  <ModalText>Are you sure you wish to decline this task?</ModalText>
-                  <ButtonWrapper>
-                    <ButtonView onPress={handleCancelTask}>
-                      <AcceptButton>
-                        <ButtonText>Yes</ButtonText>
-                      </AcceptButton>
-                    </ButtonView>
-                    <ButtonView onPress={() => setToggleModal(!toggleModal)}>
-                      <RejectButton>
-                      <ButtonText>Back</ButtonText>
-                      </RejectButton>
-                    </ButtonView>
-                  </ButtonWrapper>
-                </AcceptButtonView>
-              </ModalView>
-            </Modal>
+          <Modal isVisible={toggleModal}>
+            <ModalView>
+              <MarginView08/>
+              <RejectTaskInput
+                placeholder={t('Comments')}
+                value={rejectTaskInputValue}
+                onChangeText={setRejectTaskInputValue}
+                mutiline={true}
+              />
+              <MarginView08/>
+              <AcceptButtonView>
+                <MarginView04/>
+                <CenterView>
+                  <ModalText>{t('AreYouSureDecline')}</ModalText>
+                </CenterView>
+                <MarginView04/>
+                <ButtonWrapper>
+                  <Button type={'submit'} small={true} onPress={handleCancelTask}>
+                    Yes
+                  </Button>
+                  <Button type={'inverted'} small={true} onPress={() => setToggleModal(!toggleModal)}>
+                    Back
+                  </Button>
+                </ButtonWrapper>
+                <MarginView08/>
+              </AcceptButtonView>
+              <MarginView08/>
+            </ModalView>
+          </Modal>
 
-            <Modal isVisible={togglePhotoModal}>
-              <ModalView>
-                <AcceptButtonView>
-                  <ModalText>Choose photo from:</ModalText>
-                  <ButtonWrapper>
-                    <ButtonView onPress={() => chooseFromLibrary()}>
-                      <AcceptButton>
-                        <ButtonText>Reel</ButtonText>
-                      </AcceptButton>
-                    </ButtonView>
-                    <ButtonView onPress={() => takePhotoFromCamera()}>
-                      <CameraButton>
-                        <ButtonText>Camera</ButtonText>
-                      </CameraButton>
-                    </ButtonView>
-                  </ButtonWrapper>
-                </AcceptButtonView>
-                <DescriptionView>
-                  <BackButton onPress={() => setTogglePhotoModal(!togglePhotoModal)}>
-                    <ButtonText>Back</ButtonText>
-                  </BackButton>
-                </DescriptionView>
-              </ModalView>
-            </Modal>
-
-          </FormScrollView>
-        </ModalView>
+          <Modal isVisible={togglePhotoModal}>
+            <ModalView>
+              <ModalHeaderView>
+              <ModalHeaderLeft>
+                <ButtonForModal
+                  type='submit'
+                  onPress={() => setTogglePhotoModal(!togglePhotoModal)}
+                >
+                  { Platform.OS === 'ios'
+                    ? (
+                      <BackIcon name="chevron-left" size={24}/>
+                    )
+                    : (
+                      <BackIcon name="arrow-left" size={20}/>
+                    )
+                  }
+                  <BackText>Back</BackText>
+                </ButtonForModal>
+              </ModalHeaderLeft>
+              <ModalHeaderCenter/>
+              <ModalHeaderRight>
+              </ModalHeaderRight>
+            </ModalHeaderView>
+              {/* <MarginView08/> */}
+              {/* <AcceptButtonView> */}
+              <DescriptionView>
+              <MarginView04/>
+                <CenterView>
+                  <ModalText>{t('ChoosePhotoFrom')}</ModalText>
+                </CenterView>
+                <MarginView04/>
+                <ButtonWrapper>
+                  <Button type={'submit'} small={true} onPress={() => chooseFromLibrary()}>
+                    {t('Reel')}
+                  </Button>
+                  <Button type={'inverted'} small={true} onPress={() => takePhotoFromCamera()}>
+                    {t('Camera')}
+                  </Button>
+                </ButtonWrapper>
+              {/* </AcceptButtonView> */}
+              <MarginView08/>
+              </DescriptionView>
+              <MarginView08/>
+            </ModalView>
+          </Modal>
+        </FormScrollView>
       </Modal>
-
       <Modal isVisible={sendingIndicator}>
-          <ModalView>
-            <ModalText>Sending...</ModalText>
-            <ActivityIndicator size="small" color="#000"/>
-          </ModalView>
+        <ModalView>
+          <MarginView08/>
+          <ModalText>{t('Sending')}</ModalText>
+          <ActivityIndicator size="small" color="#1B2432"/>
+          <MarginView08/>
+        </ModalView>
       </Modal>
     </Container>
   );
