@@ -6,6 +6,7 @@ import Modal from 'react-native-modal';
 import defaultAvatar from '~/assets/defaultAvatar.png';
 import { updateProfileRequest } from '~/store/modules/user/actions';
 import { useTranslation } from 'react-i18next';
+import io from 'socket.io-client/dist/socket.io';
 // -----------------------------------------------------------------------------
 import {
   AddIcon,
@@ -83,6 +84,12 @@ export default function Dashboard({ navigation }) {
   const [workerCountThisWeekDue, setWorkerCountThisWeekDue] = useState();
 
   useEffect(() => {
+    // const socket = io('http://10.0.3.2:3333');
+    const socket = io('http://3.142.16.89:3333');
+    socket.on(`dashboard_update_${user_email}`, msg => {
+      console.log(msg)
+      loadData()
+    })
     loadData()
   }, [update_services])
 

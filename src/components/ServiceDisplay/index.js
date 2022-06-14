@@ -23,7 +23,7 @@ import {
   HrLine,
   IconsView,
   Image, ImageView, ImageWrapper, InnerStatusView,
-  Label, LabelInitiated, LabelEnded, LeftView,
+  Label, LabelInitiated, LabelEnded, LabelMuted, LeftView,
   MarginView02, MarginView04, MarginView08,
   ModalHeaderCenter, ModalHeaderLeft, ModalHeaderRight, ModalHeaderView, ModalView, ModalText,
   NameText,
@@ -53,6 +53,10 @@ export default function ServiceDisplay({ data, navigation, display, userData, wo
   const [toggleModal, setToggleModal] = useState();
   // console.log(data)
   // console.log(data.createdAt)
+
+  function isEmpty(obj) {
+    return Object.keys(obj).length === 0;
+  }
 
   function handleToggleModal() {
     setToggleModal(!toggleModal)
@@ -226,25 +230,36 @@ export default function ServiceDisplay({ data, navigation, display, userData, wo
           </DescriptionView>
           <MarginView08/>
 
-          <DescriptionView>
-            <MarginView04/>
-            <Label>{t('SubItems')}</Label>
-            <MarginView04/>
-            <CheckBoxWrapper>
-              { data.sub_task_list.map((s, index) => (
-                <AlignCheckBoxView key={index}>
-                  <CheckBoxView>
-                      <CheckBox
-                        disabled={true}
-                        // value={s.complete}
-                      />
-                      <DescriptionSpan type="check-box">{s.description}</DescriptionSpan>
-                  </CheckBoxView>
-                </AlignCheckBoxView>
-              ))}
-            </CheckBoxWrapper>
-            <MarginView04/>
-          </DescriptionView>
+          { isEmpty(data.sub_task_list)
+            ? (
+              <DescriptionView>
+                <MarginView04/>
+                <LabelMuted>No sub-items</LabelMuted>
+                <MarginView04/>
+              </DescriptionView>
+            )
+            : (
+              <DescriptionView>
+                <MarginView04/>
+                <Label>{t('SubItems')}</Label>
+                <MarginView04/>
+                <CheckBoxWrapper>
+                  { data.sub_task_list.map((s, index) => (
+                    <AlignCheckBoxView key={index}>
+                      <CheckBoxView>
+                          <CheckBox
+                            disabled={true}
+                            // value={s.complete}
+                          />
+                          <DescriptionSpan type="check-box">{s.description}</DescriptionSpan>
+                      </CheckBoxView>
+                    </AlignCheckBoxView>
+                  ))}
+                </CheckBoxWrapper>
+                <MarginView04/>
+              </DescriptionView>
+            )
+          }
 
           { data.description
             ? (

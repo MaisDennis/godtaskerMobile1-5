@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { Alert } from 'react-native';
 import { useDispatch, useSelector } from 'react-redux';
 import Modal from 'react-native-modal';
@@ -12,7 +12,7 @@ import {
   FormScrollView,
   HrLine,
   Input, IosKeyboardAvoidingView, ItemWrapperView,
-  LabelText,
+  LabelText, LabelTextMuted,
   MarginView02, MarginView04, MarginView08, ModalView, ModalWrapper,
   RadioButtonView, RadioButtonTag, RadioButtonTagConfirmPhoto,
   RadioButtonLabel, RadioButtonLabelText, RadioButtonOuter, RadioButtonInner0,
@@ -51,9 +51,17 @@ export default function ServiceWorkerSendPage({ navigation, route }) {
       : new Date()
     );
 
+
+  useEffect(() => {
+    console.log(isEmpty(subTaskList))
+  }, [])
   const [subTaskList, setSubTaskList] = useState(data.sub_task_list);
   const [toggleDates, setToggleDates] = useState(false);
   const [sameHourCheck, setSameHourCheck] = useState(false)
+
+  function isEmpty(obj) {
+    return Object.keys(obj).length === 0;
+  }
 
   function handleToggleDates() {
     setToggleDates(!toggleDates)
@@ -219,49 +227,58 @@ export default function ServiceWorkerSendPage({ navigation, route }) {
           </DescriptionWorkerView01>
 
           <MarginView08/>
-          <DescriptionWorkerView02 focusColor = {focusBorder}>
-
-            <ItemWrapperView>
-              {subTaskList != ''
-                ? (
-                    <>
-                      <MarginView08/>
-                      <LabelText>{t('SubItemList')}</LabelText>
-                      <MarginView04/>
-                    </>
-                  )
-                : null
-              }
-              { subTaskList.map((s, index) => (
-                <SubTaskView key={index}>
+          { isEmpty(subTaskList)
+            ? (
+              <DescriptionWorkerView02 focusColor = {focusBorder}>
+                <ItemWrapperView>
                   <>
-                    <SubTaskWrapper>
-                      <SubTaskLeftView>
-                        <SubTaskTag>
-                          <SubTaskLabelText>{index+1}.</SubTaskLabelText>
-                          <SubTaskText>{s.description}</SubTaskText>
-                        </SubTaskTag>
-                      </SubTaskLeftView>
-
-                      <SubTaskRightView>
-                        <SubTaskTag>
-                          <WeigeTagView>
-                            <WeigeText>{t('Weige')}</WeigeText>
-                            <SubTaskWeigeText>{s.weige}</SubTaskWeigeText>
-                          </WeigeTagView>
-                        </SubTaskTag>
-                      </SubTaskRightView>
-                    </SubTaskWrapper>
-                    {/* ----------- */}
                     <MarginView04/>
-                    <HrLine/>
+                    <LabelTextMuted>No Sub-items</LabelTextMuted>
                     <MarginView04/>
-                    {/* ----------- */}
                   </>
-                </SubTaskView>
-              ))}
-            </ItemWrapperView>
-          </DescriptionWorkerView02>
+                </ItemWrapperView>
+              </DescriptionWorkerView02>
+            )
+            : (
+              <DescriptionWorkerView02 focusColor = {focusBorder}>
+                <ItemWrapperView>
+                  <>
+                    <MarginView08/>
+                    <LabelText>{t('SubItemList')}</LabelText>
+                    <MarginView04/>
+                  </>
+                  { subTaskList.map((s, index) => (
+                    <SubTaskView key={index}>
+                      <>
+                        <SubTaskWrapper>
+                          <SubTaskLeftView>
+                            <SubTaskTag>
+                              <SubTaskLabelText>{index+1}.</SubTaskLabelText>
+                              <SubTaskText>{s.description}</SubTaskText>
+                            </SubTaskTag>
+                          </SubTaskLeftView>
+
+                          <SubTaskRightView>
+                            <SubTaskTag>
+                              <WeigeTagView>
+                                <WeigeText>{t('Weige')}</WeigeText>
+                                <SubTaskWeigeText>{s.weige}</SubTaskWeigeText>
+                              </WeigeTagView>
+                            </SubTaskTag>
+                          </SubTaskRightView>
+                        </SubTaskWrapper>
+                        {/* ----------- */}
+                        <MarginView04/>
+                        <HrLine/>
+                        <MarginView04/>
+                        {/* ----------- */}
+                      </>
+                    </SubTaskView>
+                  ))}
+                </ItemWrapperView>
+              </DescriptionWorkerView02>
+            )
+          }
           <MarginView08/>
 
           <DescriptionWorkerView03

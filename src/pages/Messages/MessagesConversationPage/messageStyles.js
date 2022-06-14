@@ -63,7 +63,7 @@ export const MessageContainer = styled.View`
 
 export const MessageIcon = styled(Icon)`
 font-size: 16px;
-margin-left: 8px;
+margin: 0 2px;
 color: #666;
 `;
 
@@ -114,9 +114,12 @@ export const MessageText = styled.Text`
 `;
 
 export const MessageTime = styled.Text`
+display: flex;
+flex-direction: row;
+flex-wrap: wrap;
 font-size: ${Platform.OS === 'ios' ? '11px' : '9px'};
+text-align: center;
 
-max-width: 190px;
 width: auto;
 margin: 4px;
 color: #666;
@@ -126,7 +129,7 @@ color: #666;
 export const MessageView = styled(LinearGradient)`
 display: flex;
 flex-direction: column;
-max-width: 80%;
+max-width: 65%;
 border: 0.5px;
 border-color: #eee;
 border-radius: 12px;
@@ -136,9 +139,9 @@ border-radius: 12px;
 export const MessageViewUser = styled(LinearGradient)`
 display: flex;
 flex-direction: column;
-max-width: 80%;
+max-width: 65%;
 border: 0.5px;
-border-color: #eee;
+border-color: #D0ECE3;
 border-radius: 12px;
 /* background-color: #4ee; */
 `;

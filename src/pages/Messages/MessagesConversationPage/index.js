@@ -3,7 +3,7 @@ import {
   FlatList, SafeAreaView, TouchableOpacity
 } from 'react-native'
 import { useDispatch, useSelector } from 'react-redux';
-import { format, getDay, parseISO } from 'date-fns';
+import { format, getDay, parseISO, getYear, subYears } from 'date-fns';
 import { ptBR, enUS } from 'date-fns/locale';
 import firestore from '@react-native-firebase/firestore';
 import { useTranslation } from 'react-i18next';
@@ -74,12 +74,16 @@ export default function MessagesConversationPage({ navigation, route }) {
   fdate == null
     ? ''
     : i18n.language === 'en'
-      ? getDay(parseISO(JSON.parse(fdate))) === getDay(new Date())
-        ? format(parseISO(JSON.parse(fdate)), "'Today'   h:mm aaa", { locale: enUS })
-        : format(parseISO(JSON.parse(fdate)), "MMM'/'dd'/'yy   h:mm aaa", { locale: enUS })
-      : getDay(parseISO(JSON.parse(fdate))) === getDay(new Date())
-          ? format(parseISO(JSON.parse(fdate)), "'Hoje'   HH:mm", { locale: ptBR })
-          : format(parseISO(JSON.parse(fdate)), "dd'/'MMM'/'yy   HH:mm", { locale: ptBR })
+    ? getDay(parseISO(JSON.parse(fdate))) === getDay(new Date())
+    ? format(parseISO(JSON.parse(fdate)), "'Today'   h:mm aaa", { locale: enUS })
+    : getYear(parseISO(JSON.parse(fdate))) === getYear(new Date())
+      ? format(parseISO(JSON.parse(fdate)), "MMM'/'dd   h:mm aaa", { locale: enUS })
+      : format(parseISO(JSON.parse(fdate)), "MMM'/'dd'/'yy   h:mm aaa", { locale: enUS })
+  : getDay(parseISO(JSON.parse(fdate))) === getDay(new Date())
+    ? format(parseISO(JSON.parse(fdate)), "'Hoje'   HH:mm", { locale: ptBR })
+    : getYear(parseISO(JSON.parse(fdate))) === getYear(new Date())
+      ? format(parseISO(JSON.parse(fdate)), "dd'/'MMM   HH:mm", { locale: ptBR })
+      : format(parseISO(JSON.parse(fdate)), "dd'/'MMM'/'yy   HH:mm", { locale: ptBR })
 
   useEffect(() => {
     let mounted = true; // mounted solution: https://www.debuggr.io/react-update-unmounted-component/
@@ -448,7 +452,7 @@ export default function MessagesConversationPage({ navigation, route }) {
       <Container>
         <ConversationView
           behavior={Platform.OS === "ios" ? "padding" : null}
-          keyboardVerticalOffset = {Platform.OS === "ios" ? "80" : null}
+          keyboardVerticalOffset = {Platform.OS === "ios" ? "70" : null}
         >
           <FlatList
             data={messages}

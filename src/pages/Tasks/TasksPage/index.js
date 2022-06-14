@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { TouchableOpacity, View } from 'react-native'
+import io from 'socket.io-client/dist/socket.io';
 import { useSelector } from 'react-redux';
 import { format } from 'date-fns';
 import pt from 'date-fns/locale/pt';
@@ -28,6 +29,7 @@ export default function TaskPage({ navigation }) {
   const [taskConditionIndex, setTaskConditionIndex] = useState();
 
   const workerID = useSelector(state => state.worker.profile.id);
+  const workerEmail = useSelector(state => state.worker.profile.email);
   const update_tasks = useSelector(state => state.task.tasks);
   const formattedDate = fdate =>
   fdate == null
@@ -35,9 +37,13 @@ export default function TaskPage({ navigation }) {
     : format(fdate, "dd 'de' MMMM',' yyyy", { locale: pt });
   const todayDate = formattedDate(new Date())
   // const Tab = createMaterialTopTabNavigator();
-
+  const socket = io('http://3.142.16.89:3333');
   useEffect(() => {
     loadTasks('');
+    socket.on(`task_create_${workerEmail}`, msg => {
+      console.log(msg)
+      loadTasks('');
+    })
   }, [ update_tasks ]);
 
   async function loadTasks(nameFilter) {

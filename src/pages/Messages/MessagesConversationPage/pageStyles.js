@@ -75,7 +75,7 @@ export const ReplyView = styled.View`
   align-items: center;
   height: auto;
   width: 100%;
-  padding: 0 8px;
+  padding: 4px 8px;
   background-color: #fff;
 `;
 
@@ -83,7 +83,7 @@ export const SendInput = styled.TextInput`
   
   font-size: 14px;
   
-  line-height: 20px;
+  line-height: 18px;
   
   height: auto;
   width: 80%;
@@ -91,7 +91,7 @@ export const SendInput = styled.TextInput`
   border-width: 1px;
   border-color: #ccc;
   margin: 8px 0;
-  padding: 2px 12px 6px;
+  padding: 8px 12px 8px;
   color: #1B2432;
   background-color: #eee;
 `;

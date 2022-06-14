@@ -630,14 +630,17 @@ export const MarginView08 = styled.View`
 
 export const Menu = styled.View`
   position: absolute;
-  top: 0px;
-  width: 50%;
+  display: flex;
+  top: 36px;
+  width: 30%;
   right: 8px;
   border-width: 2px;
   border-radius: 4px;
   border-color: #1B2432;
-  background-color: #fff;
-  z-index: 10;
+  opacity: 1;
+  z-index: 12;
+  background-color: #ccc;
+  
 `;
 
 export const MenuButton = styled(TouchableOpacity)`
@@ -654,14 +657,14 @@ export const MenuButton = styled(TouchableOpacity)`
 export const MenuLabel = styled.Text`
   text-align: center;
   font-weight: bold;
-  font-size: ${Platform.OS === 'ios' ? '14px' : '12px'};
+  font-size: ${Platform.OS === 'ios' ? '12px' : '12px'};
   color: #1B2432;
   /* background-color: #4ee; */
 `;
 
 export const MenuLabelMuted = styled.Text`
   font-weight: bold;
-  font-size: ${Platform.OS === 'ios' ? '14px' : '12px'};
+  font-size: ${Platform.OS === 'ios' ? '12px' : '12px'};
   color: #ccc;
 `;
 

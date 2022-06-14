@@ -428,7 +428,7 @@ PODS:
     - BoringSSL-GRPC (= 0.0.7)
     - gRPC-Core/Interface (= 1.28.2)
   - gRPC-Core/Interface (1.28.2)
-  - GTMSessionFetcher/Core (1.7.0)
+  - GTMSessionFetcher/Core (1.7.2)
   - JWT (3.0.0-beta.14):
     - Base64 (~> 1.1.2)
   - leveldb-library (1.22.1)
@@ -438,7 +438,7 @@ PODS:
     - nanopb/encode (= 2.30907.0)
   - nanopb/decode (2.30907.0)
   - nanopb/encode (2.30907.0)
-  - OneSignalXCFramework (3.10.1)
+  - OneSignalXCFramework (3.10.3)
   - OpenSSL-Universal (1.1.1100)
   - PromisesObjC (1.2.12)
   - RCTRequired (0.62.2)
@@ -614,8 +614,8 @@ PODS:
     - React
   - react-native-date-picker (4.1.1):
     - React-Core
-  - react-native-onesignal (4.3.7):
-    - OneSignalXCFramework (= 3.10.1)
+  - react-native-onesignal (4.3.9):
+    - OneSignalXCFramework (= 3.10.3)
     - React (< 1.0.0, >= 0.13.0)
   - react-native-safe-area-context (3.2.0):
     - React-Core
@@ -1011,12 +1011,12 @@ SPEC CHECKSUMS:
   GoogleUtilities: e0913149f6b0625b553d70dae12b49fc62914fd1
   "gRPC-C++": 13d8ccef97d5c3c441b7e3c529ef28ebee86fad2
   gRPC-Core: 4afa11bfbedf7cdecd04de535a9e046893404ed5
-  GTMSessionFetcher: 43748f93435c2aa068b1cbe39655aaf600652e91
+  GTMSessionFetcher: 5595ec75acf5be50814f81e9189490412bad82ba
   JWT: ef71dfb03e1f842081e64dc42eef0e164f35d251
   leveldb-library: 50c7b45cbd7bf543c81a468fe557a16ae3db8729
   libevent: 4049cae6c81cdb3654a443be001fb9bdceff7913
   nanopb: 59221d7f958fb711001e6a449489542d92ae113e
-  OneSignalXCFramework: fe027712118f2862ab193b72270487f11450ea63
+  OneSignalXCFramework: 4efd7bd68c2b14920955b3f14b5b75bbf8fb662c
   OpenSSL-Universal: ebc357f1e6bc71fa463ccb2fe676756aff50e88c
   PromisesObjC: 3113f7f76903778cf4a0586bd1ab89329a0b7b97
   RCTRequired: cec6a34b3ac8a9915c37e7e4ad3aa74726ce4035
@@ -1030,7 +1030,7 @@ SPEC CHECKSUMS:
   React-jsinspector: 512e560d0e985d0e8c479a54a4e5c147a9c83493
   react-native-camera: 2b74be8edc1103c4c46d1f4e5f41723d9ff052cc
   react-native-date-picker: 414fe8f73392bae030dc4efec39d743b5c5de283
-  react-native-onesignal: 7643517fe655b94cfda8e697ec16f9b9135648b8
+  react-native-onesignal: 88a38450ee225600da7fbcfcf844a8af487db919
   react-native-safe-area-context: f0906bf8bc9835ac9a9d3f97e8bde2a997d8da79
   react-native-splash-screen: 200d11d188e2e78cea3ad319964f6142b6384865
   React-RCTActionSheet: f41ea8a811aac770e0cc6e0ad6b270c644ea8b7c
@@ -1064,6 +1064,6 @@ SPEC CHECKSUMS:
   Yoga: 3ebccbdd559724312790e7742142d062476b698e
   YogaKit: f782866e155069a2cca2517aafea43200b01fd5a
 
-PODFILE CHECKSUM: 558da3fb1683fb5381910189a5c10f5abbf8dcca
+PODFILE CHECKSUM: 9ffbcf57f83eb32226fe1b93631bbbd1ac2754ee
 
 COCOAPODS: 1.11.3

@@ -249,6 +249,7 @@ export const FormScrollView = styled.ScrollView.attrs({
 })`
   width: 100%;
   border-radius: 8px;
+  margin: 24px 0 0px;
   background-color: #fff;
   /* background-color: #f5f; */
 `;
@@ -329,6 +330,16 @@ export const LabelEnded = styled.Text`
   margin-right: 4px;
   max-width: 60px;
   color: ${props => props.pastDueDate === true ? '#f64C75' : '#19AE7C'};
+`;
+
+export const LabelMuted = styled.Text`
+  font-weight: bold;
+  font-size: ${Platform.OS === 'ios' ? '14px' : '12px'};
+  text-align: center;
+  margin-right: 8px;
+  /* max-width: 60px; */
+  color: #ccc;
+  /* background-color: #f3c775; */
 `;
 
 export const LastMessageText = styled.Text`

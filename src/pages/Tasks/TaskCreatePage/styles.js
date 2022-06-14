@@ -325,6 +325,14 @@ export const LabelText = styled.Text`
   color: #1B2432;
 `;
 
+export const LabelTextMuted = styled.Text`
+  font-weight: bold;
+  font-size: ${Platform.OS === 'ios' ? '14px' : '12px'};
+
+  margin-right: 8px;
+  color: #ccc;
+`;
+
 export const MarginView02 = styled.View`
   width: 100%;
   margin: 2px 0;

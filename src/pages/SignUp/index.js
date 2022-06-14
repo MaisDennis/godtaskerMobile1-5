@@ -20,7 +20,7 @@ import { signUpRequest, signUpToggleOut, signOut } from '~/store/modules/auth/ac
 // -----------------------------------------------------------------------------
 export default function SignUp(
   {
-    // navigation
+    navigation
     // route
   }
 ) {
@@ -81,6 +81,7 @@ export default function SignUp(
           t("ThankYou"),
           t("AnEmailHasBeenSent", { email: `${email}` })
         )
+        navigation.navigate('SignIn')
       } else {
         Alert.alert(
           t('ErrorInData'),
