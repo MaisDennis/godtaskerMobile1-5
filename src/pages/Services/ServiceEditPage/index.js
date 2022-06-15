@@ -508,7 +508,13 @@ export default function ServiceEditPage({ navigation, route }) {
           </DescriptionView03>
           <MarginView08/>
           <ItemWrapperView>
-            <Button onPress={handleSubmit}>
+            <Button
+              onPress={handleSubmit}
+              backgroundColor={'#18A0FB'}
+              icon={'check-circle'}
+              iconSize={20}
+              textColor={'#fff'}
+            >
               {t('Edit')}
             </Button>
           </ItemWrapperView>

@@ -12,18 +12,13 @@ import {
   ForgotPasswordLink, ForgotPasswordText, Form, FormInput,
   IconView,
   MarginView02, MarginView04, MarginView08,
-  SignUpText, SignUpTextView,
+  SignUpText, SignUpTextView, TermsText,
   Wrapper,
 } from '../SignIn/styles';
 import Button from '~/components/Button'
 import { signUpRequest, signUpToggleOut, signOut } from '~/store/modules/auth/actions';
 // -----------------------------------------------------------------------------
-export default function SignUp(
-  {
-    navigation
-    // route
-  }
-) {
+export default function SignUp({navigation}) {
   const { t, i18n } = useTranslation();
   const dispatch = useDispatch();
   const signedUp = useSelector(state => state.auth.signedup);
@@ -31,62 +26,87 @@ export default function SignUp(
   const [userName, setUserName] = useState();
   const [password, setPassword] = useState();
   const [confirmPassword, setConfirmPassword] = useState();
-
   const [email, setEmail] = useState();
+  const [loading, setLoading] = useState(false)
   const [secureText, setSecureText] = useState(true);
 
   const placeHolderColor = '#999';
 
   function handleSubmit() {
+    if (!userName) {
+      Alert.alert(t("FillUsername"))
+      return
+    }
+    if (!email) {
+      Alert.alert(t("FillEmail"))
+      return
+    }
+    if (!password) {
+      Alert.alert(t("FillPassword"))
+      return
+    }
+    if (!confirmPassword) {
+      Alert.alert(t("FillConfirmPassword"))
+      return
+    }
+
     try {
+      setLoading(true)
       const bio = t("SignUpBio", { userName: `${userName}` })
-      const res = dispatch(signUpRequest(
+      const dispatchResponse = dispatch(signUpRequest(
         userName,
         password,
         email,
         bio,
+        t,
+        navigation,
       ));
-
-      if (res) {
-        auth()
-        .createUserWithEmailAndPassword(email, password)
-        .then((response) => {
-          response.user.sendEmailVerification();
-
-
-        })
-        .catch(error => {
-          if (error.code === 'auth/email-already-in-use') {
-            console.log(error.message);
-            Alert.alert(
-            t("EmailAlreadyInUse"),
-          )
-          }
-
-          if (error.code === 'auth/invalid-email') {
-            console.log(error.message);
-            Alert.alert(
-              t("InvalidEmail"),
-            )
-          } else {
-            console.error(error);
-            Alert.alert(
-              ':(',
-            )
-          }
-        });
-
-        console.log('User account created & signed in!');
-        Alert.alert(
-          t("ThankYou"),
-          t("AnEmailHasBeenSent", { email: `${email}` })
-        )
-        navigation.navigate('SignIn')
-      } else {
-        Alert.alert(
-          t('ErrorInData'),
-        )
+      console.log(dispatchResponse)
+      if (dispatchResponse) {
+        // navigation.navigate('SignIn')
+        setLoading(false)
       }
+
+        // if (dispatchResponse) {
+      //   auth()
+      //   .createUserWithEmailAndPassword(email, password)
+      //   .then((response) => {
+      //     response.user.sendEmailVerification();
+      //   })
+      //   .catch(error => {
+      //     if (error.code === 'auth/email-already-in-use') {
+      //       console.log(error.message);
+      //       Alert.alert(
+      //         t("EmailAlreadyInUse"),
+      //       )
+      //     } else if (error.code === 'auth/invalid-email') {
+      //       console.log(error.message);
+      //       Alert.alert(
+      //         t("InvalidEmail"),
+      //       )
+      //     } else {
+      //       console.error(error);
+      //       Alert.alert(
+      //         t('SomeError'),
+      //       )
+      //     }
+      //   });
+
+      //   console.log('User account created & signed in!');
+      //   Alert.alert(
+      //     t("ThankYou"),
+      //     t("AnEmailHasBeenSent", { email: `${email}` })
+      //   )
+      //   navigation.navigate('SignIn')
+      // } else {
+      //   Alert.alert(
+      //     t('ErrorInData'),
+      //   )
+      // }
+
+
+
+
 
     // auth()
     // .createUserWithEmailAndPassword(email, password)
@@ -140,6 +160,7 @@ export default function SignUp(
         t('ErrorInData'),
         `${error}`
       )
+      setLoading(false)
     }
   }
 
@@ -270,35 +291,40 @@ export default function SignUp(
           />
           <MarginView08/>
           <Button
-            type={'submit'}
-            onPress={handleSubmit}>
+            loading={loading}
+            onPress={handleSubmit}
+            backgroundColor={'#18A0FB'}
+            icon={'check-circle'}
+            iconSize={20}
+            textColor={'#fff'}
+          >
             {t('Submit')}
           </Button>
           <MarginView08/>
-          <SignUpText>Ao se cadastrar, você concorda com os nossos:</SignUpText>
+          <SignUpText>{t('UponSignup')}</SignUpText>
           <MarginView02/>
           <SignUpTextView>
 
             <ForgotPasswordLink
               onPress={handleTerms}
             >
-              <ForgotPasswordText>
-                Termos e Condições
-              </ForgotPasswordText>
+              <TermsText>
+                {t('Terms')}
+              </TermsText>
             </ForgotPasswordLink>
             <ForgotPasswordLink
               onPress={handlePrivacy}
             >
-              <ForgotPasswordText>
-              Política de Privacidade
-              </ForgotPasswordText>
+              <TermsText>
+              {t('Privacy')}
+              </TermsText>
             </ForgotPasswordLink>
             <ForgotPasswordLink
               onPress={handleEula}
             >
-              <ForgotPasswordText>
+              <TermsText>
               EULA
-              </ForgotPasswordText>
+              </TermsText>
             </ForgotPasswordLink>
           </SignUpTextView>
           <MarginView08/>

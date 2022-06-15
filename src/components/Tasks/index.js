@@ -553,7 +553,7 @@ export default function Task({ data, navigation, taskConditionIndex }) {
             </ModalHeaderLeft>
             <ModalHeaderCenter/>
             <ModalHeaderRight>
-            <ButtonForModalRight
+              <ButtonForModalRight
                 type='submit'
                 onPress={handleToggleTask}
               >
@@ -661,42 +661,47 @@ export default function Task({ data, navigation, taskConditionIndex }) {
             </AlignDetailsView>
           </DescriptionView>
           <MarginView08/>
-
-          <DescriptionView>
-            <MarginView04/>
-            <Label>{t('SubItems')}</Label>
-            <MarginView04/>
-            <CheckBoxWrapper>
-              { data.sub_task_list.map((s, index) => (
-                <AlignCheckBoxView key={index}>
-                  <CheckBoxView>
-                      <CheckBox
-                        disabled={
-                          data.status.status === 1
-                          ? true
-                          : ( taskConditionIndex !== 1
-                              ? true
-                              : false
-                          )
-                        }
-                        value={s.complete}
-                        onValueChange={
-                          (newValue) => handleToggleCheckBox(newValue, index)
-                        }
-                      />
-                      <DescriptionSpan>{s.weige_percentage}%</DescriptionSpan>
-                      <DescriptionSpan type="check-box">{s.description}</DescriptionSpan>
-                  </CheckBoxView>
-                </AlignCheckBoxView>
-              ))}
-            </CheckBoxWrapper>
-            <MarginView04/>
-          </DescriptionView>
-
+          { data.sub_task_list.length === 0
+            ? null
+            : (
+              <>
+                <DescriptionView>
+                  <MarginView04/>
+                  <Label>{t('SubItems')}</Label>
+                  <MarginView04/>
+                  <CheckBoxWrapper>
+                    { data.sub_task_list.map((s, index) => (
+                      <AlignCheckBoxView key={index}>
+                        <CheckBoxView>
+                            <CheckBox
+                              disabled={
+                                data.status.status === 1
+                                ? true
+                                : ( taskConditionIndex !== 1
+                                    ? true
+                                    : false
+                                )
+                              }
+                              value={s.complete}
+                              onValueChange={
+                                (newValue) => handleToggleCheckBox(newValue, index)
+                              }
+                            />
+                            <DescriptionSpan>{s.weige_percentage}%</DescriptionSpan>
+                            <DescriptionSpan type="check-box">{s.description}</DescriptionSpan>
+                        </CheckBoxView>
+                      </AlignCheckBoxView>
+                    ))}
+                  </CheckBoxWrapper>
+                  <MarginView04/>
+                </DescriptionView>
+                <MarginView08/>
+              </>
+            )
+          }
           { data.description
             ? (
               <>
-                <MarginView08/>
                 <DescriptionView>
                   <MarginView04/>
                   <Label>{t('OtherComments')}</Label>
@@ -704,13 +709,13 @@ export default function Task({ data, navigation, taskConditionIndex }) {
                   <DescriptionSpan02>{data.description}</DescriptionSpan02>
                   <MarginView08/>
                 </DescriptionView>
+                <MarginView08/>
               </>
             )
             : null
           }
           { data.status.status === 3 &&
               <>
-                <MarginView08/>
                 <AcceptButtonView>
                   <MarginView04/>
                   <Label>
@@ -735,61 +740,80 @@ export default function Task({ data, navigation, taskConditionIndex }) {
                   <DescriptionSpan>{`${data.status.comment}:`}</DescriptionSpan>
                   <MarginView08/>
                 </AcceptButtonView>
+                <MarginView08/>
               </>
             }
-          <MarginView08/>
           { data.status && data.status.status !== 1
             ? (
-                <>
-                  { taskConditionIndex === 1
-                    ? (
-                      <ButtonWrapperConfirm>
-                      <Button
-                      type='submit'
-                      onPress={handleConfirm}
-                      >
-                        {t('EndTask')}
-                      </Button>
-                      </ButtonWrapperConfirm>
-                    )
-                    : null
+              <>
+                { taskConditionIndex === 1
+                  ? (
+                    <ButtonWrapperConfirm>
+                    <Button
+                    onPress={handleConfirm}
+                    backgroundColor={'#18A0FB'}
+                    icon={'check-circle'}
+                    iconSize={20}
+                    textColor={'#fff'}
+                    >
+                      {t('EndTask')}
+                    </Button>
+                    </ButtonWrapperConfirm>
+                  )
+                  : null
 
-                  }
-                </>
+                }
+              </>
             )
             : (
-              <AcceptButtonView>
-                <MarginView04/>
-                <CenterView>
-                  <ModalText>{t('AcceptThisTask')}</ModalText>
-                </CenterView>
-                <MarginView04/>
-                <ButtonWrapper>
-                  { taskConditionIndex === 1
-                    ? (
-                      <>
-                        <Button type={'submit'} small={true} onPress={handleToggleAccept}>
-                          {t('Yes')}
-                        </Button>
-                        <Button type={'inverted'} small={true} onPress={() => setToggleModal(!toggleModal)}>
-                          {t('No')}
-                        </Button>
-                      </>
-                    )
-                    : (
-                      null
-                    )
-                  }
-                </ButtonWrapper>
+              <>
+                <AcceptButtonView>
+                  <MarginView04/>
+                  <CenterView>
+                    <ModalText>{t('AcceptThisTask')}</ModalText>
+                  </CenterView>
+                  <MarginView04/>
+                  <ButtonWrapper>
+                    { taskConditionIndex === 1
+                      ? (
+                        <>
+                          <Button
+                            onPress={handleToggleAccept}
+                            backgroundColor={'#18A0FB'}
+                            icon={'check-circle'}
+                            iconSize={20}
+                            textColor={'#fff'}
+                            small={true}
+                            >
+                            {t('Yes')}
+                          </Button>
+                          <Button
+                            onPress={() => setToggleModal(!toggleModal)}
+                            backgroundColor={'#403F4C'}
+                            icon={'x-circle'}
+                            iconSize={20}
+                            textColor={'#fff'}
+                            small={true}
+                          >
+                            {t('No')}
+                          </Button>
+                        </>
+                      )
+                      : (
+                        null
+                      )
+                    }
+                  </ButtonWrapper>
+                  <MarginView08/>
+                </AcceptButtonView>
                 <MarginView08/>
-              </AcceptButtonView>
+              </>
             )
           }
 
 
           { data.signature &&
             <>
-              <MarginView08/>
               <DescriptionView>
                 <MarginView04/>
                 <Label>{t('ConfirmationPhoto')}</Label>
@@ -799,7 +823,7 @@ export default function Task({ data, navigation, taskConditionIndex }) {
                 </ImageView>
                 <MarginView08/>
               </DescriptionView>
-
+              <MarginView08/>
             </>
           }
           <MarginView04/>

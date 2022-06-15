@@ -3,6 +3,7 @@ import { Alert, TouchableOpacity, Text } from 'react-native'
 import { useDispatch, useSelector } from 'react-redux';
 import ImagePicker from 'react-native-image-crop-picker';
 import defaultAvatar from '~/assets/defaultAvatar.png';
+import { useTranslation } from 'react-i18next';
 // -----------------------------------------------------------------------------
 import {
   AllIcon,
@@ -18,6 +19,7 @@ import api from '~/services/api';
 import Button from '~/components/Button';
 // -----------------------------------------------------------------------------
 export default function UpdateProfile({ navigation, route }) {
+  const { t, i18n } = useTranslation();
   const user = useSelector(state => state.user.profile);
   const userData = useSelector(state => state.user.profile)
   const dispatch = useDispatch();
@@ -39,7 +41,7 @@ export default function UpdateProfile({ navigation, route }) {
       const formData = new FormData();
       formData.append('profileImage', {
         uri: Platform.OS === 'ios' ? image.sourceURL : image.path,
-        type: "image/*",
+        type: "image/jpg",
         name: `profile_${user.id}.jpg`,
       });
 
@@ -50,7 +52,7 @@ export default function UpdateProfile({ navigation, route }) {
       }
       catch(err) {
         Alert.alert(
-          'Error loading photo.',
+          t('ErrorLiadingPhoto'),
           [
             {
               text: 'OK',
@@ -76,7 +78,7 @@ export default function UpdateProfile({ navigation, route }) {
       navigation.goBack();
     }
     catch {
-      Alert.alert('Update failed. Error in data')
+      Alert.alert(t('UpdateFailed'))
     }
 
   }
@@ -128,7 +130,7 @@ export default function UpdateProfile({ navigation, route }) {
         <FormInput
           autoCorrect={false}
           autoCapitalize="none"
-          placeholder="Name"
+          placeholder={t('Name')}
           placeholderTextColor="#999"
           returnKeyType="next"
           value={firstName}
@@ -138,7 +140,7 @@ export default function UpdateProfile({ navigation, route }) {
         <FormInput
           autoCorrect={false}
           autoCapitalize="none"
-          placeholder="Last Name"
+          placeholder={t('LastName')}
           placeholderTextColor="#999"
           // onSubmitEditing={() => userNameRef.current.focus()}
           value={lastName}
@@ -146,8 +148,14 @@ export default function UpdateProfile({ navigation, route }) {
           // ref={lastNameRef}
         />
         <MarginView08/>
-        <Button type='submit' onPress={handleSubmit}>
-          <ButtonText>Send</ButtonText>
+        <Button
+          onPress={handleSubmit}
+          backgroundColor={'#18A0FB'}
+          icon={'check-circle'}
+          iconSize={20}
+          textColor={'#fff'}
+        >
+          <ButtonText>{t('Send')}</ButtonText>
         </Button>
       </Form>
       </IosKeyboardAvoidingView>

@@ -1,11 +1,11 @@
-import React, { useState, useRef } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import { Alert, Keyboard ,SafeAreaView } from 'react-native';
 import { useDispatch, useSelector } from 'react-redux';
 import auth, { sendEmailVerification, getAuth } from '@react-native-firebase/auth';
 import Modal from 'react-native-modal';
 import { useTranslation } from 'react-i18next';
 // -----------------------------------------------------------------------------
-import { signInRequest } from '~/store/modules/auth/actions';
+import { signInRequest, signFailure } from '~/store/modules/auth/actions';
 import logo from '~/assets/detective/detective_remake02.png'
 import godtaskerFont from '~/assets/detective/font_remake02.png';
 import {
@@ -35,10 +35,13 @@ export default function SignIn({ navigation }) {
   const [secureText, setSecureText] = useState(true);
   const [toggleForgotPassword, setToggleForgotPassword] = useState(false);
   const [toggleResendConfirmation, setToggleResendConfirmation] = useState(false);
-
-  const loading = useSelector(state => state.auth.loading);
+  const [loading, setLoading] = useState(false)
+  // let loading = useSelector(state => state.auth.loading);
   const signed = useSelector(state => state.auth.signed);
   const passwordRef = useRef();
+  useEffect(() => {
+
+  }, [])
 
   async function handleSubmit() {
     if(email == null || '') {
@@ -50,9 +53,8 @@ export default function SignIn({ navigation }) {
     if(password == null || '') {
       Alert.alert(t('PleaseFillInPassword'))
       return
-    } else {
-
     }
+    setLoading(true)
 
     await auth().signInWithEmailAndPassword(email, password)
       .then(function(user) {
@@ -82,19 +84,17 @@ export default function SignIn({ navigation }) {
         const uid = user.uid;
         console.log(user)
         if (emailVerified) {
-          dispatch(
-            signInRequest(
-              email,
-              password
-            )
-          );
+          const dispatchResponse = dispatch(signInRequest(email,password));
+          if (dispatchResponse) {setLoading(false)}
         } else {
-          Alert.alert("UserEmailNotVerified")
+          Alert.alert('UserEmailNotVerified')
+          setLoading(false)
         }
         // ...
       } else {
         // User is signed out
-
+        console.log("User is signed out")
+        setLoading(false)
         // ...
       }
     })
@@ -233,6 +233,10 @@ export default function SignIn({ navigation }) {
                 // type={'inverted'}
                 loading={loading}
                 onPress={handleSubmit}
+                icon={'log-in'}
+                iconSize={20}
+                textColor={'#fff'}
+                backgroundColor={'#403F4C'}
               >
                 {t("Login")}
               </Button>
@@ -248,6 +252,8 @@ export default function SignIn({ navigation }) {
             <Button
               type={'submit'}
               onPress={handleSignUp}
+              textColor={'#fff'}
+              backgroundColor={'#18A0FB'}
             >
               {t("SignUp")}
             </Button>

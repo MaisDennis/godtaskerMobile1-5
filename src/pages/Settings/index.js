@@ -30,7 +30,8 @@ import HeaderView from '~/components/HeaderView'
 import { signOut } from '../../store/modules/auth/actions';
 import insert from '~/assets/insert_photo-24px.svg';
 import godtaskerFont from '~/assets/detective/godtaskerFontPlainGreySmall.png';
-import QR from '~/assets/googlePlay.png';
+import QRGoogle from '~/assets/googlePlay.png';
+import QRApple from '~/assets/appStore.png';
 import { number } from 'yup';
 
 export default function SettingsPage({ navigation }) {
@@ -228,14 +229,16 @@ export default function SettingsPage({ navigation }) {
               <MarginView08/>
               <Button
                 onPress={handleToggleCopyText}
-                // small={true}
-                type='submit'
+                backgroundColor={'#18A0FB'}
+                icon={'copy'}
+                iconSize={20}
+                textColor={'#fff'}
               >
                 {t('CopyText')}
               </Button>
               <MarginView04/>
             </DownloadView>
-            <MarginView04/>
+            <MarginView08/>
             {/* <ButtonWrapper>
             <Button
                 onPress={handleToggleCopyText}
@@ -246,7 +249,6 @@ export default function SettingsPage({ navigation }) {
               </Button>
               </ButtonWrapper> */}
 
-            <MarginView04/>
             <ModalTitleText>{t('Or')}</ModalTitleText>
             <MarginView04/>
 
@@ -254,11 +256,18 @@ export default function SettingsPage({ navigation }) {
               <ModalTitleText>Google Play Store:</ModalTitleText>
               <MarginView04/>
               <QRImage
-                source={QR}
+                source={QRGoogle}
               />
             </DownloadView>
             <MarginView08/>
-            <MarginView04/>
+            <DownloadView>
+              <ModalTitleText>App Store:</ModalTitleText>
+              <MarginView04/>
+              <QRImage
+                source={QRApple}
+              />
+            </DownloadView>
+            <MarginView08/>
           </FormScrollView>
         </Modal>
 

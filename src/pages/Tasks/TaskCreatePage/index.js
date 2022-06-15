@@ -11,7 +11,7 @@ import {
   AlignCheckBoxView,
   ButtonIcon, ButtonIcon02, ButtonIcon03, ButtonTagWrapper, ButtonView, ButtonView02, ButtonView03,
   CheckBoxWrapper, CheckBoxView, Container,
-  DateOptionsView, DateOptions, DescriptionSpan, DescriptionView01, DescriptionView02, DescriptionView03,
+  DateOptionsView, DateOptions, DescriptionSpan, DescriptionView01, DescriptionView02, DescriptionView03, DescriptionView04,
   FormScrollView,
   HrLine,
   Input, IosKeyboardAvoidingView, ItemWrapperView,
@@ -19,9 +19,8 @@ import {
   MarginView02, MarginView04, MarginView08, ModalView, ModalWrapper,
   PillButton,
   RadioButtonView, RadioButtonTag, RadioButtonTagConfirmPhoto,
-  RadioButtonLabel, RadioButtonOuter, RadioButtonInner0,
-  RadioButtonInner1, RadioButtonInner2, RadioButtonInner3,
-  RadioButtonInner4, RadioButtonLabelText,
+  RadioButtonLabel, RadioButtonLabelText, RadioButtonOuter, RadioButtonInner0,
+  RadioButtonInner1, RadioButtonInner2, RadioButtonInner3, RadioButtonInner4,
   SubTaskButton, SubTaskButtonView, SubTaskCancelIcon, SubTaskConfirmButton, SubTaskConfirmIcon, SubTaskConfirmView,
   SubTaskEditIcon, SubTaskInput, SubTaskLabelText,
   SubTaskLeftView, SubTaskRightView,
@@ -39,31 +38,35 @@ export default function TaskCreatePage({ navigation }) {
   const dispatch = useDispatch();
   const userId = useSelector( state => state.user.profile.id)
   const userName = useSelector( state => state.user.profile.user_name)
-  const [name, setName] = useState("");
-  const [description, setDescription] = useState();
-  const [prior, setPrior] = useState(4);
-  const [confirmPhoto, setConfirmPhoto] = useState(1);
-  const [startDate, setStartDate] = useState(new Date());
-  const [dueDate, setDueDate] = useState(new Date());
-  const [contacts, setContacts] = useState([]);
-  const [focusBorder, setFocusBorder] = useState(1);
-  const [toggleCheckBox, setToggleCheckBox] = useState(false)
-  const [toggleModal, setToggleModal] = useState(false);
-  const [toggleDates, setToggleDates] = useState(false);
-  const [submitError, setSubmitError] = useState(false);
-  const [subTaskList, setSubTaskList] = useState([]);
-  const [editSubTaskIndex, setEditSubTaskIndex] = useState();
+
   const [addSubTaskInputValue, setAddSubTaskInputValue] = useState();
   const [addWeigeInputValue, setAddWeigeInputValue] = useState(1);
+  const [confirmPhoto, setConfirmPhoto] = useState(1);
+  const [contacts, setContacts] = useState([]);
+  const [date, setDate] = useState();
+  const [description, setDescription] = useState();
+  const [dueDate, setDueDate] = useState(new Date());
+  const [editSubTaskIndex, setEditSubTaskIndex] = useState();
   const [editSubTaskInputValue, setEditSubTaskInputValue] = useState();
   const [editWeigeInputValue, setEditWeigeInputValue] = useState(1);
-  const [subTaskToggleEdit, setSubTaskToggleEdit] = useState(false);
-  const [date, setDate] = useState();
+  const [focusBorder, setFocusBorder] = useState(1);
+  const [name, setName] = useState("");
   const [open, setOpen] = useState(false);
+  const [prior, setPrior] = useState(4);
+
   const [sameHourCheck, setSameHourCheck] = useState(false)
+  const [startDate, setStartDate] = useState(new Date());
+  const [subTaskList, setSubTaskList] = useState([]);
+  const [subTaskToggleEdit, setSubTaskToggleEdit] = useState(false);
+
+  const [toggleCheckBox, setToggleCheckBox] = useState(false)
+  const [toggleDates, setToggleDates] = useState(false);
+  const [toggleModal, setToggleModal] = useState(false);
+  const [toggleSubtaskConfirmController, setToggleSubtaskConfirmController] = useState(false);
+
   const [urgent, setUrgent] = useState(4); // leave for now to not have error upon submit
   const [complex, setComplex] = useState(4); // leave for now to not have error upon submit
-  const [toggleSubtaskConfirmController, setToggleSubtaskConfirmController] = useState(false);
+
   // functions for Date Picker
   const onDismissSingle = React.useCallback(() => {
     setOpen(false);
@@ -302,7 +305,6 @@ export default function TaskCreatePage({ navigation }) {
         { cancelable: true },
       )
     } catch(error) {
-      setSubmitError(true)
       Alert.alert(
         t('ErrorTaskNotRegistered'),
         t('PleaseTryAgain'),
@@ -605,7 +607,14 @@ export default function TaskCreatePage({ navigation }) {
           </DescriptionView03>
           <MarginView08/>
           <ItemWrapperView>
-            <Button type={'submit'} onPress={handleSubmit}>
+            <Button
+              type={'submit'}
+              onPress={handleSubmit}
+              backgroundColor={'#18A0FB'}
+              icon={'check-circle'}
+              iconSize={20}
+              textColor={'#fff'}
+            >
               {t('Send')}
             </Button>
           </ItemWrapperView>
@@ -614,19 +623,13 @@ export default function TaskCreatePage({ navigation }) {
           <MarginView08/>
 {/* ------------------------------------------------------------------------ */}
           <Modal isVisible={toggleModal}>
-            { submitError
-              ? (
-                <ModalView>
-                  {/* <Text>Error</Text> */}
-                </ModalView>
-              )
-              : (
-                <ModalView>
-                  <ModalWrapper>
-
-                    <MarginView04/>
-                    <LabelText>{t('FollowingList')}</LabelText>
-                    <MarginView02/>
+            <ModalView>
+              <ModalWrapper>
+                <MarginView04/>
+                <LabelText>{t('FollowingList')}</LabelText>
+                <MarginView04/>
+                <DescriptionView04>
+                  <ItemWrapperView>
                     <FormScrollView>
                       { contacts.map((c, index) => (
                         <AlignCheckBoxView key={index}>
@@ -646,15 +649,21 @@ export default function TaskCreatePage({ navigation }) {
                         </AlignCheckBoxView>
                       ))}
                     </FormScrollView>
-                    <MarginView02/>
-                    <Button type='inverted' onPress={handleToggleModal}>
-                      OK
-                    </Button>
-                    <MarginView08/>
-                  </ModalWrapper>
-                </ModalView>
-              )
-            }
+                  </ItemWrapperView>
+                </DescriptionView04>
+                <MarginView08/>
+                <Button
+                  onPress={handleToggleModal}
+                  backgroundColor={'#403F4C'}
+                  textColor={'#fff'}
+                  icon={'check-circle'}
+                  iconSize={20}
+                >
+                  OK
+                </Button>
+                <MarginView08/>
+              </ModalWrapper>
+            </ModalView>
           </Modal>
 
           <Modal isVisible={toggleDates}>
@@ -693,7 +702,13 @@ export default function TaskCreatePage({ navigation }) {
                 </DateOptionsView>
                 <MarginView08/>
 
-                <Button type='inverted' onPress={handleToggleDates}>
+                <Button
+                  onPress={handleToggleDates}
+                  backgroundColor={'#403F4C'}
+                  textColor={'#fff'}
+                  icon={'check-circle'}
+                  iconSize={20}
+                >
                   OK
                 </Button>
                 <MarginView08/>

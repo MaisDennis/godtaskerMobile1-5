@@ -1,65 +1,44 @@
 import styled from 'styled-components/native';
 import { TouchableOpacity } from 'react-native';
+import Icon from 'react-native-vector-icons/Feather'
 // -----------------------------------------------------------------------------
 const primaryFont = 'OpenSans-Bold';
 const secondaryFont = 'OpenSans-Regular';
 
 export const ButtonWrapper = styled(TouchableOpacity)`
-  align-items: center;
+flex-direction: row;
+align-items: center;
   justify-content: center;
   height: ${props => props.small == true ? '36px' : '40px'};
   width: ${props => props.small == true ? '108px' : '100%'};
   border-radius: 4px;
-  border-bottom-left-radius: ${props => props.type == 'submit'
-    ? (props => props.small == true ? '4px' : '8px')
-    : '4px'
-  };
-  border-bottom-right-radius: ${props => props.type == 'submit'
-    ? (props => props.small == true ? '4px' : '8px')
-    : '4px'
-  };
-  border: ${props => props.type == 'inverted'
-    ? '2px'
-    : 'none'
-  };
-  border-color: ${props => props.type == 'inverted'
-    ? (props => props.black == true
-      ?'#1B2432'
-      :'#18A0FB'
-    )
-    : 'transparent'
-  };
+  border: ${props => props.type == 'inverted' ? '2px' : 'none'};
+  border-color: ${props => props.textColor ? props.textColor : '#403F4C'};
   margin: 0 auto;
-  background-color: ${props => props.type == 'submit'
-    ? '#18A0FB'
-    : (props => props.type == 'inverted' ? 'transparent' : '#403F4C')
+  background-color: ${props => props.backgroundColor
+    ? props.backgroundColor
+    : (props => props.type == 'inverted' ? 'transparent' : '#999')
   };
+  /* background-color: #18A0FB; */
+`;
+
+export const ButtonIcon = styled(Icon)`
+  padding-right: 8px;
+  color: #fff;
 `;
 
 export const ButtonText = styled.Text`
   font-size: ${Platform.OS === 'ios'
-    ? (props => props.text == 'secondary' ? '14px' : '15px')
-    : (props => props.text == 'secondary' ? '12px' : '13px')
+  ? (props => props.text == 'secondary' ? '14px' : '15px')
+  : (props => props.text == 'secondary' ? '12px' : '13px')
   };
   font-weight: bold;
-
-  color: ${props => props.type == 'inverted'
-    ? (props => props.black == true
-      ? '#1B2432'
-      : '#18A0FB'
-    )
-    : '#fff'
-  };
+  color: ${props => props.textColor ? props.textColor : "#403F4C"} ;
 `;
 
 export const Container = styled.View`
   width: ${props => props.small == true ? 'auto' : '100%'};
   height: auto;
-  margin: ${props => props.type == 'submit'
-    ? '0 auto'
-    : (props => props.type == 'inverted'
-      ? '0 auto'
-      : '0'
-  )};
+  margin: 0 auto;
   /* background-color: #f5f; */
 `;

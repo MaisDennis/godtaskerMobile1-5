@@ -167,6 +167,9 @@
     "UserName": "Nome de usuário",
     "Password": "Senha",
     "ConfirmPassword": "Confirmar a senha",
+    "UponSignup": "Ao se cadastrar, você concorda com os nossos:",
+    "Terms": "Termos e Condições",
+    "Privacy": "Política de Privacidade",
     "ErrorInData": "Erro nos dados",
     "Search": "Pesquisar",
     "SignUpBio": "Olá, o meu nome de usuário é {{userName}}",
@@ -174,6 +177,12 @@
     "AnEmailHasBeenSent": "Um e-mail foi enviado a {{email}}. Por favor confirmar o e-mail para ativar a conta.",
     "EmailAlreadyInUse": "Esse e-mail já está em uso",
     "InvalidEmail": "E-mail inválido",
+    "SomeError": "Ocorreu um erro. Por favor tente de novo.",
+    "FillUsername": "Por favor preencher Nome de usuário",
+    "FillEmail": "Por favor preencher Email",
+    "FillPassword": "Por favor preencher Senha",
+    "FillConfirmPassword": "Por favor Confirmar a Senha",
+
 
     //pages/TaskCreatePage
     "Title": "Título:",

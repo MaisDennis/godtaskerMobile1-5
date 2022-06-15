@@ -422,7 +422,13 @@ export default function ServiceCreatePage({ navigation }) {
           </DescriptionView03>
           <MarginView08/>
           <ItemWrapperView>
-            <Button type={'submit'} onPress={handleSubmit}>
+            <Button
+            onPress={handleSubmit}
+            backgroundColor={'#18A0FB'}
+            icon={'check-circle'}
+            iconSize={20}
+            textColor={'#fff'}
+          >
               {t('Send')}
             </Button>
           </ItemWrapperView>

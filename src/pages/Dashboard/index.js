@@ -25,7 +25,7 @@ import {
   LabelNormalWorker,
   LabelSmallBoss, LabelSmallBoss2, LabelSmallRed, LabelSmallSpace,
   LabelSmallWorker, LabelSmallWorker2, LabelSpace, LeftView, LinkedInWrapper,
-  MarginView02, MarginView04, MarginView08, ModalView, ModalWrapper01, ModalWrapper02,
+  MarginView02, MarginView04, MarginView08, ModalView, ModalWrapper01, ModalWrapper02, ModalWrapper03,
   ServiceView, SocialMediaButton, SocialMediaText, SocialMediaView,
   SocialMediaWrapper, SpaceView,
   StatusCircleBoss, StatusCircleRed, StatusCircleWorker,
@@ -83,6 +83,8 @@ export default function Dashboard({ navigation }) {
   const [workerCountTomorrowDue, setWorkerCountTomorrowDue] = useState();
   const [workerCountThisWeekDue, setWorkerCountThisWeekDue] = useState();
 
+
+
   useEffect(() => {
     // const socket = io('http://10.0.3.2:3333');
     const socket = io('http://3.142.16.89:3333');
@@ -90,10 +92,13 @@ export default function Dashboard({ navigation }) {
       console.log(msg)
       loadData()
     })
+    // socket.emit("test", 'Hello World')
+
     loadData()
   }, [update_services])
 
   async function loadData() {
+
     const dashboardResponse = await api.get(`/dashboard/${user_id}`, {
       params: { user_id, worker_id }
     })
@@ -549,7 +554,7 @@ export default function Dashboard({ navigation }) {
                 data={s}
                 navigation={navigation}
                 display={true}
-                workerPage={false}
+                workerPage={false}ButtonWrapper
               >{s.name}</Service>
             ))
             : (
@@ -564,7 +569,7 @@ export default function Dashboard({ navigation }) {
         <Modal isVisible={toggleInstagram}>
           <ModalView>
             <MarginView08/>
-            <ModalWrapper01>
+            <ModalWrapper03>
               <Label>{t('EditInstagram')}</Label>
               <MarginView04/>
               <Input
@@ -575,14 +580,29 @@ export default function Dashboard({ navigation }) {
                 placeholder="@username"
               />
               <MarginView08/>
-              <Button type={'inverted'} onPress={handleToggleInstagram}>
-                Cancel
-              </Button>
-              <MarginView04/>
-              <Button type={'submit'} onPress={handleInstagramSubmit}>
-                OK
-              </Button>
-            </ModalWrapper01>
+              <ButtonWrapper>
+                <Button
+                  onPress={handleInstagramSubmit}
+                  backgroundColor={'#18A0FB'}
+                  icon={'check-circle'}
+                  iconSize={20}
+                  textColor={'#fff'}
+                  small={true}
+                >
+                  OK
+                </Button>
+                <Button
+                  onPress={handleToggleInstagram}
+                  backgroundColor={'#403F4C'}
+                  icon={'x-circle'}
+                  iconSize={20}
+                  textColor={'#fff'}
+                  small={true}
+                >
+                  Cancel
+                </Button>
+              </ButtonWrapper>
+            </ModalWrapper03>
             <MarginView08/>
           </ModalView>
         </Modal>
@@ -590,7 +610,7 @@ export default function Dashboard({ navigation }) {
         <Modal isVisible={toggleLinkedIn}>
           <ModalView>
             <MarginView08/>
-            <ModalWrapper01>
+            <ModalWrapper03>
               <Label>{t('EditLinkedIn')}</Label>
               <MarginView04/>
               <Input
@@ -612,14 +632,32 @@ export default function Dashboard({ navigation }) {
                 <LabelNormalSocialMedia>/</LabelNormalSocialMedia>
               </LinkedInWrapper>
               <MarginView08/>
-              <Button type={'inverted'} onPress={handleToggleLinkedIn}>
-                {t('Cancel')}
-              </Button>
-              <MarginView04/>
-              <Button type={'submit'} onPress={handleLinkedInSubmit}>
-                OK
-              </Button>
-            </ModalWrapper01>
+              <ButtonWrapper>
+                <Button
+                  onPress={handleLinkedInSubmit}
+                  backgroundColor={'#18A0FB'}
+                  textColor={'#fff'}
+                  small={true}
+                  icon={'check-circle'}
+                  iconSize={20}
+                  textColor={'#fff'}
+
+                >
+                  OK
+                </Button>
+                <Button
+                  onPress={handleToggleLinkedIn}
+                  backgroundColor={'#403F4C'}
+                  icon={'x-circle'}
+                  iconSize={20}
+                  textColor={'#fff'}
+                  small={true}
+
+                  >
+                  {t('Cancel')}
+                </Button>
+              </ButtonWrapper>
+            </ModalWrapper03>
             <MarginView08/>
           </ModalView>
         </Modal>
@@ -627,7 +665,7 @@ export default function Dashboard({ navigation }) {
         <Modal isVisible={toggleBio}>
           <ModalView>
             <MarginView08/>
-            <ModalWrapper01>
+            <ModalWrapper03>
               <Label>{t('EditBio')}</Label>
               <MarginView04/>
               <Input
@@ -639,15 +677,29 @@ export default function Dashboard({ navigation }) {
                 placeholder="Biography"
               />
               <MarginView08/>
-
-              <Button type={'inverted'} onPress={handleToggleBio}>
-                {t('Cancel')}
-              </Button>
-              <MarginView04/>
-              <Button type={'submit'} onPress={handleBioSubmit}>
-                OK
-              </Button>
-            </ModalWrapper01>
+              <ButtonWrapper>
+                <Button
+                  onPress={handleBioSubmit}
+                  backgroundColor={'#18A0FB'}
+                  icon={'check-circle'}
+                  iconSize={20}
+                  textColor={'#fff'}
+                  small={true}
+                >
+                  OK
+                </Button>
+                <Button
+                  onPress={handleToggleBio}
+                  backgroundColor={'#403F4C'}
+                  icon={'x-circle'}
+                  iconSize={20}
+                  textColor={'#fff'}
+                  small={true}
+                >
+                  {t('Cancel')}
+                </Button>
+              </ButtonWrapper>
+            </ModalWrapper03>
             <MarginView08/>
           </ModalView>
         </Modal>

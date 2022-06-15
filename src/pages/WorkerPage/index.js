@@ -13,7 +13,7 @@ import {
   HeaderTabView, HrLine,
   Iicon,
   Label, LabelBold, LabelMild, LabelNormal, LeftView, ListButton,
-  MarginView04, MarginView08, Menu, MenuButton, MenuLabel, MenuLabelMuted,
+  MarginView04, MarginView08, Menu, MenuButton, MenuIcon, MenuLabel, MenuLabelMuted,
   MessageButton, MessageIcon,
   ModalView, ModalWrapper01,
   ServiceView, SocialMediaButton, SocialMediaText, SocialMediaView, SocialMediaWrapper,
@@ -229,7 +229,13 @@ export default function WorkerPage({ navigation, route }) {
 
   function handleLinkToInstagram() {
     try {
-      Linking.openURL(`instagram://user?username=${instagram_username}`)
+      if (instagram_username !== '-') {
+        console.log(instagram_username, 'OK')
+        Linking.openURL(`instagram://user?username=${instagram_username}`)
+      } else {
+        console.log(instagram_username, 'NOK')
+      }
+
     }
     catch(error) {
       console.log(error)
@@ -238,7 +244,12 @@ export default function WorkerPage({ navigation, route }) {
 
   function handleLinkToLinkedIn() {
     try {
-      Linking.openURL(`https://linkedin.com/in${linkedin_username}`)
+      if (linkedin_username !== '-') {
+        console.log(instagram_username, 'OK')
+        Linking.openURL(`https://linkedin.com/in${linkedin_username}`)
+      } else {
+        console.log(instagram_username, 'NOK')
+      }
     }
     catch(error) {
       console.log(error)
@@ -285,7 +296,7 @@ export default function WorkerPage({ navigation, route }) {
               <Menu>
                 { reported === false
                   ? (
-                    <MenuButton onPress={handleReport}><MenuLabel>{t("ReportContent")}</MenuLabel></MenuButton>
+                    <MenuButton onPress={handleReport}><MenuIcon name="flag" size={20}/><MenuLabel>{t("ReportContent")}</MenuLabel></MenuButton>
                   )
                   : (
                     <MenuButton><MenuLabelMuted>{t("UserReported")}</MenuLabelMuted></MenuButton>
@@ -295,7 +306,7 @@ export default function WorkerPage({ navigation, route }) {
                 <HrLine></HrLine>
                 { checkBlocked === false
                   ? (
-                    <MenuButton onPress={handleBlock}><MenuLabel>{t("BlockUser")}</MenuLabel></MenuButton>
+                    <MenuButton onPress={handleBlock}><MenuIcon name="x-square" size={20}/><MenuLabel>{t("BlockUser")}</MenuLabel></MenuButton>
                   )
                   : (
                     <MenuButton onPress={handleUnblock}><MenuLabel>{t("UnblockUser")}</MenuLabel></MenuButton>

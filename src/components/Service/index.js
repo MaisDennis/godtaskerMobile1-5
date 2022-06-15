@@ -214,7 +214,6 @@ export default function Service({ children, data, navigation, display, workerPag
               <MarginView04/>
             </DescriptionView>
             <MarginView08/>
-
             { isEmpty(data.sub_task_list)
               ? (
                 <DescriptionView>
@@ -246,6 +245,7 @@ export default function Service({ children, data, navigation, display, workerPag
                 </DescriptionView>
               )
             }
+
             { data.description
               ? (
                 <>
@@ -269,6 +269,10 @@ export default function Service({ children, data, navigation, display, workerPag
                   <ButtonWrapperConfirm>
                     <Button
                       onPress={handleSend}
+                      backgroundColor={'#18A0FB'}
+                      icon={'check-circle'}
+                      iconSize={20}
+                      textColor={'#fff'}
                     >
                       {t('SendThisTask')}
                     </Button>
@@ -276,8 +280,11 @@ export default function Service({ children, data, navigation, display, workerPag
                   <MarginView08/>
                   <ButtonWrapperConfirm>
                     <Button
-                    type='submit'
                     onPress={handleDisplay}
+                    backgroundColor={'#403F4C'}
+                    icon={'clipboard'}
+                    iconSize={20}
+                    textColor={'#fff'}
                     >
                       {t('DisplayInProfile')}
                     </Button>
@@ -291,6 +298,10 @@ export default function Service({ children, data, navigation, display, workerPag
                       <ButtonWrapperConfirm>
                         <Button
                           onPress={handleRemoveDisplay}
+                          backgroundColor={'#403F4C'}
+                          icon={'clipboard'}
+                          iconSize={20}
+                          textColor={'#fff'}
                         >
                           {t('RemoveFromProfile')}
                         </Button>
@@ -301,7 +312,10 @@ export default function Service({ children, data, navigation, display, workerPag
                       <ButtonWrapperConfirm>
                         <Button
                           type='inverted'
-                          // onPress={handleRemoveDisplay}
+                          backgroundColor={'#403F4C'}
+                          icon={'clipboard'}
+                          iconSize={20}
+                          textColor={'#fff'}
                         >
                           {t('ContactUser')}
                         </Button>

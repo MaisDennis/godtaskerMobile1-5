@@ -6,6 +6,8 @@ import auth from '@react-native-firebase/auth';
 import api from '~/services/api';
 import { signInSuccess, signFailure, signUpSuccess, signUpFailure } from './actions';
 // -----------------------------------------------------------------------------
+
+
 export function* signIn({ payload }) {
   // console.log(payload)
 
@@ -21,7 +23,7 @@ export function* signIn({ payload }) {
 
     const { token, user } = response.data;
 
-    console.log(response.data)
+    // console.log(response.data)
 
     api.defaults.headers.Authorization = `Bearer ${token}`;
 
@@ -39,8 +41,8 @@ export function* signIn({ payload }) {
 
   } catch (error) {
     yield put(signFailure());
-    // console.log(error)
-    Alert.alert(t("InvalidDataPleaseCheckPassword"))
+    console.log(error)
+
   }
 }
 // -----------------------------------------------------------------------------
@@ -53,12 +55,13 @@ export function* signIn({ payload }) {
 // }
 // -----------------------------------------------------------------------------
 export function* signUp({ payload }) {
-
   const {
     user_name,
     password,
     email,
     bio,
+    t,
+    navigation,
   } = payload;
 
   const response = yield call(api.post, 'users', {
@@ -70,6 +73,43 @@ export function* signUp({ payload }) {
     points: 0,
     subscriber: false
   })
+
+  if (response) {
+    auth()
+    .createUserWithEmailAndPassword(email, password)
+    .then((response) => {
+      response.user.sendEmailVerification();
+
+      console.log('User account created & signed in!');
+      Alert.alert(
+        t("ThankYou"),
+        t("AnEmailHasBeenSent", { email: `${email}` })
+      )
+      navigation.navigate('SignIn')
+    })
+    .catch(error => {
+      if (error.code === 'auth/email-already-in-use') {
+        console.log(error.message);
+        Alert.alert(
+          t('EmailAlreadyInUse'),
+        )
+      } else if (error.code === 'auth/invalid-email') {
+        console.log(error.message);
+        Alert.alert(
+          t('InvalidEmail'),
+        )
+      } else {
+        console.error(error);
+        Alert.alert(
+          t('SomeError'),
+        )
+      }
+    });
+  } else {
+    Alert.alert(
+      t('SomeError'),
+    )
+  }
 }
 
 // -----------------------------------------------------------------------------

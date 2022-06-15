@@ -217,6 +217,17 @@ export const DescriptionView03 = styled.View`
   /* background-color: #eee; */
 `;
 
+export const DescriptionView04 = styled.View`
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  border-radius: 4px;
+  border-width: 2px;
+  border-color: ${props => props.focusColor === 3 ? '#19AE7C' : '#eee'};
+  padding: 12px 4px;
+  /* background-color: #eee; */
+`;
+
 export const DescriptionWorkerView01 = styled.View`
   align-items: center;
   justify-content: center;

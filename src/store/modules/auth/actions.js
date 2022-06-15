@@ -29,6 +29,8 @@ export function signUpRequest(
   password,
   email,
   bio,
+  t,
+  navigation,
 ) {
   return {
     type: '@auth/SIGN_UP_REQUEST',
@@ -37,6 +39,8 @@ export function signUpRequest(
       password,
       email,
       bio,
+      t,
+      navigation,
     },
 
   }

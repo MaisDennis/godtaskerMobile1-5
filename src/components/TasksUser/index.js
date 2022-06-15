@@ -48,7 +48,7 @@ export default function TaskUser({ data, navigation, taskConditionIndex }) {
   const { t, i18n } = useTranslation();
   const dispatch = useDispatch();
   const updated_tasks = useSelector( state => state.task.tasks)
-
+  console.log(data.sub_task_list)
   const formattedDate = fdate =>
   fdate == null
     ? '-'
@@ -698,40 +698,47 @@ export default function TaskUser({ data, navigation, taskConditionIndex }) {
                 <MarginView04/>
               </AlignDetailsView>
             </DescriptionView>
-
             <MarginView08/>
+            { data.sub_task_list.length === 0
+              ? null
+              : (
+                <>
+                  <DescriptionView>
+                    <MarginView04/>
+                    <Label>{t('SubItems')}</Label>
+                    <MarginView04/>
+                    <CheckBoxWrapper>
+                      { data.sub_task_list.map((s, index) => (
+                        <AlignCheckBoxView key={index}>
+                          <CheckBoxView>
+                              <CheckBox
+                                disabled={true}
+                                value={s.complete}
+                              />
+                              <DescriptionSpan>{s.weige_percentage}%</DescriptionSpan>
+                              <DescriptionSpan type="check-box">{s.description}</DescriptionSpan>
+                          </CheckBoxView>
+                        </AlignCheckBoxView>
+                      ))}
+                    </CheckBoxWrapper>
+                    <MarginView04/>
+                  </DescriptionView>
+                  <MarginView08/>
+                </>
+              )
 
-            <DescriptionView>
-              <MarginView04/>
-              <Label>{t('SubItems')}</Label>
-              <MarginView04/>
-              <CheckBoxWrapper>
-                { data.sub_task_list.map((s, index) => (
-                  <AlignCheckBoxView key={index}>
-                    <CheckBoxView>
-                        <CheckBox
-                          disabled={true}
-                          value={s.complete}
-                        />
-                        <DescriptionSpan>{s.weige_percentage}%</DescriptionSpan>
-                        <DescriptionSpan type="check-box">{s.description}</DescriptionSpan>
-                    </CheckBoxView>
-                  </AlignCheckBoxView>
-                ))}
-              </CheckBoxWrapper>
-              <MarginView04/>
-            </DescriptionView>
+            }
 
             { data.description
               ? (
                 <>
-                  <MarginView08/>
                   <DescriptionView>
                     <MarginView04/>
                     <Label>{t('OtherComments')}</Label>
                     <DescriptionSpan>{data.description}</DescriptionSpan>
                     <MarginView08/>
                   </DescriptionView>
+                  <MarginView08/>
                 </>
               )
               : null
@@ -739,7 +746,6 @@ export default function TaskUser({ data, navigation, taskConditionIndex }) {
 
             { data.status.status === 3 &&
               <>
-                <MarginView08/>
                 <AcceptButtonView>
                   <MarginView04/>
                   <Label>
@@ -749,12 +755,12 @@ export default function TaskUser({ data, navigation, taskConditionIndex }) {
                   {/* <DescriptionSpan>{`${data.status.comment}:`}</DescriptionSpan> */}
                   <MarginView04/>
                 </AcceptButtonView>
+                <MarginView08/>
               </>
             }
 
             { data.status.status === 4 &&
               <>
-                <MarginView08/>
                 <AcceptButtonView>
                   <MarginView04/>
                   <Label>
@@ -764,12 +770,12 @@ export default function TaskUser({ data, navigation, taskConditionIndex }) {
                   <DescriptionSpan>{`${data.status.comment}:`}</DescriptionSpan>
                   <MarginView08/>
                 </AcceptButtonView>
+                <MarginView08/>
               </>
             }
 
             { data.signature &&
               <>
-                <MarginView08/>
                 <DescriptionView>
                   <MarginView04/>
                     <Label>{t('ConfirmationPhoto')}</Label>
@@ -779,9 +785,9 @@ export default function TaskUser({ data, navigation, taskConditionIndex }) {
                     </ImageView>
                   <MarginView08/>
                 </DescriptionView>
+                <MarginView08/>
               </>
             }
-            <MarginView08/>
             <MarginView04/>
           </FormScrollView>
 

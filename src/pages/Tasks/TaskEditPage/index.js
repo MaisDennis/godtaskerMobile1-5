@@ -493,7 +493,13 @@ export default function TaskEditPage({ navigation, route }) {
           </DescriptionView03>
           <MarginView08/>
           <ItemWrapperView>
-            <Button type={'submit'} onPress={handleSubmit}>
+            <Button
+              onPress={handleSubmit}
+              backgroundColor={'#18A0FB'}
+              icon={'check-circle'}
+              iconSize={20}
+              textColor={'#fff'}
+            >
               {t('Send')}
             </Button>
           </ItemWrapperView>
@@ -537,7 +543,13 @@ export default function TaskEditPage({ navigation, route }) {
                   />
                 </DateOptionsView>
                 <MarginView08/>
-                <Button type='inverted' onPress={handleToggleDates}>
+                <Button 
+                  onPress={handleToggleDates}
+                  backgroundColor={'#403F4C'}
+                  icon={'check-circle'}
+                  iconSize={20}
+                  textColor={'#fff'}
+                >
                   OK
                 </Button>
                 <MarginView08/>

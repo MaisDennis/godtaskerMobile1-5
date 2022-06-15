@@ -229,7 +229,6 @@ export default function ServiceDisplay({ data, navigation, display, userData, wo
             <MarginView04/>
           </DescriptionView>
           <MarginView08/>
-
           { isEmpty(data.sub_task_list)
             ? (
               <DescriptionView>
@@ -260,7 +259,6 @@ export default function ServiceDisplay({ data, navigation, display, userData, wo
               </DescriptionView>
             )
           }
-
           { data.description
             ? (
               <>
@@ -279,8 +277,11 @@ export default function ServiceDisplay({ data, navigation, display, userData, wo
           <MarginView08/>
           <ButtonWrapperConfirm>
             <Button
-              type='inverted'
               onPress={handleMessageConversation}
+              backgroundColor={'#403F4C'}
+              icon={'message-square'}
+              iconSize={20}
+              textColor={'#fff'}
             >
               {t('ContactUser')}
             </Button>
@@ -288,9 +289,12 @@ export default function ServiceDisplay({ data, navigation, display, userData, wo
           <MarginView08/>
           <ButtonWrapperConfirm>
             <Button
-            type='submit'
             onPress={handleSend}
-            >
+            backgroundColor={'#18A0FB'}
+            icon={'check-circle'}
+            iconSize={20}
+            textColor={'#fff'}
+          >
               {t('HireThisService')}
             </Button>
           </ButtonWrapperConfirm>

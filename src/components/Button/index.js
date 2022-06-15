@@ -3,15 +3,18 @@ import { ActivityIndicator, StyleSheet, Text, View } from 'react-native';
 import PropTypes from 'prop-types';
 import DropShadow from "react-native-drop-shadow";
 // -----------------------------------------------------------------------------
-import { Container, ButtonText, ButtonWrapper } from './styles';
+import { Container, ButtonIcon, ButtonText, ButtonWrapper } from './styles';
 // -----------------------------------------------------------------------------
 export default function Button({
+  backgroundColor,
   children,
+  icon,
+  iconSize,
   loading,
   text,
+  textColor,
   type,
   small,
-  black,
   ...rest
 }) {
   const styles = StyleSheet.create({
@@ -31,20 +34,25 @@ export default function Button({
     >
       <DropShadow style={styles.shadowProp}>
         <ButtonWrapper
+          backgroundColor={backgroundColor}
           type={type}
           small={small}
-          black={black}
           text={text}
+          textColor={textColor}
           {...rest}
         >
           {loading ? (
             <ActivityIndicator size="small" color="#FFF" />
           ) : (
+            <>
+            <ButtonIcon name={icon} size={iconSize}/>
             <ButtonText
               type={type}
-              black={black}
               text={text}
+              textColor={textColor}
+              border
             >{children}</ButtonText>
+            </>
           )}
         </ButtonWrapper>
       </DropShadow>

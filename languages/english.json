@@ -170,6 +170,9 @@
     "UserName": "Username",
     "Password": "Password",
     "ConfirmPassword": "Confirm password",
+    "UponSignup": "In signing up, you are agreeing to our:",
+    "Terms": "Terms & Conditions",
+    "Privacy": "Privacy Policy",
     "ErrorInData": "Error in data",
     "Search": "Search",
     "SignUpBio": "Hello, my Username is {{userName}}",
@@ -177,6 +180,11 @@
     "AnEmailHasBeenSent": "An e-mail has been sent to {{email}}. Please confirm your e-mail to activate account.",
     "EmailAlreadyInUse": "E-mail already in use",
     "InvalidEmail": "Invalid e-mail",
+    "SomeError": "An error occured. Please try again.",
+    "FillUsername": "Please fill in Username",
+    "FillEmail": "Please fill in Email",
+    "FillPassword": "Please fill in Password",
+    "FillConfirmPassword": "Please Confirm Password",
 
     //pages/TaskCreatePage
     //pages/TaskEditPage

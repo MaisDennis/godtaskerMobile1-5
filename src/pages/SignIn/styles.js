@@ -238,6 +238,15 @@ export const StyledScrollView = styled.ScrollView`
 /* background: #F5F; */
 `;
 
+export const TermsText = styled.Text`
+  font-size: ${Platform.OS === 'ios' ? '14px' : '10px'};
+  line-height: ${Platform.OS === 'ios' ? '20px' : '18px'};
+  text-align: center;
+  text-decoration: underline;
+  width: auto;
+  color: #1B2432;
+`;
+
 export const Title = styled.Text`
 font-size: ${Platform.OS === 'ios' ? '18px' : '16px'};
 
@@ -248,6 +257,8 @@ margin: 16px auto;
 /* background: #999; */
 color: #1B2432;
 `;
+
+
 
 export const Wrapper = styled.ScrollView`
   display: flex;

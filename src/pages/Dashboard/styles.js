@@ -632,7 +632,7 @@ export const Menu = styled.View`
   position: absolute;
   display: flex;
   top: 36px;
-  width: 30%;
+  width: 40%;
   right: 8px;
   border-width: 2px;
   border-radius: 4px;
@@ -652,6 +652,11 @@ export const MenuButton = styled(TouchableOpacity)`
   height: 48px;
   
   /* background-color: #4433ee; */
+`;
+
+export const MenuIcon = styled(Icon)`
+  padding-right: 8px;
+  color: #1B2432;
 `;
 
 export const MenuLabel = styled.Text`
@@ -734,7 +739,15 @@ export const ModalWrapper02 = styled.ScrollView`
   /* background-color: #ee3; */
 `;
 
-
+export const ModalWrapper03 = styled.View`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 90%;
+  height: auto;
+  background-color: #fff;
+  /* background-color: #ee3; */
+`;
 
 export const SearchBarTextInput = styled.View`
   height: 70%;
